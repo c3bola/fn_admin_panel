@@ -1,0 +1,151 @@
+# =========================================================================
+# DEPENDÊNCIAS DO PROJETO
+# =========================================================================
+# Ignora pacotes baixados pelo gerenciador de dependências, pois devem ser 
+# instalados via package.json para garantir a consistência do ambiente[cite: 5].
+/node_modules
+node_modules/
+jspm_packages/
+web_modules/
+bower_components
+
+# =========================================================================
+# BUILD & ARQUIVOS COMPILADOS
+# =========================================================================
+# Ignora arquivos gerados após a transpilação e build do Angular/TypeScript[cite: 5].
+/dist
+/tmp
+/out-tsc
+/bazel-out
+build/Release
+
+# =========================================================================
+# VARIÁVEIS DE AMBIENTE (SEGURANÇA)
+# =========================================================================
+# Impede o vazamento de credenciais, chaves de API e configurações locais 
+# sensíveis para o repositório remoto[cite: 5].
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# =========================================================================
+# AMBIENTE DE DESENVOLVIMENTO E IDEs
+# =========================================================================
+# Ignora configurações específicas da máquina do desenvolvedor (Eclipse, IntelliJ, etc)[cite: 5].
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.tern-port
+
+# Configurações do VS Code: Ignora arquivos de histórico local, mas permite o 
+# rastreamento de configurações de workspace úteis para padronizar o time[cite: 5].
+.vscode/*
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+.vscode/mcp.json
+.history/*
+.vscode-test
+
+# =========================================================================
+# CACHES E ARQUIVOS TEMPORÁRIOS
+# =========================================================================
+# Arquivos gerados para acelerar processos de compilação e linting locais[cite: 5].
+/.angular/cache
+.sass-cache/
+*.tsbuildinfo
+.npm
+.eslintcache
+.stylelintcache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+.cache
+.parcel-cache
+
+# =========================================================================
+# LOGS E RELATÓRIOS
+# =========================================================================
+# Registros de erros e diagnósticos gerados em tempo de execução ou falhas[cite: 5].
+logs
+*.log
+npm-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+/libpeerconnection.log
+testem.log
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# =========================================================================
+# TESTES E COVERAGE
+# =========================================================================
+# Relatórios de cobertura de código gerados por ferramentas de teste (ex: Istanbul)[cite: 5].
+/coverage
+coverage
+*.lcov
+.nyc_output
+lib-cov
+
+# =========================================================================
+# SISTEMA OPERACIONAL
+# =========================================================================
+# Arquivos ocultos de metadados gerados automaticamente pelo macOS e Windows[cite: 5].
+.DS_Store
+Thumbs.db
+
+# =========================================================================
+# PROCESSOS E RUNTIME
+# =========================================================================
+# Arquivos de bloqueio e identificadores de processos em execução[cite: 5].
+pids
+*.pid
+*.seed
+*.pid.lock
+/connect.lock
+.lock-wscript
+.node_repl_history
+
+# =========================================================================
+# OUTROS GERENCIADORES E FERRAMENTAS (Yarn, Grunt, etc)
+# =========================================================================
+# Caches e arquivos de integridade de gerenciadores alternativos[cite: 5].
+.yarn-integrity
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+.grunt
+/typings
+__screenshots__/
+*.tgz
+
+# =========================================================================
+# OUTROS FRAMEWORKS (Gerados Dinamicamente)
+# =========================================================================
+# Caso o repositório passe a hospedar outras tecnologias (Next, Nuxt, Gatsby)[cite: 5].
+.next
+out
+.nuxt
+dist
+.cache/
+.vuepress/dist
+.temp
+**/.vitepress/dist
+**/.vitepress/cache
+.docusaurus
+.serverless/
+.fusebox/
+.dynamodb/

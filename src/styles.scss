@@ -1,0 +1,19 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Opcional: Garante que o fundo geral da aplicação seja escuro */
+body {
+  @apply bg-gray-900 text-white;
+}
+
+/* Ocultar barra de rolagem globalmente mantendo a funcionalidade de scroll */
+html, body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE e Edge */
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar, .custom-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari e Opera */
+}
