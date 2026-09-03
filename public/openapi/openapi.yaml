@@ -1,0 +1,622 @@
+openapi: 3.0.0
+info:
+  title: Fortnite Brasil Admin API
+  description: API de gerenciamento para o ecossistema de bots, grupos e membros da comunidade Fortnite Brasil no Telegram.
+  version: 1.2.0
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Servidor de Desenvolvimento
+tags:
+  - name: Groups
+    description: Gerenciamento de grupos e configurações globais
+  - name: Members
+    description: Consulta e moderação de membros da comunidade
+  - name: VIPs
+    description: Gerenciamento de assinaturas do Clubinho
+  - name: Announcements
+    description: Disparo e agendamento de comunicados em massa
+  - name: Giveaways
+    description: Criação e execução de sorteios automatizados
+
+paths:
+  # ==========================================
+  # DOMÍNIO: GRUPOS & CONFIGURAÇÕES
+  # ==========================================
+  /groups:
+    get:
+      summary: Lista todos os grupos monitorados pelos bots.
+      tags: [Groups]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupSummary'
+
+  /groups/{groupId}/config:
+    get:
+      summary: Obtém as configurações detalhadas, mensagens e filtros de um grupo.
+      tags: [Groups]
+      parameters:
+        - in: path
+          name: groupId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupConfig'
+    put:
+      summary: Atualiza as configurações gerais do grupo em massa.
+      tags: [Groups]
+      parameters:
+        - in: path
+          name: groupId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupConfig'
+      responses:
+        '200':
+          description: Configurações atualizadas.
+
+  /groups/{groupId}/blacklist:
+    get:
+      summary: Lista todos os itens da blacklist do grupo.
+      tags: [Groups]
+      parameters:
+        - in: path
+          name: groupId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BlacklistItem'
+    post:
+      summary: Adiciona um novo item (URL, Palavra ou ID) à blacklist.
+      tags: [Groups]
+      parameters:
+        - in: path
+          name: groupId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewBlacklistItem'
+      responses:
+        '201':
+          description: Item adicionado à blacklist.
+
+  /groups/{groupId}/blacklist/{itemId}:
+    delete:
+      summary: Remove um item específico da blacklist.
+      tags: [Groups]
+      parameters:
+        - in: path
+          name: groupId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: itemId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Item removido com sucesso.
+
+  # ==========================================
+  # DOMÍNIO: MEMBROS & MODERAÇÃO
+  # ==========================================
+  /members:
+    get:
+      summary: Lista membros com suporte a filtros e paginação.
+      tags: [Members]
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: role
+          schema:
+            type: string
+            enum: [Admin, VIP, Membro]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Member'
+
+  /members/{memberId}:
+    get:
+      summary: Obtém os detalhes de um membro específico.
+      tags: [Members]
+      parameters:
+        - in: path
+          name: memberId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+
+  /members/{memberId}/timeline:
+    get:
+      summary: Obtém o histórico de ações e interações do usuário na comunidade.
+      tags: [Members]
+      parameters:
+        - in: path
+          name: memberId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimelineEvent'
+
+  /members/{memberId}/notes:
+    get:
+      summary: Lista as observações internas da staff para o membro.
+      tags: [Members]
+      parameters:
+        - in: path
+          name: memberId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StaffNote'
+    post:
+      summary: Adiciona uma observação interna sobre o membro.
+      tags: [Members]
+      parameters:
+        - in: path
+          name: memberId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text: { type: string }
+      responses:
+        '201':
+          description: Observação adicionada.
+
+  /members/{memberId}/notes/{noteId}:
+    delete:
+      summary: Remove uma observação da staff.
+      tags: [Members]
+      parameters:
+        - in: path
+          name: memberId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: noteId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Observação removida.
+
+  /members/{memberId}/actions:
+    post:
+      summary: Executa ação disciplinar (Warn, Mute, Ban) diretamente no Telegram.
+      tags: [Members]
+      parameters:
+        - in: path
+          name: memberId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModerationAction'
+      responses:
+        '200':
+          description: Ação disciplinar aplicada com sucesso.
+
+  # ==========================================
+  # DOMÍNIO: CLUBINHO (VIPs)
+  # ==========================================
+  /vips:
+    get:
+      summary: Lista os assinantes do Clubinho VIP.
+      tags: [VIPs]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VipMember'
+
+  /vips/{memberId}:
+    put:
+      summary: Atualiza o plano base, limite de divulgação e vencimento do VIP.
+      tags: [VIPs]
+      parameters:
+        - in: path
+          name: memberId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VipPlanUpdate'
+      responses:
+        '200':
+          description: Plano atualizado com sucesso.
+
+  /vips/{memberId}/benefits:
+    patch:
+      summary: Ativa ou desativa benefícios individuais (tags, bypass, etc).
+      tags: [VIPs]
+      parameters:
+        - in: path
+          name: memberId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VipBenefitPatch'
+      responses:
+        '200':
+          description: Benefício atualizado individualmente.
+
+  # ==========================================
+  # DOMÍNIO: AVISOS E COMUNICADOS
+  # ==========================================
+  /announcements:
+    get:
+      summary: Lista o histórico de comunicados enviados, rascunhos e agendados.
+      tags: [Announcements]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Announcement'
+    post:
+      summary: Cria e envia (ou agenda) um novo comunicado para ativos selecionados.
+      tags: [Announcements]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewAnnouncement'
+      responses:
+        '201':
+          description: Comunicado registrado para disparo.
+
+  /announcements/{id}:
+    delete:
+      summary: Cancela um comunicado agendado ou apaga um rascunho.
+      tags: [Announcements]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Comunicado removido.
+
+  # ==========================================
+  # DOMÍNIO: SORTEIOS
+  # ==========================================
+  /giveaways:
+    get:
+      summary: Lista todos os sorteios (Ativos e Finalizados).
+      tags: [Giveaways]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Giveaway'
+    post:
+      summary: Cria um novo sorteio e publica o preview no Telegram.
+      tags: [Giveaways]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewGiveaway'
+      responses:
+        '201':
+          description: Sorteio criado com sucesso.
+
+  /giveaways/{id}:
+    delete:
+      summary: Remove um sorteio (apaga a mensagem no Telegram se aplicável).
+      tags: [Giveaways]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Sorteio removido.
+
+  /giveaways/{id}/draw:
+    post:
+      summary: Executa o sorteio e define os vencedores imediatamente.
+      tags: [Giveaways]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sorteio realizado. Notificações enviadas aos ganhadores.
+
+components:
+  schemas:
+    # --- SCHEMAS DE GRUPOS ---
+    GroupSummary:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        memberCount: { type: integer }
+        botActive: { type: boolean }
+        createdAt: { type: string, format: date-time }
+
+    GroupConfig:
+      type: object
+      properties:
+        botStatus: { type: boolean }
+        antiSpam: { type: boolean }
+        antiLinks: { type: boolean }
+        antiFlood: { type: boolean }
+        antiCaps: { type: boolean }
+        detectRusso: { type: boolean }
+        detectArabe: { type: boolean }
+        detectOriental: { type: boolean }
+        warnLimit: { type: integer }
+        banType: { type: string, enum: [permanente, temporario] }
+        banTimeHours: { type: integer, nullable: true }
+        preWarnAction: { type: string, enum: [nada, silenciar_perm, silenciar_temp] }
+        muteTimeHours: { type: integer, nullable: true }
+        messages:
+          type: object
+          properties:
+            description: { type: string }
+            welcome: { type: string }
+            welcomeNight: { type: string }
+            exit: { type: string }
+            warn: { type: string }
+            ban: { type: string }
+
+    BlacklistItem:
+      type: object
+      properties:
+        id: { type: string }
+        type: { type: string, enum: [url, palavra, id_usuario] }
+        value: { type: string }
+
+    NewBlacklistItem:
+      type: object
+      properties:
+        type: { type: string, enum: [url, palavra, id_usuario] }
+        value: { type: string }
+
+    # --- SCHEMAS DE MEMBROS ---
+    Member:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        username: { type: string }
+        avatar: { type: string }
+        role: { type: string, enum: [Admin, VIP, Membro] }
+        status: { type: string, enum: [Online, Offline, Banido] }
+        warns: { type: integer }
+        joinDate: { type: string, format: date-time }
+        registrations:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              type: { type: string, enum: [group, bot, channel] }
+
+    TimelineEvent:
+      type: object
+      properties:
+        id: { type: string }
+        type: { type: string, enum: [warn, mute, ban, command, bot, group] }
+        title: { type: string }
+        description: { type: string }
+        date: { type: string, format: date-time }
+
+    StaffNote:
+      type: object
+      properties:
+        id: { type: string }
+        author: { type: string }
+        text: { type: string }
+        date: { type: string, format: date-time }
+
+    ModerationAction:
+      type: object
+      properties:
+        actionType: { type: string, enum: [warn, mute, ban] }
+        reason: { type: string }
+        durationHours: { type: integer, nullable: true }
+
+    # --- SCHEMAS DE VIPS ---
+    VipMember:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        username: { type: string }
+        avatar: { type: string }
+        plan: { type: string, enum: ['R$ 3,00', 'R$ 4,00', 'R$ 5,00'] }
+        divulgacoesDiarias: { type: integer }
+        status: { type: string, enum: [Ativo, Expirando, Inativo] }
+        expiresAt: { type: string, format: date-time }
+        benefits:
+          $ref: '#/components/schemas/VipBenefits'
+
+    VipBenefits:
+      type: object
+      properties:
+        acoesPromocionais: { type: boolean }
+        tagCustomizada: { type: boolean }
+        bypassSlowMode: { type: boolean }
+        falarGrupoFechado: { type: boolean }
+        opinarDecisoes: { type: boolean }
+
+    VipPlanUpdate:
+      type: object
+      properties:
+        plan: { type: string, enum: ['R$ 3,00', 'R$ 4,00', 'R$ 5,00'] }
+        divulgacoesDiarias: { type: integer }
+        expiresAt: { type: string, format: date-time }
+
+    VipBenefitPatch:
+      type: object
+      properties:
+        benefitKey: { type: string, enum: [acoesPromocionais, tagCustomizada, bypassSlowMode, falarGrupoFechado, opinarDecisoes] }
+        isActive: { type: boolean }
+
+    # --- SCHEMAS DE COMUNICADOS ---
+    Announcement:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        excerpt: { type: string }
+        status: { type: string, enum: [Enviado, Agendado, Rascunho] }
+        date: { type: string, format: date-time }
+        views: { type: integer }
+        targets:
+          type: array
+          items: { type: string }
+
+    NewAnnouncement:
+      type: object
+      properties:
+        title: { type: string }
+        content: { type: string }
+        schedule: { type: boolean }
+        scheduleDate: { type: string, format: date-time, nullable: true }
+        targetIds:
+          type: array
+          items: { type: string }
+
+    # --- SCHEMAS DE SORTEIOS ---
+    Giveaway:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        type: { type: string, enum: [Mensal, Especial, Relâmpago] }
+        value: { type: string }
+        description: { type: string }
+        date: { type: string, format: date }
+        status: { type: string, enum: [Ativo, Finalizado] }
+        winnersCount: { type: integer }
+        participants:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string }
+              name: { type: string }
+              username: { type: string }
+              avatar: { type: string }
+              isWinner: { type: boolean }
+
+    NewGiveaway:
+      type: object
+      properties:
+        title: { type: string }
+        date: { type: string, format: date }
+        type: { type: string, enum: [Mensal, Especial, Relâmpago] }
+        value: { type: string }
+        description: { type: string }
+        winnersCount: { type: integer }
+        imageBase64: { type: string }
