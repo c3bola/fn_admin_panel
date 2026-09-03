@@ -1,0 +1,180 @@
+<!-- Fundo escuro (Backdrop) visível apenas no mobile quando o menu está aberto -->
+@if (layoutService.isSidebarOpen()) {
+  <div (click)="layoutService.closeSidebar()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"></div>
+}
+
+<!-- Sidebar com Classes Responsivas e Animação -->
+<aside 
+  [class.translate-x-0]="layoutService.isSidebarOpen()" 
+  [class.-translate-x-full]="!layoutService.isSidebarOpen()"
+  [class.md:ml-0]="layoutService.isSidebarOpen()"
+  [class.md:-ml-[280px]]="!layoutService.isSidebarOpen()"
+  class="fixed md:relative inset-y-0 left-0 z-50 w-[280px] h-full bg-[#0c0817] border-r border-gray-800/50 flex flex-col shrink-0 transition-all duration-300 md:translate-x-0">
+  
+  <!-- Logo com Ícone de Lhama/Estrela -->
+  <div class="flex items-center gap-3 p-6 border-b border-gray-800/40">
+    <div class="h-10 w-10 bg-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-600/20">
+      <lucide-icon [img]="Sparkles" class="h-6 w-6 text-white"></lucide-icon>
+    </div>
+    <div>
+      <h1 class="text-sm font-bold tracking-wide text-white leading-tight">FORTNITE BRASIL</h1>
+      <p class="text-[10px] text-gray-500 font-semibold tracking-wider">PAINEL ADMINISTRATIVO</p>
+    </div>
+  </div>
+
+  <!-- Navegação Scrollável (Sem o evento de click) -->
+  <div class="flex-1 overflow-y-auto px-4 py-6 custom-scrollbar space-y-6">
+    
+    <!-- Link Principal -->
+    <div>
+     <a routerLink="/admin" routerLinkActive="bg-purple-600/20 text-purple-400 border-purple-600/30" [routerLinkActiveOptions]="{exact: true}" class="flex items-center gap-3 px-4 py-3 rounded-xl border border-transparent text-gray-400 hover:text-white transition-all">
+        <lucide-icon [img]="Home" class="h-5 w-5"></lucide-icon>
+        <span class="text-sm font-semibold">Visão Geral</span>
+      </a>
+    </div>
+
+    <!-- Seção BOTS -->
+    <div>
+      <h3 class="text-[10px] text-gray-500 font-bold tracking-widest uppercase mb-3 px-2">BOTS</h3>
+      <ul class="space-y-1.5">
+        <li>
+          <a routerLink="/admin/bots/fortmebot" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors group">
+            <div class="h-7 w-7 bg-purple-600/20 rounded-lg flex items-center justify-center shrink-0">
+              <lucide-icon [img]="Bot" class="h-3.5 w-3.5 text-purple-400"></lucide-icon>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gray-200 leading-tight">FortMeBot</p>
+              <p class="text-[9px] text-gray-500">Engajamento</p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/bots/fortmebot" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors group cursor-pointer">
+            <div class="h-7 w-7 bg-blue-500/20 rounded-lg flex items-center justify-center shrink-0">
+              <lucide-icon [img]="ShieldAlert" class="h-3.5 w-3.5 text-blue-400"></lucide-icon>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gray-200 leading-tight">GuardaOiBot</p>
+              <p class="text-[9px] text-gray-500">Moderação</p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/bots/fortmebot" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors group cursor-pointer">
+            <div class="h-7 w-7 bg-cyan-500/20 rounded-lg flex items-center justify-center shrink-0">
+              <lucide-icon [img]="Bus" class="h-3.5 w-3.5 text-cyan-400"></lucide-icon>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gray-200 leading-tight">BattleBusBot</p>
+              <p class="text-[9px] text-gray-500">Registro de Players</p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/bots/fortmebot"  class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors group cursor-pointer">
+            <div class="h-7 w-7 bg-yellow-500/20 rounded-lg flex items-center justify-center shrink-0">
+              <lucide-icon [img]="ShoppingCart" class="h-3.5 w-3.5 text-yellow-400"></lucide-icon>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gray-200 leading-tight">LojaFortniteBot</p>
+              <p class="text-[9px] text-gray-500">Loja e Alertas</p>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/bots/fortmebot" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors group cursor-pointer">
+            <div class="h-7 w-7 bg-purple-500/20 rounded-lg flex items-center justify-center shrink-0">
+              <lucide-icon [img]="WalletCards" class="h-3.5 w-3.5 text-purple-300"></lucide-icon>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gray-200 leading-tight">FortCardsBot</p>
+              <p class="text-[9px] text-gray-500">Coleção de Cards</p>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Seção COMUNIDADE -->
+    <div>
+      <h3 class="text-[10px] text-gray-500 font-bold tracking-widest uppercase mb-3 px-2">COMUNIDADE</h3>
+      <ul class="space-y-1">
+        <li>
+          <a routerLink="/admin/groups" routerLinkActive="bg-white/10 text-white" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors text-xs font-medium">
+            <lucide-icon [img]="Users" class="h-4 w-4 text-gray-400"></lucide-icon>
+            <span>Grupos</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/members" routerLinkActive="bg-white/10 text-white" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors text-xs font-medium">
+            <lucide-icon [img]="Users" class="h-4 w-4 text-gray-400"></lucide-icon>
+            <span>Membros</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/vip" routerLinkActive="bg-white/10 text-white" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors text-xs font-medium cursor-pointer">
+            <lucide-icon [img]="Star" class="h-4 w-4 text-gray-400"></lucide-icon>
+            <span>Clubinho (VIPs)</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/announcements" routerLinkActive="bg-white/10 text-white" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors text-xs font-medium cursor-pointer">
+            <lucide-icon [img]="Megaphone" class="h-4 w-4 text-gray-400"></lucide-icon>
+            <span>Avisos e Comunicados</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/giveaways" routerLinkActive="bg-white/10 text-white" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors text-xs font-medium cursor-pointer">
+            <lucide-icon [img]="Gift" class="h-4 w-4 text-gray-400"></lucide-icon>
+            <span>Sorteios</span>
+          </a>
+        </li>
+        <li>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors text-xs font-medium cursor-pointer">
+            <lucide-icon [img]="HelpCircle" class="h-4 w-4 text-gray-400"></lucide-icon>
+            <span>Suporte</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Seção SISTEMA -->
+    <div>
+      <h3 class="text-[10px] text-gray-500 font-bold tracking-widest uppercase mb-3 px-2">SISTEMA</h3>
+      <ul class="space-y-1">
+        <li>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors text-xs font-medium cursor-pointer">
+            <lucide-icon [img]="Link" class="h-4 w-4 text-gray-400"></lucide-icon>
+            <span>Integrações</span>
+          </a>
+        </li>
+        <li>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors text-xs font-medium cursor-pointer">
+            <lucide-icon [img]="FileText" class="h-4 w-4 text-gray-400"></lucide-icon>
+            <span>Logs</span>
+          </a>
+        </li>
+        <li>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors text-xs font-medium cursor-pointer">
+            <lucide-icon [img]="Settings" class="h-4 w-4 text-gray-400"></lucide-icon>
+            <span>Configurações</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Footer da Sidebar -->
+  <div class="p-4 border-t border-gray-800/40 bg-[#080510]">
+    <div class="flex items-center gap-3 px-3 py-2.5 bg-white/[0.02] rounded-xl border border-gray-800/50">
+      <div class="h-8 w-8 bg-purple-900/40 rounded-lg flex items-center justify-center border border-purple-500/20">
+        <lucide-icon [img]="Star" class="h-4 w-4 text-purple-400"></lucide-icon>
+      </div>
+      <div>
+        <p class="text-xs font-semibold text-gray-200">fortcards.me</p>
+        <p class="text-[10px] text-gray-500">v1.0.0</p>
+      </div>
+    </div>
+  </div>
+</aside>
