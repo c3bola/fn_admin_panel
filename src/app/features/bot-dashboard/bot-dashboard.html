@@ -1,0 +1,346 @@
+<div class="p-6 max-w-[1600px] mx-auto space-y-6">
+
+  <!-- BANNER BOT -->
+  <div class="relative w-full h-[220px] rounded-2xl overflow-hidden border border-gray-800/50">
+    <img 
+      src="assets/image/header/fortme_header.png" 
+      alt="FortMeBot Workshop" 
+      class="absolute inset-0 w-full h-full object-cover object-center"
+    >
+    <div class="absolute inset-0 bg-gradient-to-r from-[#06040e]/80 via-transparent to-[#06040e]/80"></div>
+  </div>
+
+  <!-- GRID DE ESTATÍSTICAS COM SPARKLINES -->
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+    
+    <!-- Card 1: Comandos -->
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-xl p-4 flex flex-col justify-between overflow-hidden">
+      <div class="flex items-start gap-3">
+        <div class="h-10 w-10 bg-purple-600/20 text-purple-400 rounded-xl flex items-center justify-center shrink-0">
+          <lucide-icon [img]="MessageSquare" class="h-5 w-5"></lucide-icon>
+        </div>
+        <div>
+          <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Comandos Executados</p>
+          <div class="flex items-baseline gap-2 mt-0.5">
+            <h3 class="text-2xl font-bold text-white">15.670</h3>
+            <span class="text-[11px] font-bold text-green-500 flex items-center">
+              <lucide-icon [img]="ArrowUp" class="h-3 w-3 mr-0.5"></lucide-icon> 8,6%
+            </span>
+          </div>
+          <p class="text-[10px] text-gray-500">em relação a ontem</p>
+        </div>
+      </div>
+      <div #sparkline1 class="h-10 w-full mt-2"></div>
+    </div>
+
+    <!-- Card 2: Usuários Únicos -->
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-xl p-4 flex flex-col justify-between overflow-hidden">
+      <div class="flex items-start gap-3">
+        <div class="h-10 w-10 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center shrink-0">
+          <lucide-icon [img]="Users" class="h-5 w-5"></lucide-icon>
+        </div>
+        <div>
+          <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Usuários Únicos</p>
+          <div class="flex items-baseline gap-2 mt-0.5">
+            <h3 class="text-2xl font-bold text-white">4.812</h3>
+            <span class="text-[11px] font-bold text-green-500 flex items-center">
+              <lucide-icon [img]="ArrowUp" class="h-3 w-3 mr-0.5"></lucide-icon> 9,3%
+            </span>
+          </div>
+          <p class="text-[10px] text-gray-500">em relação a ontem</p>
+        </div>
+      </div>
+      <div #sparkline2 class="h-10 w-full mt-2"></div>
+    </div>
+
+    <!-- Card 3: Interações -->
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-xl p-4 flex flex-col justify-between overflow-hidden">
+      <div class="flex items-start gap-3">
+        <div class="h-10 w-10 bg-cyan-500/20 text-cyan-400 rounded-xl flex items-center justify-center shrink-0">
+          <lucide-icon [img]="Crosshair" class="h-5 w-5"></lucide-icon>
+        </div>
+        <div>
+          <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest leading-tight">Interações (Duelos + Votos)</p>
+          <div class="flex items-baseline gap-2 mt-0.5">
+            <h3 class="text-2xl font-bold text-white">2.341</h3>
+            <span class="text-[11px] font-bold text-green-500 flex items-center">
+              <lucide-icon [img]="ArrowUp" class="h-3 w-3 mr-0.5"></lucide-icon> 7,1%
+            </span>
+          </div>
+          <p class="text-[10px] text-gray-500">em relação a ontem</p>
+        </div>
+      </div>
+      <div #sparkline3 class="h-10 w-full mt-2"></div>
+    </div>
+
+    <!-- Card 4: Love Points -->
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-xl p-4 flex flex-col justify-between overflow-hidden">
+      <div class="flex items-start gap-3">
+        <div class="h-10 w-10 bg-pink-500/20 text-pink-400 rounded-xl flex items-center justify-center shrink-0">
+          <lucide-icon [img]="Heart" class="h-5 w-5"></lucide-icon>
+        </div>
+        <div>
+          <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Love Points Gerados</p>
+          <div class="flex items-baseline gap-2 mt-0.5">
+            <h3 class="text-2xl font-bold text-white">8.752</h3>
+            <span class="text-[11px] font-bold text-green-500 flex items-center">
+              <lucide-icon [img]="ArrowUp" class="h-3 w-3 mr-0.5"></lucide-icon> 12,4%
+            </span>
+          </div>
+          <p class="text-[10px] text-gray-500">em relação a ontem</p>
+        </div>
+      </div>
+      <div #sparkline4 class="h-10 w-full mt-2"></div>
+    </div>
+
+    <!-- Card 5: Tempo Médio -->
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-xl p-4 flex flex-col justify-between overflow-hidden">
+      <div class="flex items-start gap-3">
+        <div class="h-10 w-10 bg-purple-600/20 text-purple-300 rounded-xl flex items-center justify-center shrink-0">
+          <lucide-icon [img]="Clock" class="h-5 w-5"></lucide-icon>
+        </div>
+        <div>
+          <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Tempo Médio de Resposta</p>
+          <div class="flex items-baseline gap-2 mt-0.5">
+            <h3 class="text-2xl font-bold text-white">0,68s</h3>
+          </div>
+          <p class="text-[10px] text-green-500 font-semibold flex items-center">
+            <lucide-icon [img]="ArrowDown" class="h-3 w-3 mr-0.5"></lucide-icon> 15,2% mais rápido
+          </p>
+        </div>
+      </div>
+      <div #sparkline5 class="h-10 w-full mt-2"></div>
+    </div>
+
+  </div>
+
+  <!-- SEÇÃO DO MEIO: RECURSOS, ATIVIDADES E DONUT CHART -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    
+    <!-- Painel 1: Recursos Mais Utilizados -->
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-xl p-5 flex flex-col justify-between">
+      <div class="flex justify-between items-center mb-4 border-b border-gray-800/40 pb-2">
+        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase">Recursos Mais Utilizados</h3>
+        <a href="#" class="text-xs text-purple-400 hover:text-purple-300">Ver todos</a>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between text-xs font-semibold mb-1">
+            <span class="text-gray-200">1. LoveMe</span>
+            <span class="text-gray-400">1.283 usos</span>
+          </div>
+          <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+            <div class="bg-purple-600 h-full rounded-full" style="width: 85%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between text-xs font-semibold mb-1">
+            <span class="text-gray-200">2. TryHardMe</span>
+            <span class="text-gray-400">983 usos</span>
+          </div>
+          <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+            <div class="bg-blue-500 h-full rounded-full" style="width: 65%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between text-xs font-semibold mb-1">
+            <span class="text-gray-200">3. BananaMe</span>
+            <span class="text-gray-400">846 usos</span>
+          </div>
+          <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+            <div class="bg-yellow-500 h-full rounded-full" style="width: 55%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between text-xs font-semibold mb-1">
+            <span class="text-gray-200">4. Elementais</span>
+            <span class="text-gray-400">742 usos</span>
+          </div>
+          <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+            <div class="bg-cyan-500 h-full rounded-full" style="width: 48%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between text-xs font-semibold mb-1">
+            <span class="text-gray-200">5. Coleção</span>
+            <span class="text-gray-400">561 usos</span>
+          </div>
+          <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden">
+            <div class="bg-pink-500 h-full rounded-full" style="width: 38%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Painel 2: Atividades Recentes -->
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-xl p-5">
+      <div class="flex justify-between items-center mb-4 border-b border-gray-800/40 pb-2">
+        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase">Atividades Recentes</h3>
+        <a href="#" class="text-xs text-purple-400 hover:text-purple-300">Ver todas</a>
+      </div>
+
+      <ul class="space-y-3.5">
+        <li class="flex items-start gap-3">
+          <div class="h-7 w-7 bg-purple-600/20 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+            <lucide-icon [img]="Sparkles" class="h-3.5 w-3.5 text-purple-400"></lucide-icon>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-start">
+              <p class="text-xs font-bold text-gray-200 truncate">Coleção completada</p>
+              <span class="text-[10px] text-gray-500 shrink-0">2m atrás</span>
+            </div>
+            <p class="text-[11px] text-gray-400"><span class="text-blue-400">@PlayerBR</span> completou a coleção T-27</p>
+          </div>
+        </li>
+
+        <li class="flex items-start gap-3">
+          <div class="h-7 w-7 bg-emerald-500/20 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+            <lucide-icon [img]="Swords" class="h-3.5 w-3.5 text-emerald-400"></lucide-icon>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-start">
+              <p class="text-xs font-bold text-gray-200 truncate">Duelo criado</p>
+              <span class="text-[10px] text-gray-500 shrink-0">5m atrás</span>
+            </div>
+            <p class="text-[11px] text-gray-400"><span class="text-blue-400">@NinjaBR</span> desafiou <span class="text-blue-400">@Darkness</span></p>
+          </div>
+        </li>
+
+        <li class="flex items-start gap-3">
+          <div class="h-7 w-7 bg-pink-500/20 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+            <lucide-icon [img]="Flame" class="h-3.5 w-3.5 text-pink-400"></lucide-icon>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-start">
+              <p class="text-xs font-bold text-gray-200 truncate">Card raro obtido</p>
+              <span class="text-[10px] text-gray-500 shrink-0">8m atrás</span>
+            </div>
+            <p class="text-[11px] text-gray-400"><span class="text-blue-400">@PlayerBR</span> obteve o card Raven (Épico)</p>
+          </div>
+        </li>
+
+        <li class="flex items-start gap-3">
+          <div class="h-7 w-7 bg-cyan-500/20 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+            <lucide-icon [img]="Vote" class="h-3.5 w-3.5 text-cyan-400"></lucide-icon>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex justify-between items-start">
+              <p class="text-xs font-bold text-gray-200 truncate">Votação encerrada</p>
+              <span class="text-[10px] text-gray-500 shrink-0">12m atrás</span>
+            </div>
+            <p class="text-[11px] text-gray-400 truncate">Tema "Melhor Skin do Capítulo 5" encerrada</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Painel 3: Uso de Comandos (Donut Chart) -->
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-xl p-5 flex flex-col justify-between">
+      <div class="flex justify-between items-center mb-2 border-b border-gray-800/40 pb-2">
+        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase">Uso de Comandos (7 Dias)</h3>
+        <a href="#" class="text-xs text-purple-400 hover:text-purple-300">Ver relatório</a>
+      </div>
+
+      <div class="flex items-center gap-4 flex-1">
+        <!-- Gráfico Rosca -->
+        <div class="relative w-40 h-40 shrink-0">
+          <div #donutChart class="w-full h-full"></div>
+          <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            <span class="text-sm font-bold text-white">15.670</span>
+            <span class="text-[9px] text-gray-400">Total</span>
+          </div>
+        </div>
+
+        <!-- Legenda -->
+        <div class="space-y-1.5 text-xs flex-1">
+          <div class="flex justify-between"><span class="text-purple-400 font-medium">/loveme</span><span class="text-gray-400">28% (4.384)</span></div>
+          <div class="flex justify-between"><span class="text-blue-400 font-medium">/tryhardme</span><span class="text-gray-400">21% (3.287)</span></div>
+          <div class="flex justify-between"><span class="text-yellow-400 font-medium">/bananame</span><span class="text-gray-400">18% (2.819)</span></div>
+          <div class="flex justify-between"><span class="text-cyan-400 font-medium">/elementais</span><span class="text-gray-400">16% (2.506)</span></div>
+          <div class="flex justify-between"><span class="text-pink-400 font-medium">/coleção</span><span class="text-gray-400">12% (1.874)</span></div>
+          <div class="flex justify-between"><span class="text-indigo-400 font-medium">Outros</span><span class="text-gray-400">5% (800)</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SEÇÃO INFERIOR: GRÁFICO DE BARRAS E RESUMO -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    
+    <!-- Coluna 1 & 2: Barras Múltiplas -->
+    <div class="lg:col-span-2 bg-[#0c0817] border border-gray-800/50 rounded-xl p-5">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase">Uso dos Recursos (7 Dias)</h3>
+        <a href="#" class="text-xs text-purple-400 hover:text-purple-300">Ver relatório</a>
+      </div>
+      <div #barChart class="h-[240px] w-full"></div>
+    </div>
+
+    <!-- Coluna 3: Resumo Rápido -->
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-xl p-5 flex flex-col justify-between">
+      <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-4">Resumo Rápido (7 Dias)</h3>
+
+      <div class="grid grid-cols-2 gap-3 flex-1">
+        <div class="bg-white/[0.02] border border-gray-800/40 rounded-xl p-3 flex flex-col justify-between">
+          <div class="flex items-center gap-2">
+            <div class="h-7 w-7 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+              <lucide-icon [img]="Trophy" class="h-3.5 w-3.5 text-yellow-400"></lucide-icon>
+            </div>
+            <span class="text-xl font-bold text-white">125</span>
+          </div>
+          <p class="text-[11px] text-gray-400 mt-2">Duelos realizados</p>
+          <span class="text-[10px] text-green-500 font-bold flex items-center mt-0.5">
+            <lucide-icon [img]="ArrowUp" class="h-3 w-3 mr-0.5"></lucide-icon> 14%
+          </span>
+        </div>
+
+        <div class="bg-white/[0.02] border border-gray-800/40 rounded-xl p-3 flex flex-col justify-between">
+          <div class="flex items-center gap-2">
+            <div class="h-7 w-7 bg-purple-600/20 rounded-lg flex items-center justify-center">
+              <lucide-icon [img]="Vote" class="h-3.5 w-3.5 text-purple-400"></lucide-icon>
+            </div>
+            <span class="text-xl font-bold text-white">8</span>
+          </div>
+          <p class="text-[11px] text-gray-400 mt-2">Votações criadas</p>
+          <span class="text-[10px] text-green-500 font-bold flex items-center mt-0.5">
+            <lucide-icon [img]="ArrowUp" class="h-3 w-3 mr-0.5"></lucide-icon> 33%
+          </span>
+        </div>
+
+        <div class="bg-white/[0.02] border border-gray-800/40 rounded-xl p-3 flex flex-col justify-between">
+          <div class="flex items-center gap-2">
+            <div class="h-7 w-7 bg-pink-500/20 rounded-lg flex items-center justify-center">
+              <lucide-icon [img]="Flame" class="h-3.5 w-3.5 text-pink-400"></lucide-icon>
+            </div>
+            <span class="text-xl font-bold text-white">561</span>
+          </div>
+          <p class="text-[11px] text-gray-400 mt-2">Streaks ativos</p>
+          <span class="text-[10px] text-green-500 font-bold flex items-center mt-0.5">
+            <lucide-icon [img]="ArrowUp" class="h-3 w-3 mr-0.5"></lucide-icon> 9%
+          </span>
+        </div>
+
+        <div class="bg-white/[0.02] border border-gray-800/40 rounded-xl p-3 flex flex-col justify-between">
+          <div class="flex items-center gap-2">
+            <div class="h-7 w-7 bg-purple-600/20 rounded-lg flex items-center justify-center">
+              <lucide-icon [img]="Sparkles" class="h-3.5 w-3.5 text-purple-400"></lucide-icon>
+            </div>
+            <span class="text-xl font-bold text-white">402</span>
+          </div>
+          <p class="text-[11px] text-gray-400 mt-2">Cards gerados</p>
+          <span class="text-[10px] text-green-500 font-bold flex items-center mt-0.5">
+            <lucide-icon [img]="ArrowUp" class="h-3 w-3 mr-0.5"></lucide-icon> 11%
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
