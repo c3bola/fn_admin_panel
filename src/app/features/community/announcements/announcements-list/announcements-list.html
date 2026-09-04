@@ -1,0 +1,261 @@
+<div class="p-6 max-w-[1600px] mx-auto space-y-6 relative">
+
+  <!-- BREADCRUMB E AÇÕES -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-gray-500">
+      <lucide-icon [img]="Menu" class="h-4 w-4 hidden md:block"></lucide-icon>
+      <span>Comunidade</span> <span class="text-gray-700">/</span>
+      <span class="text-purple-400">Avisos e Comunicados</span>
+    </div>
+
+    <button (click)="openModal()" class="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-5 py-2.5 rounded-lg text-xs font-bold transition-colors shadow-lg shadow-purple-600/20">
+      <lucide-icon [img]="Plus" class="h-4 w-4"></lucide-icon> Novo Comunicado
+    </button>
+  </div>
+
+  <!-- ESTATÍSTICAS RÁPIDAS -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 flex items-center gap-4">
+      <div class="h-12 w-12 bg-purple-600/20 text-purple-400 rounded-xl flex items-center justify-center shrink-0">
+        <lucide-icon [img]="Megaphone" class="h-6 w-6"></lucide-icon>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Avisos Enviados</p>
+        <h3 class="text-2xl font-bold text-white">{{ stats.totalSent }}</h3>
+      </div>
+    </div>
+    
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 flex items-center gap-4">
+      <div class="h-12 w-12 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center shrink-0">
+        <lucide-icon [img]="Eye" class="h-6 w-6"></lucide-icon>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Alcance Total</p>
+        <h3 class="text-2xl font-bold text-white">{{ stats.totalReach }}</h3>
+      </div>
+    </div>
+
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 flex items-center gap-4">
+      <div class="h-12 w-12 bg-orange-500/20 text-orange-500 rounded-xl flex items-center justify-center shrink-0">
+        <lucide-icon [img]="Clock" class="h-6 w-6"></lucide-icon>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Agendados</p>
+        <h3 class="text-2xl font-bold text-white">{{ stats.scheduled }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTÓRICO DE COMUNICADOS -->
+  <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl overflow-hidden mt-6 flex flex-col">
+    <!-- Header Lista -->
+    <div class="p-4 border-b border-gray-800/60 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <h3 class="text-sm font-bold text-white uppercase tracking-wider">Histórico de Envios</h3>
+      <div class="flex items-center gap-2">
+        <div class="relative">
+          <lucide-icon [img]="Search" class="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-gray-500"></lucide-icon>
+          <input type="text" placeholder="Buscar comunicado..." class="w-full md:w-64 bg-[#06040e] border border-gray-800 rounded-lg pl-9 pr-4 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors">
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Cards (Em vez de tabela para acomodar bem as tags de destino) -->
+    <div class="divide-y divide-gray-800/40">
+      @for (ann of announcements(); track ann.id) {
+        <div class="p-5 hover:bg-white/[0.02] transition-colors flex flex-col xl:flex-row gap-6 justify-between items-start xl:items-center group">
+          
+          <div class="flex-1 min-w-0 space-y-2">
+            <div class="flex items-center gap-3">
+              <h4 class="text-sm font-bold text-gray-200 truncate">{{ ann.title }}</h4>
+              
+              @if (ann.status === 'Enviado') {
+                <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-green-400 bg-green-500/10 px-2 py-0.5 rounded border border-green-500/20">
+                  <lucide-icon [img]="CheckCircle" class="h-3 w-3"></lucide-icon> Enviado
+                </span>
+              } @else if (ann.status === 'Agendado') {
+                <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20">
+                  <lucide-icon [img]="Clock" class="h-3 w-3"></lucide-icon> Agendado
+                </span>
+              } @else {
+                <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-gray-400 bg-gray-500/10 px-2 py-0.5 rounded border border-gray-500/20">
+                  <lucide-icon [img]="FileText" class="h-3 w-3"></lucide-icon> Rascunho
+                </span>
+              }
+            </div>
+            
+            <p class="text-xs text-gray-500 truncate">{{ ann.excerpt }}</p>
+            
+            <!-- Ativos de Destino -->
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <span class="text-[10px] font-bold text-gray-600 uppercase">Destinos:</span>
+              @for (target of ann.targets; track target) {
+                <span class="px-1.5 py-0.5 bg-[#06040e] border border-gray-800 rounded text-[10px] text-gray-400">{{ target }}</span>
+              }
+            </div>
+          </div>
+
+          <!-- Métricas e Ações -->
+          <div class="flex items-center gap-8 xl:w-72 shrink-0">
+            <div>
+              <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Data</p>
+              <p class="text-xs text-gray-300 font-mono flex items-center gap-1.5"><lucide-icon [img]="Calendar" class="h-3.5 w-3.5 text-gray-500"></lucide-icon> {{ ann.date }}</p>
+            </div>
+            <div>
+              <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-1">Visualizações</p>
+              <p class="text-xs text-gray-300 font-mono flex items-center gap-1.5"><lucide-icon [img]="Eye" class="h-3.5 w-3.5 text-gray-500"></lucide-icon> {{ ann.views | number }}</p>
+            </div>
+          </div>
+          
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- MODAL: NOVO COMUNICADO -->
+  @if (isModalOpen()) {
+    <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+      <div class="bg-[#130d24] border border-gray-800 rounded-2xl w-full max-w-4xl shadow-2xl flex flex-col my-8 h-auto max-h-[90vh]">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-800/60 bg-[#0c0817] shrink-0">
+          <div class="flex items-center gap-3">
+            <div class="h-8 w-8 bg-purple-600/20 text-purple-400 rounded-lg flex items-center justify-center">
+              <lucide-icon [img]="Megaphone" class="h-4 w-4"></lucide-icon>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white leading-tight">Novo Comunicado</h3>
+              <p class="text-[10px] text-gray-400">Envie mensagens em massa para seus ativos.</p>
+            </div>
+          </div>
+          <button (click)="closeModal()" class="text-gray-500 hover:text-white transition-colors">
+            <lucide-icon [img]="X" class="h-5 w-5"></lucide-icon>
+          </button>
+        </div>
+
+        <!-- Body (Com scroll interno) -->
+        <div class="flex flex-col md:flex-row flex-1 overflow-hidden">
+          
+          <!-- Coluna Esquerda: Mensagem -->
+          <div class="flex-1 p-6 border-r border-gray-800/60 overflow-y-auto custom-scrollbar space-y-5">
+            
+            <div>
+              <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Título (Apenas para controle interno)</label>
+              <input type="text" [(ngModel)]="newAnnouncement.title" placeholder="Ex: Aviso de Manutenção - Agosto" class="w-full bg-[#06040e] border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors">
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest">Conteúdo da Mensagem</label>
+                <span class="text-[9px] text-gray-500 font-mono">Suporta HTML/Telegram</span>
+              </div>
+              <!-- Reutilizando o estilo do text-editor simplificado -->
+              <div class="border border-gray-800 rounded-lg overflow-hidden bg-[#06040e]">
+                <textarea 
+                  [(ngModel)]="newAnnouncement.content"
+                  rows="8" 
+                  class="w-full bg-transparent p-4 text-sm text-gray-300 focus:outline-none resize-none custom-scrollbar font-mono leading-relaxed"
+                  placeholder="Escreva a mensagem que será enviada aos usuários..."></textarea>
+              </div>
+            </div>
+
+            <!-- Opções de Agendamento -->
+            <div class="bg-white/[0.02] border border-gray-800/60 rounded-xl p-4">
+              <label class="flex items-center justify-between cursor-pointer group mb-3">
+                <div class="flex items-center gap-3">
+                  <div class="h-8 w-8 bg-orange-500/20 text-orange-400 rounded-lg flex items-center justify-center">
+                    <lucide-icon [img]="Clock" class="h-4 w-4"></lucide-icon>
+                  </div>
+                  <div>
+                    <span class="text-xs font-bold text-gray-200 group-hover:text-white transition-colors">Agendar Envio</span>
+                    <p class="text-[10px] text-gray-500">Deixe marcado para disparar no futuro.</p>
+                  </div>
+                </div>
+                <!-- Toggle Simples -->
+                <div (click)="newAnnouncement.schedule = !newAnnouncement.schedule" [class]="newAnnouncement.schedule ? 'w-10 h-5 bg-orange-500 rounded-full relative transition-colors' : 'w-10 h-5 bg-gray-700 rounded-full relative transition-colors'">
+                  <div [class]="newAnnouncement.schedule ? 'absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full transition-all' : 'absolute left-1 top-0.5 h-4 w-4 bg-gray-400 rounded-full transition-all'"></div>
+                </div>
+              </label>
+
+              @if (newAnnouncement.schedule) {
+                <div class="pt-3 border-t border-gray-800/60 mt-3 animate-fade-in">
+                  <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Data e Hora</label>
+                  <input type="datetime-local" [(ngModel)]="newAnnouncement.scheduleDate" class="w-full bg-[#06040e] border border-gray-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-orange-500 transition-colors [color-scheme:dark]">
+                </div>
+              }
+            </div>
+
+          </div>
+
+          <!-- Coluna Direita: Seleção de Destino -->
+          <div class="w-full md:w-80 p-6 bg-[#0c0817] overflow-y-auto custom-scrollbar flex flex-col">
+            <div class="flex items-center justify-between mb-4">
+              <label class="text-xs font-bold text-gray-400 uppercase tracking-widest">Onde Enviar?</label>
+              <span class="text-[10px] bg-purple-600/20 text-purple-400 px-2 py-0.5 rounded font-bold">{{ selectedAssetsCount }} selecionados</span>
+            </div>
+
+            <!-- Ações rápidas de seleção -->
+            <div class="flex items-center gap-2 mb-4">
+              <button (click)="selectAllAssets()" class="text-[10px] font-semibold text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 px-2 py-1 rounded transition-colors flex-1">Todos</button>
+              <button (click)="selectAllAssets('group')" class="text-[10px] font-semibold text-purple-400 hover:text-purple-300 bg-purple-600/10 hover:bg-purple-600/20 px-2 py-1 rounded transition-colors flex-1">Grupos</button>
+              <button (click)="selectAllAssets('bot')" class="text-[10px] font-semibold text-blue-400 hover:text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 px-2 py-1 rounded transition-colors flex-1">Bots</button>
+            </div>
+
+            <!-- Lista de Ativos (Checkboxes) -->
+            <div class="space-y-2 flex-1">
+              @for (asset of assets(); track asset.id) {
+                <label class="flex items-center justify-between p-3 bg-[#06040e] border rounded-lg cursor-pointer transition-colors"
+                       [class.border-purple-500]="asset.selected" [class.bg-purple-600]="asset.selected && false" [class.border-gray-800]="!asset.selected"
+                       (click)="toggleAssetSelection(asset.id); $event.preventDefault()">
+                  
+                  <div class="flex items-center gap-3 min-w-0">
+                    <!-- Ícone Dinâmico -->
+                    @if (asset.type === 'group') {
+                      <lucide-icon [img]="Users" class="h-4 w-4 text-purple-400 shrink-0"></lucide-icon>
+                    } @else if (asset.type === 'bot') {
+                      <lucide-icon [img]="Bot" class="h-4 w-4 text-blue-400 shrink-0"></lucide-icon>
+                    } @else {
+                      <lucide-icon [img]="MessageSquare" class="h-4 w-4 text-yellow-500 shrink-0"></lucide-icon>
+                    }
+                    <span class="text-xs font-semibold text-gray-200 truncate select-none">{{ asset.name }}</span>
+                  </div>
+
+                  <!-- Check Customizado -->
+                  @if (asset.selected) {
+                    <lucide-icon [img]="CheckSquare" class="h-4 w-4 text-purple-500 shrink-0"></lucide-icon>
+                  } @else {
+                    <lucide-icon [img]="Square" class="h-4 w-4 text-gray-600 shrink-0"></lucide-icon>
+                  }
+                </label>
+              }
+            </div>
+            
+            <div class="mt-4 p-3 bg-purple-600/10 border border-purple-500/20 rounded-lg text-[10px] text-purple-300 leading-relaxed">
+              <strong>Nota:</strong> Envios para Bots usarão o recurso de Broadcast (mensagem privada para todos os usuários).
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t border-gray-800/60 flex justify-end gap-3 bg-[#0c0817] shrink-0">
+          <button (click)="closeModal()" class="px-4 py-2 text-xs font-semibold text-gray-400 hover:text-white transition-colors">
+            Cancelar
+          </button>
+          
+          <button 
+            [disabled]="selectedAssetsCount === 0 || !newAnnouncement.content"
+            (click)="sendAnnouncement()" 
+            class="flex items-center gap-2 px-6 py-2 rounded-lg text-xs font-bold transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            [class]="newAnnouncement.schedule ? 'bg-orange-500 hover:bg-orange-600 text-orange-950 shadow-orange-500/20' : 'bg-purple-600 hover:bg-purple-700 text-white shadow-purple-600/20'">
+            
+            @if (newAnnouncement.schedule) {
+              <lucide-icon [img]="Clock" class="h-4 w-4"></lucide-icon> Agendar Envio
+            } @else {
+              <lucide-icon [img]="Send" class="h-4 w-4"></lucide-icon> Disparar Agora
+            }
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+</div>
