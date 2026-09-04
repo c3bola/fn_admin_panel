@@ -1,0 +1,128 @@
+<div class="p-6 max-w-[1600px] mx-auto space-y-6">
+
+  <!-- BREADCRUMB -->
+  <div class="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-2">
+    <span>Comunidade</span> <span class="text-gray-700">/</span>
+    <a routerLink="/admin/members" class="hover:text-gray-300 transition-colors">Membros</a> <span class="text-gray-700">/</span>
+    <span class="text-purple-400">{{ member.username }}</span>
+  </div>
+
+  <!-- HEADER DO USUÁRIO -->
+  <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-6 relative flex flex-col md:flex-row items-center md:items-start gap-6">
+    <a routerLink="/admin/members" class="absolute top-5 left-5 text-gray-400 hover:text-white flex items-center gap-2 text-xs font-semibold">
+      <lucide-icon [img]="ArrowLeft" class="h-4 w-4"></lucide-icon> Voltar
+    </a>
+    
+    <div class="mt-8 md:mt-0 relative shrink-0">
+      <img [src]="member.avatar" class="h-24 w-24 rounded-full border-4 border-gray-800">
+      <div class="absolute bottom-1 right-1 h-5 w-5 bg-green-500 border-4 border-[#0c0817] rounded-full"></div>
+    </div>
+
+    <div class="flex-1 text-center md:text-left mt-2 md:mt-0">
+      <div class="flex flex-col md:flex-row md:items-center gap-3 mb-2">
+        <h2 class="text-2xl font-bold text-white">{{ member.name }}</h2>
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded-md text-[10px] font-bold uppercase tracking-wider w-fit mx-auto md:mx-0">
+          <lucide-icon [img]="Star" class="h-3 w-3"></lucide-icon> {{ member.role }}
+        </span>
+      </div>
+      <p class="text-sm text-gray-400 font-mono mb-4">{{ member.username }} <span class="text-gray-700 mx-2">•</span> ID: {{ member.id }}</p>
+      
+      <div class="flex flex-wrap justify-center md:justify-start gap-6 text-xs">
+        <div><p class="text-[10px] text-gray-500 mb-1">Membro desde</p><p class="text-gray-300 font-mono">{{ member.joinDate }}</p></div>
+        <div><p class="text-[10px] text-gray-500 mb-1">Warns</p><p class="text-yellow-500 font-bold font-mono">{{ member.warns }} / 3</p></div>
+        <div>
+          <p class="text-[10px] text-gray-500 mb-1">Ativo em</p>
+          <div class="flex gap-1">
+            <span class="bg-purple-600/20 text-purple-400 p-1 rounded" title="Grupo Principal"><lucide-icon [img]="Users" class="h-3.5 w-3.5"></lucide-icon></span>
+            <span class="bg-blue-500/20 text-blue-400 p-1 rounded" title="Bot"><lucide-icon [img]="Bot" class="h-3.5 w-3.5"></lucide-icon></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="flex flex-col gap-2 w-full md:w-auto">
+      <button class="flex items-center justify-center gap-2 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-500 border border-yellow-500/20 px-4 py-2 rounded-lg text-xs font-semibold transition-colors">
+        <lucide-icon [img]="AlertTriangle" class="h-3.5 w-3.5"></lucide-icon> Aplicar Warn
+      </button>
+      <button class="flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 px-4 py-2 rounded-lg text-xs font-semibold transition-colors">
+        <lucide-icon [img]="Ban" class="h-3.5 w-3.5"></lucide-icon> Banir Usuário
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTEÚDO: TIMELINE E OBSERVAÇÕES -->
+  <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+    
+    <!-- Esquerda: Timeline de Histórico -->
+    <div class="xl:col-span-2 bg-[#0c0817] border border-gray-800/50 rounded-2xl p-6">
+      <div class="flex items-center gap-2 mb-8">
+        <lucide-icon [img]="Clock" class="h-5 w-5 text-purple-400"></lucide-icon>
+        <h3 class="text-sm font-bold text-white uppercase tracking-wider">Histórico na Comunidade</h3>
+      </div>
+
+      <div class="relative border-l-2 border-gray-800 ml-4 space-y-8 pb-4">
+        
+        @for (event of timeline; track event.title) {
+          <div class="relative pl-8">
+            <!-- Ponto da Timeline -->
+            <div class="absolute -left-[17px] top-0.5 h-8 w-8 rounded-full border-2 bg-[#0c0817] flex items-center justify-center {{ event.border }}">
+              <div class="h-6 w-6 rounded-full flex items-center justify-center {{ event.bg }} {{ event.color }}">
+                <lucide-icon [img]="event.icon" class="h-3.5 w-3.5"></lucide-icon>
+              </div>
+            </div>
+            
+            <!-- Conteúdo do Evento -->
+            <div>
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-1">
+                <h4 class="text-sm font-bold text-gray-200">{{ event.title }}</h4>
+                <span class="text-[10px] text-gray-500 font-mono">{{ event.date }}</span>
+              </div>
+              <p class="text-xs text-gray-400 leading-relaxed">{{ event.desc }}</p>
+            </div>
+          </div>
+        }
+
+      </div>
+    </div>
+
+    <!-- Direita: Observações da Staff -->
+    <div class="xl:col-span-1 space-y-6">
+      
+      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 flex flex-col h-full">
+        <div class="flex items-center gap-2 mb-6">
+          <lucide-icon [img]="FileText" class="h-4 w-4 text-blue-400"></lucide-icon>
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider">Observações da Staff</h3>
+        </div>
+
+        <!-- Adicionar Nova Observação -->
+        <div class="mb-6">
+          <textarea 
+            [(ngModel)]="newNote"
+            rows="3" 
+            class="w-full bg-[#06040e] border border-gray-800 rounded-lg p-3 text-xs text-gray-300 focus:outline-none focus:border-blue-500 transition-colors custom-scrollbar resize-none mb-2"
+            placeholder="Adicione uma nota visível apenas para admins..."></textarea>
+          <button (click)="addNote()" class="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg text-xs font-semibold transition-colors">
+            <lucide-icon [img]="Plus" class="h-3.5 w-3.5"></lucide-icon> Salvar Observação
+          </button>
+        </div>
+
+        <!-- Lista de Observações -->
+        <div class="flex-1 space-y-3 overflow-y-auto custom-scrollbar max-h-[300px] pr-2">
+          @for (note of notes(); track note.date) {
+            <div class="bg-[#06040e] border border-gray-800 rounded-lg p-3 relative group">
+              <button class="absolute top-2 right-2 text-gray-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                <lucide-icon [img]="Trash2" class="h-3 w-3"></lucide-icon>
+              </button>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-[10px] font-bold text-blue-400">{{ note.author }}</span>
+                <span class="text-[9px] text-gray-500">{{ note.date }}</span>
+              </div>
+              <p class="text-xs text-gray-400 leading-relaxed">{{ note.text }}</p>
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

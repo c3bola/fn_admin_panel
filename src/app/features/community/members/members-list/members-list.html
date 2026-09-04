@@ -1,0 +1,234 @@
+<div class="p-6 max-w-[1600px] mx-auto space-y-6">
+
+  <!-- BREADCRUMB E AÇÕES GERAIS -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-gray-500">
+      <lucide-icon [img]="Menu" class="h-4 w-4 hidden md:block"></lucide-icon>
+      <span>Comunidade</span> <span class="text-gray-700">/</span>
+      <span class="text-purple-400">Membros</span>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button class="flex items-center gap-2 bg-white/5 hover:bg-white/10 text-gray-300 px-4 py-2 rounded-lg text-xs font-semibold transition-colors">
+        <lucide-icon [img]="Download" class="h-4 w-4"></lucide-icon> Exportar CSV
+      </button>
+      <button class="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition-colors shadow-lg shadow-purple-600/20">
+        <lucide-icon [img]="UserPlus" class="h-4 w-4"></lucide-icon> Convidar Membro
+      </button>
+    </div>
+  </div>
+
+  <!-- ESTATÍSTICAS RÁPIDAS -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 flex items-center gap-4">
+      <div class="h-12 w-12 bg-purple-600/20 text-purple-400 rounded-xl flex items-center justify-center shrink-0">
+        <lucide-icon [img]="Users" class="h-6 w-6"></lucide-icon>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Total de Membros</p>
+        <h3 class="text-2xl font-bold text-white">{{ stats.total }}</h3>
+      </div>
+    </div>
+    
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 flex items-center gap-4">
+      <div class="h-12 w-12 bg-green-500/20 text-green-500 rounded-xl flex items-center justify-center shrink-0">
+        <lucide-icon [img]="CheckCircle" class="h-6 w-6"></lucide-icon>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Online Agora</p>
+        <h3 class="text-2xl font-bold text-white">{{ stats.online }}</h3>
+      </div>
+    </div>
+
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 flex items-center gap-4">
+      <div class="h-12 w-12 bg-yellow-500/20 text-yellow-500 rounded-xl flex items-center justify-center shrink-0">
+        <lucide-icon [img]="Star" class="h-6 w-6"></lucide-icon>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Membros VIP</p>
+        <h3 class="text-2xl font-bold text-white">{{ stats.vip }}</h3>
+      </div>
+    </div>
+
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 flex items-center gap-4">
+      <div class="h-12 w-12 bg-red-500/20 text-red-500 rounded-xl flex items-center justify-center shrink-0">
+        <lucide-icon [img]="Ban" class="h-6 w-6"></lucide-icon>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Banidos</p>
+        <h3 class="text-2xl font-bold text-white">{{ stats.banned }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- BARRA DE FILTROS -->
+  <div class="bg-[#0c0817] border border-gray-800/50 rounded-t-2xl p-4 flex flex-col md:flex-row items-center gap-4 mt-4 border-b border-gray-800/60">
+    <div class="flex-1 w-full relative">
+      <lucide-icon [img]="Search" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500"></lucide-icon>
+      <input type="text" placeholder="Buscar por nome, @username ou ID..." class="w-full bg-[#06040e] border border-gray-800 rounded-lg pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors">
+    </div>
+    
+    <div class="flex items-center gap-3 w-full md:w-auto">
+      <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-gray-300 flex-1 md:flex-none">
+        <lucide-icon [img]="Filter" class="h-4 w-4 text-gray-500"></lucide-icon> Filtros
+      </button>
+      <div class="w-px h-8 bg-gray-800 hidden md:block mx-1"></div>
+      <button class="flex items-center justify-between gap-3 bg-[#06040e] border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-gray-300 w-full md:w-48">
+        Ordenar: Mais Recentes <lucide-icon [img]="ChevronDown" class="h-4 w-4 text-gray-500"></lucide-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- TABELA DE MEMBROS -->
+  <div class="bg-[#0c0817] border border-gray-800/50 border-t-0 rounded-b-2xl overflow-x-auto custom-scrollbar">
+    <table class="w-full text-left text-sm text-gray-300 whitespace-nowrap">
+      <thead class="bg-[#06040e] text-[10px] uppercase text-gray-500 border-b border-gray-800/60 tracking-wider">
+        <tr>
+          <th class="px-6 py-4 font-semibold">Usuário</th>
+          <th class="px-6 py-4 font-semibold">Status</th>
+          <th class="px-6 py-4 font-semibold">Cargo</th>
+          <th class="px-6 py-4 font-semibold">Ativo em</th> <!-- Nova Coluna -->
+          <th class="px-6 py-4 font-semibold">Warns</th>
+          <th class="px-6 py-4 font-semibold">Data de Entrada</th>
+          <th class="px-6 py-4 font-semibold text-right">Ações</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-800/40">
+        
+        @for (member of members(); track member.id) {
+          <tr class="hover:bg-white/[0.02] transition-colors group">
+            
+            <!-- Usuário -->
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-3">
+                <img [src]="member.avatar" class="h-10 w-10 rounded-full border border-gray-700 group-hover:border-purple-500 transition-colors">
+                <div>
+                  <p class="text-sm font-bold text-gray-200">{{ member.name }}</p>
+                  <p class="text-[11px] text-gray-500 font-mono">{{ member.username }} <span class="text-gray-700 mx-1">•</span> ID: {{ member.id }}</p>
+                </div>
+              </div>
+            </td>
+
+            <!-- Status -->
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-1.5">
+                @if (member.status === 'Online') {
+                  <div class="h-2 w-2 bg-green-500 rounded-full"></div>
+                  <span class="text-xs text-gray-400">Online</span>
+                } @else if (member.status === 'Offline') {
+                  <div class="h-2 w-2 bg-gray-500 rounded-full"></div>
+                  <span class="text-xs text-gray-400">Offline</span>
+                } @else {
+                  <div class="h-2 w-2 bg-red-500 rounded-full"></div>
+                  <span class="text-xs text-red-400 font-semibold">Banido</span>
+                }
+              </div>
+            </td>
+
+            <!-- Cargo -->
+            <td class="px-6 py-4">
+              @if (member.role === 'Admin') {
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-600/10 text-purple-400 border border-purple-500/20 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                  <lucide-icon [img]="Shield" class="h-3 w-3"></lucide-icon> Admin
+                </span>
+              } @else if (member.role === 'VIP') {
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                  <lucide-icon [img]="Star" class="h-3 w-3"></lucide-icon> VIP
+                </span>
+              } @else {
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-500/10 text-gray-400 border border-gray-500/20 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                  <lucide-icon [img]="Users" class="h-3 w-3"></lucide-icon> Membro
+                </span>
+              }
+            </td>
+
+            <!-- Registros (Ativo em) -->
+            <td class="px-6 py-4">
+              <div class="flex flex-wrap gap-1.5 max-w-[220px]">
+                @for (reg of member.registrations; track reg.name) {
+                  @if (reg.type === 'bot') {
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded text-[9px] font-bold tracking-wide">
+                      <lucide-icon [img]="Bot" class="h-3 w-3"></lucide-icon> {{ reg.name }}
+                    </span>
+                  } @else if (reg.type === 'channel') {
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 rounded text-[9px] font-bold tracking-wide">
+                      <lucide-icon [img]="MessageSquare" class="h-3 w-3"></lucide-icon> {{ reg.name }}
+                    </span>
+                  } @else {
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-purple-600/10 text-purple-400 border border-purple-500/20 rounded text-[9px] font-bold tracking-wide">
+                      <lucide-icon [img]="Users" class="h-3 w-3"></lucide-icon> {{ reg.name }}
+                    </span>
+                  }
+                }
+              </div>
+            </td>
+
+            <!-- Warns -->
+            <td class="px-6 py-4">
+              @if (member.warns === 0) {
+                <span class="text-xs text-gray-500 font-mono">0 / 3</span>
+              } @else {
+                <span class="inline-flex items-center gap-1.5 text-xs text-yellow-500 font-bold font-mono">
+                  <lucide-icon [img]="AlertTriangle" class="h-3.5 w-3.5"></lucide-icon> {{ member.warns }} / 3
+                </span>
+              }
+            </td>
+
+            <!-- Data -->
+            <td class="px-6 py-4">
+              <span class="text-xs text-gray-400 font-mono">{{ member.joinDate }}</span>
+            </td>
+
+            <!-- Ações -->
+            <td class="px-6 py-4 text-right relative">
+              <div class="flex items-center justify-end gap-2">
+                <button title="Enviar Mensagem" class="p-2 text-gray-500 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors">
+                  <lucide-icon [img]="Mail" class="h-4 w-4"></lucide-icon>
+                </button>
+                <button title="Aplicar Warn" class="p-2 text-gray-500 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-lg transition-colors">
+                  <lucide-icon [img]="AlertTriangle" class="h-4 w-4"></lucide-icon>
+                </button>
+                <button title="Banir" class="p-2 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
+                  <lucide-icon [img]="Ban" class="h-4 w-4"></lucide-icon>
+                </button>
+                
+                <!-- Menu Dropdown -->
+                <button (click)="toggleMenu(member.id)" class="p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition-colors ml-1 relative">
+                  <lucide-icon [img]="MoreVertical" class="h-4 w-4"></lucide-icon>
+                </button>
+
+                <!-- Dropdown Card -->
+                @if (openMenuId() === member.id) {
+                  <div class="absolute top-12 right-6 w-48 bg-[#130d24] border border-gray-700 rounded-lg shadow-2xl z-50 overflow-hidden flex flex-col text-left">
+                    <a [routerLink]="['/admin/members', member.id]" class="px-4 py-2.5 text-xs font-semibold text-gray-300 hover:bg-white/10 hover:text-white transition-colors flex items-center gap-2">
+                      <lucide-icon [img]="Clock" class="h-3.5 w-3.5 text-blue-400"></lucide-icon> Ver Histórico
+                    </a>
+                    <a [routerLink]="['/admin/members', member.id]" class="px-4 py-2.5 text-xs font-semibold text-gray-300 hover:bg-white/10 hover:text-white transition-colors flex items-center gap-2 border-t border-gray-800">
+                      <lucide-icon [img]="FileText" class="h-3.5 w-3.5 text-purple-400"></lucide-icon> Adicionar Observação
+                    </a>
+                  </div>
+                }
+              </div>
+            </td>
+
+          </tr>
+        }
+
+      </tbody>
+    </table>
+
+    <!-- Paginação -->
+    <div class="px-6 py-4 border-t border-gray-800/60 bg-[#0c0817] flex items-center justify-between">
+      <span class="text-xs text-gray-500">Mostrando <strong class="text-gray-300">1</strong> a <strong class="text-gray-300">6</strong> de <strong class="text-gray-300">12.458</strong> membros</span>
+      <div class="flex items-center gap-2">
+        <button class="px-3 py-1.5 bg-[#06040e] border border-gray-800 rounded-md text-xs text-gray-500 cursor-not-allowed">Anterior</button>
+        <button class="px-3 py-1.5 bg-purple-600 border border-purple-500 rounded-md text-xs text-white font-semibold shadow-lg shadow-purple-600/20">1</button>
+        <button class="px-3 py-1.5 bg-[#06040e] border border-gray-800 hover:bg-white/5 rounded-md text-xs text-gray-400 transition-colors">2</button>
+        <button class="px-3 py-1.5 bg-[#06040e] border border-gray-800 hover:bg-white/5 rounded-md text-xs text-gray-400 transition-colors">3</button>
+        <span class="text-gray-500 px-1">...</span>
+        <button class="px-3 py-1.5 bg-[#06040e] border border-gray-800 hover:bg-white/5 rounded-md text-xs text-gray-400 transition-colors">Próxima</button>
+      </div>
+    </div>
+
+  </div>
+</div>
