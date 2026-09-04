@@ -1,0 +1,257 @@
+<div class="p-6 max-w-[1600px] mx-auto space-y-6">
+
+  <!-- BREADCRUMB -->
+  <div class="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-2">
+    <lucide-icon [img]="Menu" class="h-4 w-4 hidden md:block"></lucide-icon>
+    <span>Comunidade</span> <span class="text-gray-700">/</span>
+    <span class="text-purple-400">Grupos</span>
+  </div>
+
+  <!-- HERO BANNER -->
+  <div class="relative w-full h-[220px] rounded-2xl overflow-hidden mb-6 border border-gray-800/50 bg-[#0c0817]">
+    <!-- Imagem de Fundo Estelar -->
+    <img src="assets/image/header/group_header.png" class="absolute inset-0 w-full h-full object-cover object-center">
+    <div class="absolute inset-0 bg-gradient-to-r from-[#06040e]/90 via-[#06040e]/70 to-[#06040e]/90"></div>
+    
+   
+
+    
+  </div>
+
+  <!-- BARRA DE FILTROS -->
+  <div class="bg-[#0c0817] border border-gray-800/50 rounded-xl p-3 flex flex-wrap lg:flex-nowrap items-center gap-4">
+    <!-- Busca -->
+    <div class="flex-1 min-w-[250px] relative">
+      <lucide-icon [img]="Search" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500"></lucide-icon>
+      <input type="text" placeholder="Buscar grupos..." class="w-full bg-[#06040e] border border-gray-800 rounded-lg pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors">
+    </div>
+    
+    <!-- Categoria -->
+    <div class="w-full sm:w-auto">
+      <p class="text-[10px] text-gray-500 font-semibold mb-0.5 px-1">Categoria</p>
+      <button class="w-full sm:w-40 flex items-center justify-between bg-[#06040e] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-300">
+        Todas <lucide-icon [img]="ChevronDown" class="h-4 w-4 text-gray-500"></lucide-icon>
+      </button>
+    </div>
+
+    <!-- Idioma -->
+    <div class="w-full sm:w-auto">
+      <p class="text-[10px] text-gray-500 font-semibold mb-0.5 px-1">Idioma</p>
+      <button class="w-full sm:w-40 flex items-center justify-between bg-[#06040e] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-300">
+        Todos <lucide-icon [img]="ChevronDown" class="h-4 w-4 text-gray-500"></lucide-icon>
+      </button>
+    </div>
+
+    <div class="w-px h-10 bg-gray-800 hidden lg:block mx-2"></div>
+
+    <!-- Ordenação e Visualização -->
+    <div class="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-end mt-2 lg:mt-0">
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-gray-500 font-semibold">Ordenar por:</span>
+        <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-300">
+          Mais ativos <lucide-icon [img]="ChevronDown" class="h-4 w-4 text-gray-500"></lucide-icon>
+        </button>
+      </div>
+      <div class="flex items-center gap-1 bg-[#06040e] border border-gray-800 rounded-lg p-1">
+        <button class="p-1.5 bg-gray-800 rounded text-white"><lucide-icon [img]="LayoutGrid" class="h-4 w-4"></lucide-icon></button>
+        <button class="p-1.5 text-gray-500 hover:text-white transition-colors"><lucide-icon [img]="ListIcon" class="h-4 w-4"></lucide-icon></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT PRINCIPAL: LISTA DE GRUPOS + SIDEBAR -->
+  <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+    
+    <!-- ÁREA DE GRUPOS (Esquerda) -->
+    <div class="xl:col-span-3 space-y-8">
+      
+      <!-- SEÇÃO 1: GRUPOS DA COMUNIDADE -->
+      <section>
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <lucide-icon [img]="Users" class="h-5 w-5 text-purple-500"></lucide-icon>
+            <div>
+              <h3 class="text-sm font-bold text-white uppercase tracking-widest">GRUPOS DA COMUNIDADE</h3>
+              <p class="text-[11px] text-gray-500">Grupos oficiais criados e gerenciados pela equipe da Fortnite Brasil.</p>
+            </div>
+          </div>
+          <a href="#" class="text-xs font-semibold text-purple-400 hover:text-purple-300 flex items-center gap-1">Ver todos <lucide-icon [img]="ArrowRight" class="h-3 w-3"></lucide-icon></a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          @for (group of communityGroups; track group.name) {
+            <a [routerLink]="group.link" class="bg-[#0c0817] border border-gray-800/50 rounded-xl overflow-hidden hover:border-gray-700 transition-colors group relative flex flex-col h-full cursor-pointer">
+              <!-- Banner do Card -->
+              <div class="h-24 w-full relative bg-gray-800 overflow-hidden">
+                <img src="assets/image/header/main_header.png" class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity">
+                @if (group.badge) {
+                  <span class="absolute top-2 left-2 text-[8px] font-bold text-white px-2 py-0.5 rounded uppercase tracking-wider {{ group.badgeColor }}">{{ group.badge }}</span>
+                }
+              </div>
+              
+              <!-- Ícone Flutuante -->
+              <div class="absolute top-16 left-4 h-12 w-12 bg-purple-600 rounded-xl border-4 border-[#0c0817] flex items-center justify-center z-10">
+                <lucide-icon [img]="group.icon" class="h-5 w-5 text-white"></lucide-icon>
+              </div>
+
+              <!-- Corpo do Card -->
+              <div class="p-4 pt-6 flex flex-col flex-1">
+                <h4 class="text-sm font-bold text-white flex items-center gap-1.5">{{ group.name }} <div class="h-1.5 w-1.5 bg-green-500 rounded-full"></div></h4>
+                <p class="text-[11px] text-gray-400 mt-1 mb-4 leading-relaxed flex-1">{{ group.desc }}</p>
+                
+                <div class="flex items-center justify-between text-[11px] font-medium pt-3 border-t border-gray-800/50">
+                  <span class="text-green-500 flex items-center gap-1"><div class="h-1.5 w-1.5 bg-green-500 rounded-full"></div> {{ group.online }} online</span>
+                  <span class="text-gray-500">{{ group.members }} membros</span>
+                </div>
+              </div>
+              @if (group.isVip) {
+                <span class="absolute bottom-11 right-4 text-[9px] font-bold text-yellow-900 bg-yellow-500 px-1.5 py-0.5 rounded">VIP</span>
+              }
+            </a>
+          }
+        </div>
+      </section>
+
+      <!-- SEÇÃO 2: GRUPOS DE TERCEIROS -->
+      <section>
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <lucide-icon [img]="Users" class="h-5 w-5 text-purple-500"></lucide-icon>
+            <div>
+              <h3 class="text-sm font-bold text-white uppercase tracking-widest">GRUPOS DE TERCEIROS</h3>
+              <p class="text-[11px] text-gray-500">Grupos em que os bots foram adicionados por terceiros. Não gerenciados pela Fortnite Brasil.</p>
+            </div>
+          </div>
+          <a href="#" class="text-xs font-semibold text-purple-400 hover:text-purple-300 flex items-center gap-1">Ver todos <lucide-icon [img]="ArrowRight" class="h-3 w-3"></lucide-icon></a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          @for (group of thirdPartyGroups; track group.name) {
+            <div class="bg-[#0c0817] border border-gray-800/50 rounded-xl overflow-hidden hover:border-gray-700 transition-colors group flex flex-col h-full cursor-pointer">
+              <!-- Banner do Card com indicação de Bot -->
+              <div class="h-24 w-full relative bg-gray-800 overflow-hidden">
+                <img src="assets/image/header/main_header.png" class="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity">
+                <div class="absolute top-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm border border-white/10 px-2 py-1 rounded-lg">
+                  <lucide-icon [img]="group.botIcon" class="h-3.5 w-3.5 text-blue-400"></lucide-icon>
+                  <span class="text-[10px] font-bold text-gray-200">Bot: {{ group.bot }} <span class="text-green-500 inline-block h-1 w-1 rounded-full mb-0.5"></span></span>
+                </div>
+              </div>
+
+              <!-- Corpo do Card -->
+              <div class="p-4 flex flex-col flex-1">
+                <h4 class="text-sm font-bold text-white">{{ group.name }}</h4>
+                <p class="text-[11px] text-gray-400 mt-1 mb-4 leading-relaxed flex-1">{{ group.desc }}</p>
+                
+                <div class="flex items-center justify-between text-[11px] font-medium pt-3 border-t border-gray-800/50">
+                  <span class="text-green-500 flex items-center gap-1"><div class="h-1.5 w-1.5 bg-green-500 rounded-full"></div> {{ group.online }} online</span>
+                  <span class="text-gray-500">{{ group.members }} membros</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+
+    </div>
+
+    <!-- SIDEBAR DIREITA -->
+    <div class="xl:col-span-1 space-y-6">
+      
+      <!-- Sobre Grupos -->
+      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5">
+        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-4">SOBRE GRUPOS</h3>
+        <p class="text-[11px] text-gray-400 mb-4">Existem dois tipos de grupos na comunidade:</p>
+        
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="h-8 w-8 bg-purple-600/20 text-purple-400 rounded flex items-center justify-center shrink-0 mt-0.5"><lucide-icon [img]="Users" class="h-4 w-4"></lucide-icon></div>
+            <div>
+              <p class="text-xs font-bold text-gray-200">Grupos da Comunidade</p>
+              <p class="text-[10px] text-gray-500 mt-0.5 leading-relaxed">Criados e gerenciados pelos administradores da Fortnite Brasil.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="h-8 w-8 bg-blue-500/20 text-blue-400 rounded flex items-center justify-center shrink-0 mt-0.5"><lucide-icon [img]="Users" class="h-4 w-4"></lucide-icon></div>
+            <div>
+              <p class="text-xs font-bold text-gray-200">Grupos de Terceiros</p>
+              <p class="text-[10px] text-gray-500 mt-0.5 leading-relaxed">Grupos em que bots foram adicionados por terceiros e não são gerenciados pela comunidade.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dicas -->
+      <div class="bg-purple-600/5 border border-purple-600/20 rounded-2xl p-5">
+        <div class="flex items-center gap-2 mb-3">
+          <lucide-icon [img]="Shield" class="h-4 w-4 text-purple-400"></lucide-icon>
+          <h3 class="text-[10px] font-bold text-purple-400 tracking-widest uppercase">DICAS DA COMUNIDADE</h3>
+        </div>
+        <ul class="text-[11px] text-gray-400 space-y-2 pl-4 list-disc marker:text-purple-500">
+          <li>Respeite todos os membros.</li>
+          <li>Evite spam e mensagens ofensivas.</li>
+          <li>Use os grupos para fazer amigos e aproveitar ao máximo!</li>
+        </ul>
+      </div>
+
+      <!-- Atividade Recente -->
+      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase">ATIVIDADE RECENTE</h3>
+          <a href="#" class="text-[10px] font-semibold text-purple-400 hover:text-purple-300 flex items-center gap-1">Ver todas <lucide-icon [img]="ArrowRight" class="h-3 w-3"></lucide-icon></a>
+        </div>
+        
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="h-7 w-7 bg-purple-600/20 text-purple-400 rounded-lg flex items-center justify-center shrink-0"><lucide-icon [img]="Users" class="h-3.5 w-3.5"></lucide-icon></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-start">
+                <p class="text-[11px] font-bold text-gray-200">Novo grupo criado</p>
+                <span class="text-[9px] text-gray-500">2m atrás</span>
+              </div>
+              <p class="text-[10px] text-gray-400 mt-0.5">Clã dos Campeões</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-3">
+            <div class="h-7 w-7 bg-blue-500/20 text-blue-400 rounded-lg flex items-center justify-center shrink-0"><lucide-icon [img]="UserPlus" class="h-3.5 w-3.5"></lucide-icon></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-start">
+                <p class="text-[11px] font-bold text-gray-200">Membro entrou no grupo</p>
+                <span class="text-[9px] text-gray-500">5m atrás</span>
+              </div>
+              <p class="text-[10px] text-gray-400 mt-0.5"><span class="text-blue-400">Jogador_Pro_BR</span> entrou em <span class="text-blue-400">Battle Royale BR</span></p>
+            </div>
+          </div>
+          
+          <div class="flex items-start gap-3">
+            <div class="h-7 w-7 bg-purple-600/20 text-purple-400 rounded-lg flex items-center justify-center shrink-0"><lucide-icon [img]="UserPlus" class="h-3.5 w-3.5"></lucide-icon></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-start">
+                <p class="text-[11px] font-bold text-gray-200">Novo membro</p>
+                <span class="text-[9px] text-gray-500">8m atrás</span>
+              </div>
+              <p class="text-[10px] text-gray-400 mt-0.5"><span class="text-blue-400">NinjaBR</span> entrou em <span class="text-purple-400">Clubinho Fortnite</span></p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="h-7 w-7 bg-cyan-500/20 text-cyan-400 rounded-lg flex items-center justify-center shrink-0"><lucide-icon [img]="ShieldAlert" class="h-3.5 w-3.5"></lucide-icon></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-start">
+                <p class="text-[11px] font-bold text-gray-200">Bot adicionado em um grupo</p>
+                <span class="text-[9px] text-gray-500">12m atrás</span>
+              </div>
+              <p class="text-[10px] text-gray-400 mt-0.5"><span class="text-blue-400">GuardaOiBot</span> foi adicionado em <span class="text-cyan-400">Zona de Competições</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botão Criar Novo -->
+      <button class="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white py-3.5 rounded-xl text-sm font-semibold transition-colors shadow-lg shadow-purple-600/20">
+        <lucide-icon [img]="Plus" class="h-4 w-4"></lucide-icon> Criar novo grupo da comunidade
+      </button>
+
+    </div>
+  </div>
+</div>
