@@ -20,6 +20,47 @@ tags:
 
 paths:
   # ==========================================
+  # DOMÍNIO: AUTENTICAÇÃO
+  # ==========================================
+  /auth/telegram:
+    post:
+      summary: Autentica o administrador via Telegram Login Widget.
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelegramAuthPayload'
+      responses:
+        '200':
+          description: Autenticação bem sucedida. Retorna o token JWT.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: { type: string }
+                  admin: { $ref: '#/components/schemas/Member' }
+        '401':
+          description: Hash do Telegram inválido ou usuário não autorizado.
+
+  /auth/me:
+    get:
+      summary: Retorna o contexto da sessão atual (Usuário, Bots liberados e Navegação dinâmica).
+      tags: [Auth]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Contexto carregado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionContext'
+        '401':
+          description: Token ausente ou inválido.
+  # ==========================================
   # DOMÍNIO: GRUPOS & CONFIGURAÇÕES
   # ==========================================
   /groups:
@@ -431,7 +472,79 @@ paths:
           description: Sorteio realizado. Notificações enviadas aos ganhadores.
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
   schemas:
+  # --- SCHEMAS DE AUTENTICACAO ---
+    TelegramAuthPayload:
+      type: object
+      required: [id, first_name, auth_date, hash]
+      properties:
+        id: { type: integer }
+        first_name: { type: string }
+        last_name: { type: string, nullable: true }
+        username: { type: string, nullable: true }
+        photo_url: { type: string, nullable: true }
+        auth_date: { type: integer }
+        hash: { type: string }
+  
+  # --- SCHEMAS DE SESSÃO E RBAC ---
+    SessionContext:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserContext'
+        notifications_count:
+          type: integer
+        bots_access:
+          type: array
+          items:
+            $ref: '#/components/schemas/BotAccess'
+        navigation:
+          type: array
+          items:
+            $ref: '#/components/schemas/NavSection'
+
+    UserContext:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        username: { type: string }
+        avatar_url: { type: string, nullable: true }
+        role: { type: string }
+
+    BotAccess:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        category: { type: string }
+        status: { type: string }
+        is_active: { type: boolean }
+        route: { type: string }
+
+    NavSection:
+      type: object
+      properties:
+        section: { type: string }
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/NavItem'
+
+    NavItem:
+      type: object
+      properties:
+        label: { type: string }
+        icon: { type: string }
+        route: { type: string }
+        permission: { type: string }
+    
     # --- SCHEMAS DE GRUPOS ---
     GroupSummary:
       type: object
