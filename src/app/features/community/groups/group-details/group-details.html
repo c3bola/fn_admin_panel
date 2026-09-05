@@ -1,0 +1,459 @@
+<div class="p-6 max-w-[1600px] mx-auto space-y-6">
+
+  <!-- BREADCRUMB -->
+  <div class="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-2">
+    <lucide-icon [img]="Menu" class="h-4 w-4 hidden md:block"></lucide-icon>
+    <span>Comunidade</span> <span class="text-gray-700">/</span>
+    <span>Grupos</span> <span class="text-gray-700">/</span>
+    <span class="text-purple-400">Fortnite Salve o Mundo</span>
+  </div>
+
+  <!-- HEADER DO GRUPO -->
+  <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+    
+    <!-- Info Principal -->
+    <div class="xl:col-span-3 bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 flex flex-col md:flex-row gap-6 relative overflow-hidden">
+      <a href="#" class="absolute top-5 left-5 text-gray-400 hover:text-white flex items-center gap-2 text-xs font-semibold z-10 bg-black/40 px-3 py-1.5 rounded-lg backdrop-blur-sm">
+        <lucide-icon [img]="ArrowLeft" class="h-4 w-4"></lucide-icon> Voltar para grupos
+      </a>
+      
+      <!-- Banner / Imagem -->
+      <div class="w-full md:w-[320px] h-[180px] rounded-xl overflow-hidden relative shrink-0">
+        <img src="assets/image/header/main_header.png" alt="Banner" class="w-full h-full object-cover">
+        <div class="absolute bottom-4 left-4 h-12 w-12 bg-purple-600 rounded-xl border-2 border-[#0c0817] flex items-center justify-center">
+          <lucide-icon [img]="Users" class="h-6 w-6 text-white"></lucide-icon>
+        </div>
+      </div>
+
+      <!-- Detalhes -->
+      <div class="flex flex-col justify-end flex-1 pt-8 md:pt-0">
+        <div class="flex items-center gap-3 mb-2">
+          <h2 class="text-2xl font-bold text-white">Fortnite Salve o mundo</h2>
+          <button class="text-gray-500 hover:text-gray-300"><lucide-icon [img]="Edit2" class="h-4 w-4"></lucide-icon></button>
+          <span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-semibold text-gray-300 flex items-center gap-1.5">
+            <div class="h-1.5 w-1.5 bg-green-500 rounded-full"></div> Grupo da Comunidade
+          </span>
+        </div>
+        <p class="text-sm text-gray-400 mb-6 max-w-xl">Grupo oficial da comunidade Fortnite Brasil focado no modo Salve o Mundo. Dicas, estratégias, trocas e muita ajuda entre jogadores!</p>
+        
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-4 text-xs">
+          <div>
+            <p class="text-[10px] text-gray-500 mb-1">ID do Grupo</p>
+            <p class="font-mono text-gray-300 flex items-center gap-1">-1001234567890 <lucide-icon [img]="Copy" class="h-3 w-3 cursor-pointer hover:text-white"></lucide-icon></p>
+          </div>
+          <div>
+            <p class="text-[10px] text-gray-500 mb-1">Criado em</p>
+            <p class="text-gray-300 flex items-center gap-1.5"><lucide-icon [img]="Calendar" class="h-3.5 w-3.5"></lucide-icon> 12/02/2024</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-gray-500 mb-1">Criado por</p>
+            <p class="text-blue-400 flex items-center gap-1.5"><lucide-icon [img]="User" class="h-3.5 w-3.5"></lucide-icon> @CebolaFn</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-gray-500 mb-1">Idioma</p>
+            <p class="text-gray-300 flex items-center gap-1.5"><lucide-icon [img]="Globe" class="h-3.5 w-3.5"></lucide-icon> Português (BR)</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-gray-500 mb-1">Membros</p>
+            <p class="text-gray-300 flex items-center gap-1.5"><lucide-icon [img]="Users" class="h-3.5 w-3.5"></lucide-icon> 328</p>
+          </div>
+          <div>
+            <p class="text-[10px] text-gray-500 mb-1">Tópicos</p>
+            <p class="text-gray-300 flex items-center gap-1.5"><lucide-icon [img]="Hash" class="h-3.5 w-3.5"></lucide-icon> Ativados</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ações do Bot no Grupo -->
+    <div class="xl:col-span-1 bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 flex flex-col justify-center">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="h-10 w-10 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center">
+          <div class="h-3 w-3 bg-green-500 rounded-full animate-pulse"></div>
+        </div>
+        <div>
+          <p class="text-sm font-bold text-green-500">Bot no grupo</p>
+          <p class="text-[10px] text-gray-500">Ativo desde 12/02/2024 08:32</p>
+        </div>
+      </div>
+      <div class="space-y-3">
+        <button class="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-semibold text-sm transition-colors">
+          <lucide-icon [img]="Send" class="h-4 w-4"></lucide-icon> Ver no Telegram
+        </button>
+        <button class="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-gray-300 py-3 rounded-xl font-semibold text-sm transition-colors">
+          <lucide-icon [img]="RefreshCw" class="h-4 w-4"></lucide-icon> Reiniciar Bot
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LAYOUT PRINCIPAL: ABAS ESQUERDA + SIDEBAR DIREITA -->
+  <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
+    
+    <!-- CONTEÚDO PRINCIPAL (COM ABAS) -->
+    <div class="xl:col-span-3">
+      
+      <!-- Navegação de Abas Reutilizável -->
+      <app-shared-tabs 
+        [tabs]="groupTabs" 
+        [activeTabId]="activeTab()" 
+        (tabChange)="activeTab.set($event)">
+      </app-shared-tabs>
+
+      <!-- Renderização Dinâmica das Abas -->
+      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-6">
+        
+        <!-- ABA: CONFIGURAÇÕES -->
+        @if (activeTab() === 'configuracoes') {
+          <div class="mb-6">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-1">CONFIGURAÇÕES GERAIS</h3>
+            <p class="text-xs text-gray-500">Configure o comportamento geral do bot neste grupo.</p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+            <!-- Coluna 1 -->
+            <div class="space-y-6">
+              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+                <div>
+                  <p class="text-sm font-semibold text-gray-200">Status do Bot</p>
+                  <p class="text-[10px] text-gray-500 mt-0.5">Ativa ou desativa o bot neste grupo.</p>
+                </div>
+                <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
+              </div>
+
+              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+                <div>
+                  <p class="text-sm font-semibold text-gray-200">Quantidade de warns antes do ban</p>
+                  <p class="text-[10px] text-gray-500 mt-0.5">Defina quantos warns o usuário pode receber.</p>
+                </div>
+                <div class="flex items-center gap-3 bg-[#06040e] border border-gray-800 rounded-lg px-2 py-1">
+                  <button class="text-gray-500 hover:text-white"><lucide-icon [img]="Minus" class="h-3 w-3"></lucide-icon></button>
+                  <span class="text-sm font-mono text-white w-4 text-center">3</span>
+                  <button class="text-gray-500 hover:text-white"><lucide-icon [img]="Plus" class="h-3 w-3"></lucide-icon></button>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+                <div>
+                  <p class="text-sm font-semibold text-gray-200">O que fazer em um warn?</p>
+                  <p class="text-[10px] text-gray-500 mt-0.5">Ação aplicada quando um usuário receber um warn.</p>
+                </div>
+                <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 px-3 py-1.5 rounded-lg text-xs text-gray-300">
+                  Silenciar <lucide-icon [img]="ChevronDown" class="h-3 w-3 text-gray-500"></lucide-icon>
+                </button>
+              </div>
+
+              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+                <div>
+                  <p class="text-sm font-semibold text-gray-200">Duração do silêncio</p>
+                  <p class="text-[10px] text-gray-500 mt-0.5">Tempo que o usuário ficará silenciado.</p>
+                </div>
+                <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 px-3 py-1.5 rounded-lg text-xs text-gray-300">
+                  1 hora <lucide-icon [img]="ChevronDown" class="h-3 w-3 text-gray-500"></lucide-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- Coluna 2 -->
+            <div class="space-y-6">
+              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+                <div>
+                  <p class="text-sm font-semibold text-gray-200">Mensagem de boas-vindas</p>
+                  <p class="text-[10px] text-gray-500 mt-0.5">Enviar mensagem para novos membros.</p>
+                </div>
+                <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
+              </div>
+
+              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+                <div>
+                  <p class="text-sm font-semibold text-gray-200">Mensagem de saída</p>
+                  <p class="text-[10px] text-gray-500 mt-0.5">Enviar mensagem quando um membro sair.</p>
+                </div>
+                <div class="w-10 h-5 bg-gray-700 rounded-full relative cursor-pointer"><div class="absolute left-1 top-0.5 h-4 w-4 bg-gray-400 rounded-full"></div></div>
+              </div>
+
+              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+                <div>
+                  <p class="text-sm font-semibold text-gray-200">Apagar a cada X minutos apenas GIFs</p>
+                  <p class="text-[10px] text-gray-500 mt-0.5">Limita o envio de GIFs a cada intervalo.</p>
+                </div>
+                <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 px-3 py-1.5 rounded-lg text-xs text-gray-300">
+                  10 minutos <lucide-icon [img]="ChevronDown" class="h-3 w-3 text-gray-500"></lucide-icon>
+                </button>
+              </div>
+
+              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+                <div>
+                  <p class="text-sm font-semibold text-gray-200">Idioma do Bot</p>
+                  <p class="text-[10px] text-gray-500 mt-0.5">Idioma utilizado nas mensagens do bot.</p>
+                </div>
+                <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 px-3 py-1.5 rounded-lg text-xs text-gray-300">
+                  Português (BR) <lucide-icon [img]="ChevronDown" class="h-3 w-3 text-gray-500"></lucide-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- ABA: PERMISSÕES -->
+        @if (activeTab() === 'permissoes') {
+          <div class="flex gap-8">
+            <div class="w-[300px] shrink-0 border-r border-gray-800/50 pr-8 space-y-4">
+              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Enviar mensagens</span></div>
+              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Enviar mídia</span></div>
+              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Enviar enquetes</span></div>
+              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Adicionar links</span></div>
+              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Ver membros</span></div>
+              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Banir usuários</span></div>
+              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Fixar mensagens</span></div>
+              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Gerenciar tópicos</span></div>
+              
+              <div class="mt-8 p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl flex items-center gap-3">
+                <lucide-icon [img]="Shield" class="h-6 w-6 text-gray-500"></lucide-icon>
+                <div>
+                  <p class="text-[10px] text-gray-500 uppercase tracking-widest">Permissões atuais</p>
+                  <p class="text-sm font-bold text-gray-200">Administrador</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- ABA: WARNS -->
+        @if (activeTab() === 'warns') {
+          <div class="max-w-xl space-y-4">
+            <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+              <span class="text-sm font-semibold text-gray-200">Quantidade de warns antes do ban</span>
+              <div class="flex items-center gap-3 bg-[#06040e] border border-gray-800 rounded-lg px-2 py-1">
+                <button class="text-gray-500 hover:text-white"><lucide-icon [img]="Minus" class="h-3 w-3"></lucide-icon></button>
+                <span class="text-sm font-mono text-white w-4 text-center">3</span>
+                <button class="text-gray-500 hover:text-white"><lucide-icon [img]="Plus" class="h-3 w-3"></lucide-icon></button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+              <span class="text-sm font-semibold text-gray-200">O que fazer em um warn?</span>
+              <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 px-3 py-1.5 rounded-lg text-xs text-gray-300">
+                Silenciar <lucide-icon [img]="ChevronDown" class="h-3 w-3 text-gray-500"></lucide-icon>
+              </button>
+            </div>
+            <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+              <span class="text-sm font-semibold text-gray-200">Duração do silêncio</span>
+              <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 px-3 py-1.5 rounded-lg text-xs text-gray-300">
+                1 hora <lucide-icon [img]="ChevronDown" class="h-3 w-3 text-gray-500"></lucide-icon>
+              </button>
+            </div>
+            <div class="flex items-start gap-3 p-4 bg-purple-600/10 border border-purple-500/20 rounded-xl mt-6">
+              <lucide-icon [img]="Info" class="h-5 w-5 text-purple-400 mt-0.5"></lucide-icon>
+              <div>
+                <p class="text-sm font-bold text-purple-300">Sobre 3 warns</p>
+                <p class="text-xs text-purple-400/80 mt-1">Quando o usuário atingir o número de infrações definido acima, o bot aplicará 3 warns de uma vez.</p>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- ABA: MENSAGENS -->
+        @if (activeTab() === 'mensagens') {
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Boas-vindas -->
+            <div class="p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+              <div class="flex items-center justify-between mb-4">
+                <p class="text-sm font-semibold text-gray-200">Mensagem de boas-vindas</p>
+                <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
+              </div>
+              <button class="w-full flex items-center justify-center gap-2 bg-[#06040e] border border-gray-700 hover:bg-white/5 py-2 rounded-lg text-xs font-semibold text-gray-300 transition-colors">
+                <lucide-icon [img]="Edit2" class="h-3.5 w-3.5"></lucide-icon> Editar mensagem
+              </button>
+            </div>
+            <!-- Saída -->
+            <div class="p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+              <div class="flex items-center justify-between mb-4">
+                <p class="text-sm font-semibold text-gray-200">Mensagem de saída</p>
+                <div class="w-10 h-5 bg-gray-700 rounded-full relative cursor-pointer"><div class="absolute left-1 top-0.5 h-4 w-4 bg-gray-400 rounded-full"></div></div>
+              </div>
+              <button class="w-full flex items-center justify-center gap-2 bg-[#06040e] border border-gray-700 hover:bg-white/5 py-2 rounded-lg text-xs font-semibold text-gray-300 transition-colors opacity-50 cursor-not-allowed">
+                <lucide-icon [img]="Edit2" class="h-3.5 w-3.5"></lucide-icon> Editar mensagem
+              </button>
+            </div>
+            <!-- Advertência -->
+            <div class="p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+              <div class="flex items-center justify-between mb-4">
+                <p class="text-sm font-semibold text-gray-200">Mensagem de advertência (warn)</p>
+                <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
+              </div>
+              <button class="w-full flex items-center justify-center gap-2 bg-[#06040e] border border-gray-700 hover:bg-white/5 py-2 rounded-lg text-xs font-semibold text-gray-300 transition-colors">
+                <lucide-icon [img]="Edit2" class="h-3.5 w-3.5"></lucide-icon> Editar mensagem
+              </button>
+            </div>
+            <!-- Banimento -->
+            <div class="p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+              <div class="flex items-center justify-between mb-4">
+                <p class="text-sm font-semibold text-gray-200">Mensagem de banimento</p>
+                <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
+              </div>
+              <button class="w-full flex items-center justify-center gap-2 bg-[#06040e] border border-gray-700 hover:bg-white/5 py-2 rounded-lg text-xs font-semibold text-gray-300 transition-colors">
+                <lucide-icon [img]="Edit2" class="h-3.5 w-3.5"></lucide-icon> Editar mensagem
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- ABA: MODERAÇÃO -->
+        @if (activeTab() === 'moderacao') {
+          <div class="space-y-4 max-w-2xl">
+            <!-- Regra -->
+            <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+              <div class="flex items-center gap-3">
+                <div class="h-8 w-8 bg-blue-500/20 text-blue-400 rounded flex items-center justify-center"><lucide-icon [img]="MessageSquare" class="h-4 w-4"></lucide-icon></div>
+                <div>
+                  <p class="text-sm font-bold text-gray-200">Anti Spam</p>
+                  <p class="text-[10px] text-gray-500">Bloqueia mensagens repetitivas.</p>
+                </div>
+              </div>
+              <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
+            </div>
+            <!-- Regra -->
+            <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+              <div class="flex items-center gap-3">
+                <div class="h-8 w-8 bg-cyan-500/20 text-cyan-400 rounded flex items-center justify-center"><lucide-icon [img]="Link" class="h-4 w-4"></lucide-icon></div>
+                <div>
+                  <p class="text-sm font-bold text-gray-200">Anti Links</p>
+                  <p class="text-[10px] text-gray-500">Bloqueia links não permitidos.</p>
+                </div>
+              </div>
+              <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
+            </div>
+            <!-- Regra -->
+            <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+              <div class="flex items-center gap-3">
+                <div class="h-8 w-8 bg-blue-600/20 text-blue-500 rounded flex items-center justify-center"><lucide-icon [img]="Activity" class="h-4 w-4"></lucide-icon></div>
+                <div>
+                  <p class="text-sm font-bold text-gray-200">Anti Flood</p>
+                  <p class="text-[10px] text-gray-500">Limita o envio excessivo de mensagens.</p>
+                </div>
+              </div>
+              <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
+            </div>
+            <!-- Regra -->
+            <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+              <div class="flex items-center gap-3">
+                <div class="h-8 w-8 bg-purple-500/20 text-purple-400 rounded flex items-center justify-center"><span class="font-bold text-sm">AA</span></div>
+                <div>
+                  <p class="text-sm font-bold text-gray-200">Anti Caps Lock</p>
+                  <p class="text-[10px] text-gray-500">Bloqueia mensagens em CAIXA ALTA.</p>
+                </div>
+              </div>
+              <div class="w-10 h-5 bg-gray-700 rounded-full relative cursor-pointer"><div class="absolute left-1 top-0.5 h-4 w-4 bg-gray-400 rounded-full"></div></div>
+            </div>
+            
+            <button class="w-full bg-white/[0.05] hover:bg-white/[0.08] text-gray-300 py-3 rounded-xl text-sm font-semibold mt-4 transition-colors">
+              Verificar Lista de Palavras
+            </button>
+          </div>
+        }
+
+      </div>
+    </div>
+
+    <!-- SIDEBAR DIREITA -->
+    <div class="xl:col-span-1 flex flex-col gap-6">
+      
+      <!-- Resumo do Grupo -->
+      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5">
+        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-4">RESUMO DO GRUPO</h3>
+        <ul class="space-y-4">
+          <li class="flex items-center gap-3">
+            <div class="h-8 w-8 bg-purple-600/20 rounded-lg flex items-center justify-center"><lucide-icon [img]="Users" class="h-4 w-4 text-purple-400"></lucide-icon></div>
+            <div><p class="text-xs font-bold text-gray-200">Tipo do Grupo</p><p class="text-[10px] text-gray-500">Grupo da Comunidade</p></div>
+          </li>
+          <li class="flex items-center gap-3">
+            <div class="h-8 w-8 bg-blue-500/20 rounded-lg flex items-center justify-center"><lucide-icon [img]="Users" class="h-4 w-4 text-blue-400"></lucide-icon></div>
+            <div><p class="text-xs font-bold text-gray-200">Total de Membros</p><p class="text-[10px] text-gray-500">328 membros</p></div>
+          </li>
+          <li class="flex items-center gap-3">
+            <div class="h-8 w-8 bg-green-500/20 rounded-lg flex items-center justify-center"><lucide-icon [img]="CheckCircle" class="h-4 w-4 text-green-400"></lucide-icon></div>
+            <div><p class="text-xs font-bold text-gray-200">Membros Online</p><p class="text-[10px] text-gray-500">41 online agora</p></div>
+          </li>
+          <li class="flex items-center gap-3 justify-between">
+            <div class="flex items-center gap-3">
+              <div class="h-8 w-8 bg-emerald-500/20 rounded-lg flex items-center justify-center"><lucide-icon [img]="Hash" class="h-4 w-4 text-emerald-400"></lucide-icon></div>
+              <div><p class="text-xs font-bold text-gray-200">Tópicos</p></div>
+            </div>
+            <span class="text-[10px] font-bold text-green-500">Ativados</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <div class="h-8 w-8 bg-yellow-500/20 rounded-lg flex items-center justify-center"><lucide-icon [img]="User" class="h-4 w-4 text-yellow-400"></lucide-icon></div>
+            <div><p class="text-xs font-bold text-gray-200">Bot Adicionado por</p><p class="text-[10px] text-gray-500">@CebolaFn</p></div>
+          </li>
+          <li class="flex items-center gap-3">
+            <div class="h-8 w-8 bg-blue-600/20 rounded-lg flex items-center justify-center"><lucide-icon [img]="Shield" class="h-4 w-4 text-blue-500"></lucide-icon></div>
+            <div><p class="text-xs font-bold text-gray-200">Permissões do Bot</p><p class="text-[10px] text-gray-500">Administrador</p></div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Ações Rápidas -->
+      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5">
+        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-4">AÇÕES RÁPIDAS</h3>
+        <div class="flex gap-3">
+          <button class="flex-1 flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-lg text-xs font-semibold transition-colors">
+            <lucide-icon [img]="Send" class="h-3.5 w-3.5"></lucide-icon> Enviar Aviso
+          </button>
+          <button class="flex-1 flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 py-2.5 rounded-lg text-xs font-semibold transition-colors">
+            <lucide-icon [img]="Minus" class="h-3.5 w-3.5"></lucide-icon> Remover Bot
+          </button>
+        </div>
+      </div>
+
+      <!-- Estatísticas (7 dias) -->
+      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5">
+        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-4">ESTATÍSTICAS (7 DIAS)</h3>
+        <div class="grid grid-cols-2 gap-y-4 gap-x-2 text-xs">
+          <div class="flex items-center gap-2"><lucide-icon [img]="Trash2" class="h-3.5 w-3.5 text-gray-500"></lucide-icon> <span class="text-gray-300">Mensagens deletadas</span></div>
+          <div class="flex items-center justify-end gap-2"><lucide-icon [img]="AlertTriangle" class="h-3.5 w-3.5 text-yellow-500"></lucide-icon> <span class="text-gray-300">Usuários banidos</span> <span class="font-mono text-gray-500">180</span></div>
+          <div class="flex items-center gap-2"><lucide-icon [img]="MessageSquare" class="h-3.5 w-3.5 text-red-500"></lucide-icon> <span class="text-gray-300">Warns aplicados</span></div>
+          <div class="flex items-center justify-end gap-2"><lucide-icon [img]="Link" class="h-3.5 w-3.5 text-cyan-500"></lucide-icon> <span class="text-gray-300">Links removidos</span> <span class="font-mono text-gray-500">56</span></div>
+          <div class="flex items-center gap-2"><lucide-icon [img]="Lock" class="h-3.5 w-3.5 text-purple-500"></lucide-icon> <span class="text-gray-300">Usuários banidos</span></div>
+          <div class="flex items-center justify-end gap-2"><lucide-icon [img]="Activity" class="h-3.5 w-3.5 text-green-500"></lucide-icon> <span class="text-gray-300">Spam bloqueado</span> <span class="font-mono text-gray-500">132</span></div>
+        </div>
+        <button class="w-full mt-4 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-gray-300 py-2 rounded-lg text-xs font-semibold transition-colors">
+          <lucide-icon [img]="FileText" class="h-3.5 w-3.5"></lucide-icon> Ver relatório completo
+        </button>
+      </div>
+
+      <!-- Logs de Ações Mini -->
+      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5">
+        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-4 flex items-center gap-2">
+          <lucide-icon [img]="Activity" class="h-4 w-4 text-purple-400"></lucide-icon> LOGS DE AÇÕES
+        </h3>
+        <ul class="space-y-4">
+          <li class="flex items-start gap-3">
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-yellow-500/20 text-yellow-500">WARN</span>
+            <div class="flex-1 flex justify-between"><p class="text-[11px] text-gray-300">Usuário <span class="text-blue-400">@PlayerBR</span> recebeu um warn</p><span class="text-[9px] text-gray-500">Hoje 14:32</span></div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-500/20 text-orange-400">MUTE</span>
+            <div class="flex-1 flex justify-between"><p class="text-[11px] text-gray-300">Usuário <span class="text-blue-400">@PlayerBR</span> foi silenciado por 1h</p><span class="text-[9px] text-gray-500">Hoje 14:32</span></div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-red-500/20 text-red-500">DELETE</span>
+            <div class="flex-1 flex justify-between"><p class="text-[11px] text-gray-300">Mensagem apagada de <span class="text-blue-400">@PlayerBR</span></p><span class="text-[9px] text-gray-500">Hoje 14:31</span></div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-cyan-500/20 text-cyan-400">LINK</span>
+            <div class="flex-1 flex justify-between"><p class="text-[11px] text-gray-300">Link removido de <span class="text-blue-400">@PlayerBR</span></p><span class="text-[9px] text-gray-500">Hoje 14:30</span></div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-green-500/20 text-green-500">JOIN</span>
+            <div class="flex-1 flex justify-between"><p class="text-[11px] text-gray-300"><span class="text-blue-400">@NovoPlayer</span> entrou no grupo</p><span class="text-[9px] text-gray-500">Hoje 14:29</span></div>
+          </li>
+        </ul>
+        <button class="w-full mt-4 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-gray-300 py-2 rounded-lg text-xs font-semibold transition-colors">
+          <lucide-icon [img]="FileText" class="h-3.5 w-3.5"></lucide-icon> Ver todos os logs
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
