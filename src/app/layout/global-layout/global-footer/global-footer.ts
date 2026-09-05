@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { SessionService } from '../../../core/auth/session.service';
 
 @Component({
   selector: 'app-global-footer',
@@ -6,7 +7,9 @@ import { Component } from '@angular/core';
   templateUrl: './global-footer.html'
 })
 export class GlobalFooterComponent {
-  // Altere o ano ou o nome da marca aqui e mudará em toda a aplicação
+  private sessionService = inject(SessionService);
+  
+  systemInfo = this.sessionService.system;
+  
   readonly currentYear = new Date().getFullYear();
-  readonly companyName = 'Fortnite Brasil';
 }

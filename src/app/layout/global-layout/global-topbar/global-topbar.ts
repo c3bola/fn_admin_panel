@@ -1,8 +1,9 @@
-import { Component, Output, EventEmitter, signal, inject } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LayoutService } from '../../../shared/services/layout.service';
-import { LucideAngularModule, Menu, Bot, Bell, ChevronDown, Check, LogOut, Settings, User, Search } from 'lucide-angular';
 import { Router } from '@angular/router';
+import { LayoutService } from '../../../shared/services/layout.service';
+import { SessionService } from '../../../core/auth/session.service';
+import { LucideAngularModule, Menu, Bot, Bell, ChevronDown, Check, LogOut, Settings, User, Search } from 'lucide-angular';
 
 @Component({
   selector: 'app-global-topbar',
@@ -12,6 +13,8 @@ import { Router } from '@angular/router';
 })
 export class GlobalTopbarComponent {
   layoutService = inject(LayoutService);
+  sessionService = inject(SessionService);
+  private router = inject(Router);
   
   // Ícones Lucide
   readonly Menu = Menu;
@@ -28,18 +31,21 @@ export class GlobalTopbarComponent {
   isProfileDropdownOpen = signal(false);
   isNotificationsOpen = signal(false);
 
-  // Lista de bots gerenciados pelo painel
-  bots = [
-    { name: 'FortMeBot', type: 'Engajamento' },
-    { name: 'GuardaOiBot', type: 'Moderação' },
-    { name: 'BattleBusBot', type: 'Registro de Players' },
-    { name: 'LojaFortniteBot', type: 'Loja e Alertas' },
-    { name: 'FortCardsBot', type: 'Coleção de Cards' }
-  ];
+  // Dados dinâmicos puxados da sessão (Backend)
+  bots = this.sessionService.botsAccess;
+  currentUser = this.sessionService.currentUser;
+  notificationsCount = this.sessionService.notificationsCount;
 
-  selectedBot = signal(this.bots[0]);
+  // Controle de bot selecionado
+  private manualSelectedBot = signal<any>(null);
 
-  constructor(private router: Router) { }
+  // Signal computado: Retorna o bot selecionado manualmente ou, por padrão, o primeiro da lista
+  activeBot = computed(() => {
+    const selected = this.manualSelectedBot();
+    if (selected) return selected;
+    const available = this.bots();
+    return available.length > 0 ? available[0] : null;
+  });
 
   toggleNotificationsDropdown(event: Event) {
     event.stopPropagation();
@@ -62,9 +68,14 @@ export class GlobalTopbarComponent {
     this.isNotificationsOpen.set(false);
   }
 
-  selectBot(bot: typeof this.bots[0]) {
-    this.selectedBot.set(bot);
+  selectBot(bot: any) {
+    this.manualSelectedBot.set(bot);
     this.isBotDropdownOpen.set(false);
+    
+    // Navega dinamicamente para a rota do bot cadastrada no banco de dados
+    if (bot.route) {
+      this.router.navigate([bot.route]);
+    }
   }
 
   fazerLogout() {

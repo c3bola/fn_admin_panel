@@ -1,3 +1,5 @@
 <footer class="text-center py-4 border-t border-gray-800/40 shrink-0">
-  <p class="text-xs text-gray-500">{{ companyName }} © {{ currentYear }} - Todos os direitos reservados.</p>
+  <p class="text-xs text-gray-500">
+    {{ systemInfo()?.name || 'Fortnite Brasil Painel' }} v{{ systemInfo()?.version || '1.0.0' }} © {{ currentYear }} - Todos os direitos reservados.
+  </p>
 </footer>
