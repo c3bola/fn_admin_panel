@@ -1,27 +1,25 @@
 <div class="relative flex min-h-screen items-center w-full bg-gray-950 overflow-hidden font-sans">
-  
+
   <!-- Fundo com a Imagem do Robô -->
-  <img 
-    src="assets/image/background/login_telegram_background.png" 
-    class="absolute inset-0 h-full w-full object-cover opacity-60" 
-    alt="Fortnite Brasil Background"
-  >
+  <img src="assets/image/background/login_telegram_background.png"
+    class="absolute inset-0 h-full w-full object-cover opacity-60" alt="Fortnite Brasil Background">
 
   <!-- Container Principal (Card de Login) -->
-  <div class="relative z-10 w-full max-w-[440px] mx-auto md:ml-[10%] p-8 bg-[#0a0618]/80 backdrop-blur-xl border border-gray-800 rounded-3xl shadow-2xl">
-    
+  <div
+    class="relative z-10 w-full max-w-[440px] mx-auto md:ml-[10%] p-8 bg-[#0a0618]/80 backdrop-blur-xl border border-gray-800 rounded-3xl shadow-2xl">
+
     <!-- Header: Logo e Título -->
     <div class="flex flex-col items-center text-center">
       <!-- Substitua pelo SVG real do Llama depois -->
       <div class="h-16 w-16 mb-4 bg-purple-600 rounded-xl flex items-center justify-center">
         <lucide-icon [img]="Zap" class="h-8 w-8 text-white"></lucide-icon>
       </div>
-      
+
       <h1 class="text-2xl font-bold tracking-wide text-white">FORTNITE BRASIL</h1>
       <p class="mt-1 text-xs font-semibold tracking-widest text-purple-500 uppercase">
         Painel Administrativo
       </p>
-      
+
       <lucide-icon [img]="Zap" class="h-5 w-5 mt-4 text-purple-600"></lucide-icon>
     </div>
 
@@ -34,13 +32,26 @@
     </div>
 
     <!-- Botão de Ação -->
-    <button 
-      (click)="entrarNoPainel()"
-      class="mt-8 flex w-full items-center justify-center gap-3 rounded-xl bg-purple-600 px-4 py-3.5 font-bold text-white transition-colors hover:bg-purple-700">
-      <lucide-icon [img]="Send" class="h-5 w-5"></lucide-icon>
-      ENTRAR COM TELEGRAM
+    <button (click)="loginMockado()"
+      class="mt-4 flex w-full items-center justify-center gap-3 rounded-xl bg-emerald-600 px-4 py-3.5 font-bold text-white transition-colors hover:bg-emerald-700">
+      LOGIN DE DESENVOLVIMENTO
     </button>
+    <!-- Container Relativo para sobrepor os botões >
+    <div class="relative mt-8 w-full">
 
+      <!-- 1. O seu botão customizado (Visual) >
+      <button
+        class="flex w-full items-center justify-center gap-3 rounded-xl bg-purple-600 px-4 py-3.5 font-bold text-white transition-colors hover:bg-purple-700 pointer-events-none">
+        <lucide-icon [img]="Send" class="h-5 w-5"></lucide-icon>
+        ENTRAR COM TELEGRAM
+      </button>
+
+      <!-- 2. O container do Telegram (Invisível e posicionado por cima)
+      <div #telegramWidgetContainer
+        class="absolute inset-0 opacity-0 flex w-full items-center justify-center overflow-hidden cursor-pointer">
+      </div>
+
+    </div> -->
     <!-- Divisor -->
     <div class="relative mt-8 flex items-center py-4">
       <div class="flex-grow border-t border-gray-800"></div>
@@ -52,7 +63,7 @@
 
     <!-- Informações de Segurança -->
     <div class="mt-4 flex flex-col gap-4">
-      
+
       <!-- Box 1: Acesso Restrito -->
       <div class="flex items-start gap-4 rounded-xl border border-gray-800 bg-white/[0.02] p-4">
         <lucide-icon [img]="Lock" class="h-5 w-5 shrink-0 text-gray-400"></lucide-icon>
