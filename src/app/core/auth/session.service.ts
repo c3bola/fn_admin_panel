@@ -42,6 +42,7 @@ export class SessionService {
   botsAccess = signal<BotAccess[]>([]);
   navigation = signal<NavSection[]>([]);
   notificationsCount = signal<number>(0);
+  system = signal<{ name: string; version: string } | null>(null);
 
   constructor(private http: HttpClient) {}
 
@@ -50,7 +51,7 @@ export class SessionService {
     tap(response => {
       this.currentUser.set(response.user);
       this.botsAccess.set(response.bots_access);
-      
+      this.system.set(response.system);
       // FILTRAGEM NO FRONTEND: Garante que apenas códigos iniciados com 'main.' 
       // formem a navegação global (GERAL, COMUNIDADE, SISTEMA), ignorando 'bot.*'
       const rawNavigation = response.navigation || [];

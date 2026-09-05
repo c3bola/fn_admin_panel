@@ -15,7 +15,7 @@ import {
 @Component({
   selector: 'app-group-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, SharedTabsComponent, TextEditorComponent, RouterLink],
+  imports: [CommonModule, LucideAngularModule, SharedTabsComponent],
   templateUrl: './group-details.html'
 })
 export class GroupDetailsComponent implements OnInit {
