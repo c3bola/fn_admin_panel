@@ -6,11 +6,16 @@ export const routes: Routes = [
     loadComponent: () => import('./features/auth/login/login').then(c => c.LoginComponent)
   },
   {
-    path: 'admin',
+    path: '',
     loadComponent: () => import('./layout/global-layout/global-layout').then(c => c.GlobalLayoutComponent),
     children: [
       {
         path: '', 
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      },
+      {
+        path: 'dashboard', 
         loadComponent: () => import('./features/global-dashboard/global-dashboard').then(c => c.GlobalDashboardComponent)
       },
       // Rotas de Comunidade
@@ -19,7 +24,7 @@ export const routes: Routes = [
         loadComponent: () => import('./features/community/groups/groups-list/groups-list').then(c => c.GroupsListComponent)
       },
       {
-        path: 'groups/:groupId',
+        path: 'groups/:id', // Corrigido de :groupId para :id
         loadComponent: () => import('./features/community/groups/group-details/group-details').then(c => c.GroupDetailsComponent)
       },
       {
@@ -45,7 +50,7 @@ export const routes: Routes = [
     ]
   },
   {
-    path: 'admin/bots/:botId',
+    path: 'bots/:botId',
     loadComponent: () => import('./layout/bot-layout/bot-layout').then(c => c.BotLayoutComponent),
     children: [
       {
@@ -55,8 +60,7 @@ export const routes: Routes = [
     ]
   },
   { 
-    path: '', 
-    redirectTo: 'login', 
-    pathMatch: 'full' 
+    path: '**', 
+    redirectTo: 'login' 
   }
 ];

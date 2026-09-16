@@ -53,7 +53,7 @@ export class LoginComponent implements AfterViewInit {
           // Armazena o JWT devolvido pelo Node.js
           localStorage.setItem('admin_token', response.token);
           // Redireciona para o painel
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/']);
         },
         error: (error) => {
           console.error('Falha de segurança ou ID não autorizado:', error);
@@ -70,7 +70,7 @@ export class LoginComponent implements AfterViewInit {
         localStorage.setItem('admin_user', JSON.stringify(response.user));
         
         // Redireciona direto para a área logada
-        this.router.navigate(['/admin']);
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => console.error('Erro ao gerar mock de sessão:', err)
     });

@@ -52,7 +52,7 @@
       <ul class="space-y-1.5">
         @for (bot of bots(); track bot.id) {
         <li>
-          <a [routerLink]="bot.route || '/admin'"
+          <a [routerLink]="bot.route || '/'"
             class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 text-gray-400 hover:text-white transition-colors group cursor-pointer">
 
             <div [ngClass]="getBotColorClasses(bot.theme_color).bg"

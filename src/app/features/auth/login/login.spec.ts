@@ -47,7 +47,7 @@ export class LoginComponent implements AfterViewInit {
       .subscribe({
         next: (response: any) => {
           localStorage.setItem('admin_token', response.token);
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/']);
         },
         error: (error) => {
           console.error('Falha de segurança ou ID não autorizado:', error);
@@ -61,7 +61,7 @@ export class LoginComponent implements AfterViewInit {
         next: (response: any) => {
           localStorage.setItem('admin_token', response.token);
           localStorage.setItem('admin_user', JSON.stringify(response.user));
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/dashboard']);
         },
         error: (err) => console.error('Erro ao gerar mock de sessão:', err)
       });

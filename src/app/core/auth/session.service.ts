@@ -59,7 +59,7 @@ export class SessionService {
         ...section,
         items: section.items.filter((item: any) => {
           // Se o item tiver uma propriedade de código ou rota, filtramos por 'main'
-          return item.route?.startsWith('/admin/') && !item.route.includes('/bots/');
+          return item.route?.startsWith('/') && !item.route.includes('/bots/');
         })
       })).filter((section: any) => section.items.length > 0);
 
