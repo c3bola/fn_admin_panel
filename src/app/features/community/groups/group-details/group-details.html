@@ -4,456 +4,1083 @@
   <div class="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-2">
     <lucide-icon [img]="Menu" class="h-4 w-4 hidden md:block"></lucide-icon>
     <span>Comunidade</span> <span class="text-gray-700">/</span>
-    <span>Grupos</span> <span class="text-gray-700">/</span>
-    <span class="text-purple-400">Fortnite Salve o Mundo</span>
+    <span class="capitalize">{{ groupInfo()?.type === 'channel' ? 'Canais' : 'Grupos' }}</span> <span class="text-gray-700">/</span>
+    <span class="text-purple-400">{{ groupInfo()?.name || 'Carregando...' }}</span>
   </div>
 
-  <!-- HEADER DO GRUPO -->
   <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
-    
     <!-- Info Principal -->
-    <div class="xl:col-span-3 bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 flex flex-col md:flex-row gap-6 relative overflow-hidden">
-      <a href="#" class="absolute top-5 left-5 text-gray-400 hover:text-white flex items-center gap-2 text-xs font-semibold z-10 bg-black/40 px-3 py-1.5 rounded-lg backdrop-blur-sm">
-        <lucide-icon [img]="ArrowLeft" class="h-4 w-4"></lucide-icon> Voltar para grupos
+    <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 flex flex-col md:flex-row gap-6 relative overflow-hidden transition-all duration-300"
+         [ngClass]="groupInfo()?.type === 'channel' ? 'xl:col-span-4' : 'xl:col-span-3'"
+         [style.boxShadow]="groupInfo()?.themeColor ? '0 10px 40px ' + groupInfo()?.themeColor + '10' : ''">
+      
+      <a routerLink="/groups" class="absolute top-5 left-5 text-gray-400 hover:text-white flex items-center gap-2 text-xs font-semibold z-[50] bg-black/40 px-3 py-1.5 rounded-lg backdrop-blur-sm cursor-pointer border border-white/10 hover:bg-black/60 transition-colors">
+        <lucide-icon [img]="ArrowLeft" class="h-4 w-4"></lucide-icon> Voltar
       </a>
       
-      <!-- Banner / Imagem -->
-      <div class="w-full md:w-[320px] h-[180px] rounded-xl overflow-hidden relative shrink-0">
-        <img src="assets/image/header/main_header.png" alt="Banner" class="w-full h-full object-cover">
-        <div class="absolute bottom-4 left-4 h-12 w-12 bg-purple-600 rounded-xl border-2 border-[#0c0817] flex items-center justify-center">
-          <lucide-icon [img]="Users" class="h-6 w-6 text-white"></lucide-icon>
-        </div>
-      </div>
-
-      <!-- Detalhes -->
-      <div class="flex flex-col justify-end flex-1 pt-8 md:pt-0">
-        <div class="flex items-center gap-3 mb-2">
-          <h2 class="text-2xl font-bold text-white">Fortnite Salve o mundo</h2>
-          <button class="text-gray-500 hover:text-gray-300"><lucide-icon [img]="Edit2" class="h-4 w-4"></lucide-icon></button>
-          <span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-semibold text-gray-300 flex items-center gap-1.5">
-            <div class="h-1.5 w-1.5 bg-green-500 rounded-full"></div> Grupo da Comunidade
-          </span>
-        </div>
-        <p class="text-sm text-gray-400 mb-6 max-w-xl">Grupo oficial da comunidade Fortnite Brasil focado no modo Salve o Mundo. Dicas, estratégias, trocas e muita ajuda entre jogadores!</p>
+      <!-- Banner / Imagem Dinâmico com Overlay de Upload -->
+      <div class="w-full md:w-[320px] h-[180px] rounded-xl overflow-hidden relative shrink-0 mt-8 md:mt-0 bg-[#06040e] group">
+        <img [src]="groupInfo()?.coverImageUrl" alt="Banner" class="w-full h-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:opacity-40">
         
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-4 text-xs">
-          <div>
-            <p class="text-[10px] text-gray-500 mb-1">ID do Grupo</p>
-            <p class="font-mono text-gray-300 flex items-center gap-1">-1001234567890 <lucide-icon [img]="Copy" class="h-3 w-3 cursor-pointer hover:text-white"></lucide-icon></p>
+        <label class="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer bg-black/40 backdrop-blur-sm z-20">
+          <lucide-icon [img]="Camera" class="h-8 w-8 text-white mb-2 drop-shadow-lg"></lucide-icon>
+          <span class="text-[10px] font-bold text-white uppercase tracking-widest drop-shadow-md">Alterar Capa</span>
+          <input type="file" accept="image/png, image/jpeg, image/jpg, image/webp" class="hidden" (change)="onCoverImageSelected($event)">
+        </label>
+
+        <div class="absolute bottom-4 left-4 h-12 w-12 rounded-xl border-2 border-[#0c0817] flex items-center justify-center z-30"
+             [style.backgroundColor]="groupInfo()?.themeColor || '#9333ea'">
+          <lucide-icon [img]="getIcon(groupInfo()?.iconName)" class="h-6 w-6 text-white"></lucide-icon>
+        </div>
+      </div>
+
+      <div class="flex flex-col justify-end flex-1 pt-4 md:pt-0 min-w-0">
+        <div class="flex items-center gap-3 mb-2">
+          <h2 class="text-2xl font-bold text-white truncate">{{ groupInfo()?.name || 'Carregando...' }}</h2>
+          <button (click)="openEditor('description', 'Editar Descrição')" class="text-gray-500 hover:text-white transition-colors shrink-0">
+            <lucide-icon [img]="Edit2" class="h-4 w-4"></lucide-icon>
+          </button>
+          
+          @if (groupInfo()?.isOfficial) {
+            <span class="px-2.5 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-semibold text-gray-300 flex items-center gap-1.5 shrink-0 hidden lg:flex">
+              <div class="h-1.5 w-1.5 bg-green-500 rounded-full"></div> Oficial
+            </span>
+          }
+          @if (groupInfo()?.isVip) {
+            <span class="text-[9px] font-bold text-yellow-900 bg-yellow-500 px-2 py-1 rounded shrink-0 shadow-[0_0_10px_rgba(234,179,8,0.3)]">VIP</span>
+          }
+        </div>
+        
+        <p class="text-sm text-gray-400 mb-6 max-w-xl whitespace-pre-line leading-relaxed">{{ groupInfo()?.description || 'Nenhuma descrição informada.' }}</p>
+        
+        <div class="flex flex-wrap items-center gap-x-8 gap-y-4 text-xs">
+          <div class="min-w-0">
+            <p class="text-[10px] text-gray-500 mb-1 uppercase tracking-wider">ID Telegram</p>
+            <p class="font-mono text-gray-300 flex items-center gap-1 truncate max-w-[150px] sm:max-w-none" [title]="groupInfo()?.platformId">
+              <span class="truncate">{{ groupInfo()?.platformId }}</span> 
+              <lucide-icon [img]="Copy" class="h-3 w-3 cursor-pointer hover:text-white shrink-0"></lucide-icon>
+            </p>
           </div>
           <div>
-            <p class="text-[10px] text-gray-500 mb-1">Criado em</p>
-            <p class="text-gray-300 flex items-center gap-1.5"><lucide-icon [img]="Calendar" class="h-3.5 w-3.5"></lucide-icon> 12/02/2024</p>
+            <p class="text-[10px] text-gray-500 mb-1 uppercase tracking-wider">Criado em</p>
+            <p class="text-gray-300 flex items-center gap-1.5"><lucide-icon [img]="Calendar" class="h-3.5 w-3.5 shrink-0"></lucide-icon> {{ groupInfo()?.createdAt | date:'dd/MM/yyyy' }}</p>
           </div>
           <div>
-            <p class="text-[10px] text-gray-500 mb-1">Criado por</p>
-            <p class="text-blue-400 flex items-center gap-1.5"><lucide-icon [img]="User" class="h-3.5 w-3.5"></lucide-icon> @CebolaFn</p>
+            <p class="text-[10px] text-gray-500 mb-1 uppercase tracking-wider">Tipo</p>
+            <p class="text-gray-300 flex items-center gap-1.5 capitalize"><lucide-icon [img]="Users" class="h-3.5 w-3.5 shrink-0"></lucide-icon> {{ groupInfo()?.type }}</p>
           </div>
           <div>
-            <p class="text-[10px] text-gray-500 mb-1">Idioma</p>
-            <p class="text-gray-300 flex items-center gap-1.5"><lucide-icon [img]="Globe" class="h-3.5 w-3.5"></lucide-icon> Português (BR)</p>
-          </div>
-          <div>
-            <p class="text-[10px] text-gray-500 mb-1">Membros</p>
-            <p class="text-gray-300 flex items-center gap-1.5"><lucide-icon [img]="Users" class="h-3.5 w-3.5"></lucide-icon> 328</p>
-          </div>
-          <div>
-            <p class="text-[10px] text-gray-500 mb-1">Tópicos</p>
-            <p class="text-gray-300 flex items-center gap-1.5"><lucide-icon [img]="Hash" class="h-3.5 w-3.5"></lucide-icon> Ativados</p>
+            <p class="text-[10px] text-gray-500 mb-1 uppercase tracking-wider">Membros</p>
+            <p class="text-gray-300 flex items-center gap-1.5"><lucide-icon [img]="Users" class="h-3.5 w-3.5 shrink-0"></lucide-icon> {{ groupInfo()?.memberCount }}</p>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Ações do Bot no Grupo -->
-    <div class="xl:col-span-1 bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 flex flex-col justify-center">
-      <div class="flex items-center gap-3 mb-6">
-        <div class="h-10 w-10 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center">
-          <div class="h-3 w-3 bg-green-500 rounded-full animate-pulse"></div>
-        </div>
-        <div>
-          <p class="text-sm font-bold text-green-500">Bot no grupo</p>
-          <p class="text-[10px] text-gray-500">Ativo desde 12/02/2024 08:32</p>
+    
+    <!-- AÇÕES DO BOT NO GRUPO (Oculto para Canais) -->
+    @if (groupInfo()?.type === 'group') {
+      <div class="xl:col-span-1 bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 flex flex-col justify-center animate-in fade-in duration-300">
+        @if (isBotEnabled()) {
+          <div class="flex items-center gap-3 mb-6">
+            <div class="h-10 w-10 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center">
+              <div class="h-3 w-3 bg-green-500 rounded-full animate-pulse"></div>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-green-500">Bot Ativo</p>
+              <p class="text-[10px] text-gray-500">Monitorando o grupo</p>
+            </div>
+          </div>
+        } @else {
+          <div class="flex items-center gap-3 mb-6">
+            <div class="h-10 w-10 bg-gray-500/10 border border-gray-500/30 rounded-full flex items-center justify-center">
+              <div class="h-3 w-3 bg-gray-500 rounded-full"></div>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-gray-500">Bot Inativo</p>
+              <p class="text-[10px] text-gray-600">Sem proteção configurada</p>
+            </div>
+          </div>
+        }
+        <div class="space-y-3">
+          <button class="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-semibold text-sm transition-colors shadow-lg shadow-purple-600/20">
+            <lucide-icon [img]="Send" class="h-4 w-4"></lucide-icon> Ver no Telegram
+          </button>
+          <button class="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-gray-300 py-3 rounded-xl font-semibold text-sm transition-colors">
+            <lucide-icon [img]="RefreshCw" class="h-4 w-4"></lucide-icon> Reiniciar Bot
+          </button>
         </div>
       </div>
-      <div class="space-y-3">
-        <button class="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-semibold text-sm transition-colors">
-          <lucide-icon [img]="Send" class="h-4 w-4"></lucide-icon> Ver no Telegram
-        </button>
-        <button class="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-gray-300 py-3 rounded-xl font-semibold text-sm transition-colors">
-          <lucide-icon [img]="RefreshCw" class="h-4 w-4"></lucide-icon> Reiniciar Bot
-        </button>
-      </div>
-    </div>
-
+    }
   </div>
 
-  <!-- LAYOUT PRINCIPAL: ABAS ESQUERDA + SIDEBAR DIREITA -->
   <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
-    
-    <!-- CONTEÚDO PRINCIPAL (COM ABAS) -->
-    <div class="xl:col-span-3">
+    <!-- ÁREA PRINCIPAL DAS ABAS -->
+    <div class="transition-all duration-300" [ngClass]="groupInfo()?.type === 'channel' ? 'xl:col-span-4' : 'xl:col-span-3'">
       
-      <!-- Navegação de Abas Reutilizável -->
       <app-shared-tabs 
-        [tabs]="groupTabs" 
+        [tabs]="groupTabs()" 
         [activeTabId]="activeTab()" 
         (tabChange)="activeTab.set($event)">
       </app-shared-tabs>
 
-      <!-- Renderização Dinâmica das Abas -->
-      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-6">
+      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-6 min-h-[400px]">
         
-        <!-- ABA: CONFIGURAÇÕES -->
+        <!-- ABA 1: CONFIGURAÇÕES -->
         @if (activeTab() === 'configuracoes') {
-          <div class="mb-6">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-1">CONFIGURAÇÕES GERAIS</h3>
-            <p class="text-xs text-gray-500">Configure o comportamento geral do bot neste grupo.</p>
-          </div>
-          
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-            <!-- Coluna 1 -->
-            <div class="space-y-6">
-              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-                <div>
-                  <p class="text-sm font-semibold text-gray-200">Status do Bot</p>
-                  <p class="text-[10px] text-gray-500 mt-0.5">Ativa ou desativa o bot neste grupo.</p>
-                </div>
-                <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
-              </div>
-
-              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-                <div>
-                  <p class="text-sm font-semibold text-gray-200">Quantidade de warns antes do ban</p>
-                  <p class="text-[10px] text-gray-500 mt-0.5">Defina quantos warns o usuário pode receber.</p>
-                </div>
-                <div class="flex items-center gap-3 bg-[#06040e] border border-gray-800 rounded-lg px-2 py-1">
-                  <button class="text-gray-500 hover:text-white"><lucide-icon [img]="Minus" class="h-3 w-3"></lucide-icon></button>
-                  <span class="text-sm font-mono text-white w-4 text-center">3</span>
-                  <button class="text-gray-500 hover:text-white"><lucide-icon [img]="Plus" class="h-3 w-3"></lucide-icon></button>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-                <div>
-                  <p class="text-sm font-semibold text-gray-200">O que fazer em um warn?</p>
-                  <p class="text-[10px] text-gray-500 mt-0.5">Ação aplicada quando um usuário receber um warn.</p>
-                </div>
-                <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 px-3 py-1.5 rounded-lg text-xs text-gray-300">
-                  Silenciar <lucide-icon [img]="ChevronDown" class="h-3 w-3 text-gray-500"></lucide-icon>
-                </button>
-              </div>
-
-              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-                <div>
-                  <p class="text-sm font-semibold text-gray-200">Duração do silêncio</p>
-                  <p class="text-[10px] text-gray-500 mt-0.5">Tempo que o usuário ficará silenciado.</p>
-                </div>
-                <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 px-3 py-1.5 rounded-lg text-xs text-gray-300">
-                  1 hora <lucide-icon [img]="ChevronDown" class="h-3 w-3 text-gray-500"></lucide-icon>
-                </button>
-              </div>
-            </div>
-
-            <!-- Coluna 2 -->
-            <div class="space-y-6">
-              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-                <div>
-                  <p class="text-sm font-semibold text-gray-200">Mensagem de boas-vindas</p>
-                  <p class="text-[10px] text-gray-500 mt-0.5">Enviar mensagem para novos membros.</p>
-                </div>
-                <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
-              </div>
-
-              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-                <div>
-                  <p class="text-sm font-semibold text-gray-200">Mensagem de saída</p>
-                  <p class="text-[10px] text-gray-500 mt-0.5">Enviar mensagem quando um membro sair.</p>
-                </div>
-                <div class="w-10 h-5 bg-gray-700 rounded-full relative cursor-pointer"><div class="absolute left-1 top-0.5 h-4 w-4 bg-gray-400 rounded-full"></div></div>
-              </div>
-
-              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-                <div>
-                  <p class="text-sm font-semibold text-gray-200">Apagar a cada X minutos apenas GIFs</p>
-                  <p class="text-[10px] text-gray-500 mt-0.5">Limita o envio de GIFs a cada intervalo.</p>
-                </div>
-                <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 px-3 py-1.5 rounded-lg text-xs text-gray-300">
-                  10 minutos <lucide-icon [img]="ChevronDown" class="h-3 w-3 text-gray-500"></lucide-icon>
-                </button>
-              </div>
-
-              <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-                <div>
-                  <p class="text-sm font-semibold text-gray-200">Idioma do Bot</p>
-                  <p class="text-[10px] text-gray-500 mt-0.5">Idioma utilizado nas mensagens do bot.</p>
-                </div>
-                <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 px-3 py-1.5 rounded-lg text-xs text-gray-300">
-                  Português (BR) <lucide-icon [img]="ChevronDown" class="h-3 w-3 text-gray-500"></lucide-icon>
-                </button>
-              </div>
-            </div>
-          </div>
-        }
-
-        <!-- ABA: PERMISSÕES -->
-        @if (activeTab() === 'permissoes') {
-          <div class="flex gap-8">
-            <div class="w-[300px] shrink-0 border-r border-gray-800/50 pr-8 space-y-4">
-              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Enviar mensagens</span></div>
-              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Enviar mídia</span></div>
-              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Enviar enquetes</span></div>
-              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Adicionar links</span></div>
-              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Ver membros</span></div>
-              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Banir usuários</span></div>
-              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Fixar mensagens</span></div>
-              <div class="flex items-center gap-3 text-green-400"><lucide-icon [img]="Check" class="h-5 w-5 bg-green-500/20 rounded"></lucide-icon> <span class="text-sm font-medium">Gerenciar tópicos</span></div>
-              
-              <div class="mt-8 p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl flex items-center gap-3">
-                <lucide-icon [img]="Shield" class="h-6 w-6 text-gray-500"></lucide-icon>
-                <div>
-                  <p class="text-[10px] text-gray-500 uppercase tracking-widest">Permissões atuais</p>
-                  <p class="text-sm font-bold text-gray-200">Administrador</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        }
-
-        <!-- ABA: WARNS -->
-        @if (activeTab() === 'warns') {
-          <div class="max-w-xl space-y-4">
-            <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-              <span class="text-sm font-semibold text-gray-200">Quantidade de warns antes do ban</span>
-              <div class="flex items-center gap-3 bg-[#06040e] border border-gray-800 rounded-lg px-2 py-1">
-                <button class="text-gray-500 hover:text-white"><lucide-icon [img]="Minus" class="h-3 w-3"></lucide-icon></button>
-                <span class="text-sm font-mono text-white w-4 text-center">3</span>
-                <button class="text-gray-500 hover:text-white"><lucide-icon [img]="Plus" class="h-3 w-3"></lucide-icon></button>
-              </div>
-            </div>
-            <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-              <span class="text-sm font-semibold text-gray-200">O que fazer em um warn?</span>
-              <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 px-3 py-1.5 rounded-lg text-xs text-gray-300">
-                Silenciar <lucide-icon [img]="ChevronDown" class="h-3 w-3 text-gray-500"></lucide-icon>
-              </button>
-            </div>
-            <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-              <span class="text-sm font-semibold text-gray-200">Duração do silêncio</span>
-              <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 px-3 py-1.5 rounded-lg text-xs text-gray-300">
-                1 hora <lucide-icon [img]="ChevronDown" class="h-3 w-3 text-gray-500"></lucide-icon>
-              </button>
-            </div>
-            <div class="flex items-start gap-3 p-4 bg-purple-600/10 border border-purple-500/20 rounded-xl mt-6">
-              <lucide-icon [img]="Info" class="h-5 w-5 text-purple-400 mt-0.5"></lucide-icon>
+          <div class="space-y-10 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            
+            <div class="flex items-center justify-between">
               <div>
-                <p class="text-sm font-bold text-purple-300">Sobre 3 warns</p>
-                <p class="text-xs text-purple-400/80 mt-1">Quando o usuário atingir o número de infrações definido acima, o bot aplicará 3 warns de uma vez.</p>
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">
+                  {{ groupInfo()?.type === 'channel' ? 'Configurações do Canal' : 'Moderação e Filtros Principais' }}
+                </h3>
+                <p class="text-[10px] text-gray-500 mt-1">
+                  {{ groupInfo()?.type === 'channel' ? 'Ajuste os dados estéticos e verifique o vínculo de discussão.' : 'Regras primárias processadas em tempo real pelo bot no grupo.' }}
+                </p>
               </div>
+              <button (click)="saveAllSettings()" [disabled]="isSaving()" class="bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-lg text-xs font-semibold transition-colors shadow-lg shadow-purple-600/20 flex items-center gap-2">
+                @if (isSaving()) {
+                  <div class="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Salvando...
+                } @else {
+                  <lucide-icon [img]="CheckCircle" class="h-4 w-4"></lucide-icon> Salvar Configurações
+                }
+              </button>
+            </div>
+
+            @if (groupInfo()?.type === 'group') {
+              @if (!isBotEnabled()) {
+                <div class="bg-red-500/5 border border-red-500/10 rounded-2xl p-8 flex flex-col items-center justify-center text-center max-w-4xl mx-auto">
+                  <lucide-icon [img]="ShieldAlert" class="h-10 w-10 text-red-400 mb-3"></lucide-icon>
+                  <h3 class="text-sm font-bold text-red-400 mb-1">Moderação Desativada</h3>
+                  <p class="text-[11px] text-red-400/70 max-w-md">Para acessar as configurações de filtros de mensagens e regras, ative o botão de Monitoramento na barra lateral.</p>
+                </div>
+              } @else {
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl">
+                  <div class="p-6 bg-white/[0.02] border border-gray-800/40 rounded-xl flex flex-col justify-between">
+                     <div>
+                       <p class="text-sm font-bold text-gray-200 mb-1 flex items-center gap-2"><lucide-icon [img]="Shield" class="h-4 w-4 text-purple-400"></lucide-icon> Verificação de Regras</p>
+                       <p class="text-[11px] text-gray-500 mb-4 leading-relaxed">Exige que o membro participe do canal de regras da comunidade. Caso contrário, ele sofre a ação configurada abaixo.</p>
+                     </div>
+                     
+                     @if (botConfig()?.rulesCheck?.status) {
+                       <div class="flex items-center justify-between w-full bg-[#06040e] border border-gray-800 rounded-lg px-3 py-2 mt-3 relative focus-within:border-purple-500 transition-colors">
+                          <span class="text-[10px] text-gray-500 font-bold uppercase shrink-0 mr-3">Ação:</span>
+                          <div class="relative flex-1">
+                            <select [ngModel]="botConfig()?.rulesCheck?.action" (ngModelChange)="updateBotConfigField('rulesCheck', 'action', $event)" 
+                                    class="w-full bg-transparent text-white text-sm text-right focus:outline-none appearance-none cursor-pointer pr-6 relative z-10" style="direction: rtl;">
+                               <option value="mute" class="bg-[#130d24] text-white text-left" style="direction: ltr;">Silenciar (Mute)</option>
+                               <option value="kick" class="bg-[#130d24] text-white text-left" style="direction: ltr;">Expulsar (Kick)</option>
+                               <option value="warn" class="bg-[#130d24] text-white text-left" style="direction: ltr;">Avisar (Warn)</option>
+                            </select>
+                            <lucide-icon [img]="ChevronDown" class="absolute right-0 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none z-0"></lucide-icon>
+                          </div>
+                       </div>
+                     }
+  
+                     <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-800/50">
+                       <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider" [ngClass]="botConfig()?.rulesCheck?.status ? 'text-purple-400' : 'text-gray-500'">Ativar Filtro:</span>
+                       <div (click)="botConfig()!.rulesCheck.status = !botConfig()!.rulesCheck.status" class="w-10 h-5 rounded-full relative cursor-pointer transition-colors shrink-0" [ngClass]="botConfig()?.rulesCheck?.status ? 'bg-purple-600' : 'bg-gray-700'">
+                          <div class="absolute top-0.5 h-4 w-4 bg-white rounded-full transition-all" [ngClass]="botConfig()?.rulesCheck?.status ? 'right-1' : 'left-1'"></div>
+                       </div>
+                     </div>
+                  </div>
+                  
+                  <div class="p-6 bg-white/[0.02] border border-gray-800/40 rounded-xl flex flex-col justify-between">
+                     <div>
+                       <p class="text-sm font-bold text-gray-200 mb-1 flex items-center gap-2"><lucide-icon [img]="Zap" class="h-4 w-4 text-indigo-400"></lucide-icon> Limitação de GIFs (Anti-Spam)</p>
+                       <p class="text-[11px] text-gray-500 mb-4 leading-relaxed">Controla o envio massivo de mídias dinâmicas para evitar poluição visual no chat.</p>
+                     </div>
+                     
+                     @if (botConfig()?.gifs?.status) {
+                       <div class="flex items-center gap-4 bg-[#06040e] border border-gray-800 rounded-lg p-3 mt-3">
+                         <div class="flex-1 flex items-center justify-between">
+                            <span class="text-[10px] text-gray-500 font-bold uppercase">Máximo:</span>
+                            <input type="number" [ngModel]="botConfig()?.gifs?.count" (ngModelChange)="updateBotConfigField('gifs', 'count', $event)" class="w-12 bg-transparent text-white text-sm text-center focus:outline-none border-b border-gray-700">
+                         </div>
+                         <div class="w-px h-4 bg-gray-800"></div>
+                         <div class="flex-1 flex items-center justify-between">
+                            <span class="text-[10px] text-gray-500 font-bold uppercase">Minutos:</span>
+                            <input type="number" [ngModel]="botConfig()?.gifs?.time" (ngModelChange)="updateBotConfigField('gifs', 'time', $event)" class="w-12 bg-transparent text-white text-sm text-center focus:outline-none border-b border-gray-700">
+                         </div>
+                       </div>
+                     }
+  
+                     <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-800/50">
+                       <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider" [ngClass]="botConfig()?.gifs?.status ? 'text-purple-400' : 'text-gray-500'">Ativar Filtro:</span>
+                       <div (click)="botConfig()!.gifs.status = !botConfig()!.gifs.status" class="w-10 h-5 rounded-full relative cursor-pointer transition-colors" [ngClass]="botConfig()?.gifs?.status ? 'bg-purple-600' : 'bg-gray-700'">
+                          <div class="absolute top-0.5 h-4 w-4 bg-white rounded-full transition-all" [ngClass]="botConfig()?.gifs?.status ? 'right-1' : 'left-1'"></div>
+                       </div>
+                     </div>
+                  </div>
+                </div>
+              }
+            }
+
+            @if (groupInfo()?.type === 'channel') {
+              <div class="pt-8 border-t border-gray-800/50 max-w-5xl">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                   <div>
+                     <h4 class="text-sm font-bold text-white flex items-center gap-2"><lucide-icon [img]="Link" class="h-4 w-4 text-blue-400"></lucide-icon> Vínculo com Grupo de Discussão</h4>
+                     <p class="text-[10px] text-gray-500 mt-1">Conecte este canal a um grupo existente para que as postagens sejam encaminhadas automaticamente.</p>
+                   </div>
+                   <div (click)="toggleChannelLink()" class="w-10 h-5 rounded-full relative transition-colors shrink-0 cursor-pointer" 
+                        [ngClass]="isLinkedChannel() ? 'bg-blue-600' : 'bg-gray-700'">
+                     <div class="absolute top-0.5 h-4 w-4 bg-white rounded-full transition-all" [ngClass]="isLinkedChannel() ? 'right-1' : 'left-1'"></div>
+                   </div>
+                </div>
+                
+                @if (isLinkedChannel()) {
+                  <div class="animate-in fade-in slide-in-from-top-2 duration-300 mt-4">
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Selecione o Grupo Associado</label>
+                    <div class="relative max-w-md bg-[#130d24] border border-gray-800 rounded-lg focus-within:border-blue-500 transition-colors">
+                      <select [ngModel]="linkedChannelId()" (ngModelChange)="linkedChannelId.set($event)" class="w-full bg-transparent pl-4 pr-8 py-3 text-sm text-white focus:outline-none appearance-none cursor-pointer relative z-10">
+                         <option [value]="null" disabled selected class="bg-[#130d24] text-gray-500">Escolha um grupo livre...</option>
+                         @for (grp of availableGroups(); track grp.id) {
+                            <option [value]="grp.id" class="bg-[#130d24] text-white">{{ grp.name }}</option>
+                         }
+                      </select>
+                      <lucide-icon [img]="ChevronDown" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none z-0"></lucide-icon>
+                    </div>
+                  </div>
+                } @else {
+                  <div class="bg-[#130d24] border border-gray-800 rounded-xl p-5 flex items-center justify-between mt-2">
+                    <div class="flex items-center gap-4">
+                      <div class="h-12 w-12 bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-center justify-center">
+                        <lucide-icon [img]="Users" class="h-5 w-5 text-blue-400"></lucide-icon>
+                      </div>
+                      <div>
+                        <p class="text-sm font-bold text-gray-200">Nenhum grupo vinculado</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5">Este canal está operando solto, sem vínculo estrutural com fóruns/grupos.</p>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+
+            @if (groupInfo()?.type === 'group') {
+              <div class="pt-8 border-t border-gray-800/50 max-w-5xl">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                   <div>
+                     <h4 class="text-sm font-bold text-white flex items-center gap-2"><lucide-icon [img]="Link" class="h-4 w-4 text-blue-400"></lucide-icon> Vínculo com Canal Oficial</h4>
+                     <p class="text-[10px] text-gray-500 mt-1">Sincroniza este grupo como o chat de discussão de um canal da comunidade.</p>
+                   </div>
+                   <div (click)="toggleChannelLink()" class="w-10 h-5 rounded-full relative transition-colors shrink-0 cursor-pointer" 
+                        [ngClass]="isLinkedChannel() ? 'bg-blue-600' : 'bg-gray-700'">
+                     <div class="absolute top-0.5 h-4 w-4 bg-white rounded-full transition-all" [ngClass]="isLinkedChannel() ? 'right-1' : 'left-1'"></div>
+                   </div>
+                </div>
+                
+                @if (isForumMode()) {
+                   <p class="text-[10px] text-yellow-500 font-semibold mb-4 flex items-center gap-1.5 animate-in fade-in"><lucide-icon [img]="AlertTriangle" class="h-3 w-3"></lucide-icon> Desative o Modo Fórum na aba Tópicos para permitir o vínculo estrutural com um canal.</p>
+                }
+                
+                @if (isLinkedChannel()) {
+                  <div class="animate-in fade-in slide-in-from-top-2 duration-300 mt-4">
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Selecione o Canal Associado</label>
+                    <div class="relative max-w-md bg-[#130d24] border border-gray-800 rounded-lg focus-within:border-blue-500 transition-colors">
+                      <select [ngModel]="linkedChannelId()" (ngModelChange)="linkedChannelId.set($event)" class="w-full bg-transparent pl-4 pr-8 py-3 text-sm text-white focus:outline-none appearance-none cursor-pointer relative z-10">
+                         <option [value]="null" disabled selected class="bg-[#130d24] text-gray-500">Escolha um canal disponível...</option>
+                         @for (channel of availableChannels(); track channel.id) {
+                            <option [value]="channel.id" class="bg-[#130d24] text-white">{{ channel.name }}</option>
+                         }
+                      </select>
+                      <lucide-icon [img]="ChevronDown" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none z-0"></lucide-icon>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+
+            <div class="pt-8 border-t border-gray-800/50">
+              <div class="mb-8">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider">Exibição na Lista de Comunidades</h3>
+                <p class="text-[10px] text-gray-500 mt-1">Ajuste os dados estéticos para o card do grupo na vitrine pública do painel.</p>
+              </div>
+
+              <div class="space-y-6 max-w-5xl mb-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Nome da Comunidade</label>
+                    <input type="text" [ngModel]="groupInfo()?.name" (ngModelChange)="groupInfo.update(g => g ? {...g, name: $event} : null)" class="w-full bg-[#130d24] border border-gray-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Idioma</label>
+                    <div class="relative bg-[#130d24] border border-gray-800 rounded-lg focus-within:border-purple-500 transition-colors">
+                      <select [ngModel]="groupInfo()?.language" (ngModelChange)="groupInfo.update(g => g ? {...g, language: $event} : null)" class="w-full bg-transparent pl-4 pr-8 py-3 text-sm text-white focus:outline-none appearance-none cursor-pointer relative z-10">
+                        <option value="pt-BR" class="bg-[#130d24] text-white">Português (Brasil)</option>
+                        <option value="en-US" class="bg-[#130d24] text-white">Inglês (EUA)</option>
+                        <option value="es-ES" class="bg-[#130d24] text-white">Espanhol</option>
+                      </select>
+                      <lucide-icon [img]="ChevronDown" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none z-0"></lucide-icon>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Descrição</label>
+                  <textarea rows="4" [ngModel]="groupInfo()?.description" (ngModelChange)="groupInfo.update(g => g ? {...g, description: $event} : null)" class="w-full bg-[#130d24] border border-gray-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors resize-none"></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Modo da Comunidade</label>
+                    <div class="relative bg-[#130d24] border border-gray-800 rounded-lg focus-within:border-purple-500 transition-colors">
+                      <select [ngModel]="groupInfo()?.mode" (ngModelChange)="groupInfo.update(g => g ? {...g, mode: $event} : null)" class="w-full bg-transparent pl-4 pr-8 py-3 text-sm text-white focus:outline-none appearance-none cursor-pointer relative z-10">
+                        @for (mode of availableModes(); track mode.id) {
+                           <option [value]="mode.name" class="bg-[#130d24] text-white">{{ mode.name }}</option>
+                        }
+                        @if (availableModes().length === 0) {
+                           <option value="" disabled class="bg-[#130d24] text-gray-500">Carregando modos...</option>
+                        }
+                      </select>
+                      <lucide-icon [img]="ChevronDown" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none z-0"></lucide-icon>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Visibilidade</label>
+                    <div class="relative bg-[#130d24] border border-gray-800 rounded-lg focus-within:border-purple-500 transition-colors">
+                      <select [ngModel]="groupInfo()?.visibility" (ngModelChange)="groupInfo.update(g => g ? {...g, visibility: $event} : null)" class="w-full bg-transparent pl-4 pr-8 py-3 text-sm text-white focus:outline-none appearance-none cursor-pointer relative z-10">
+                        <option value="public" class="bg-[#130d24] text-white">Público</option>
+                        <option value="private" class="bg-[#130d24] text-white">Privado</option>
+                      </select>
+                      <lucide-icon [img]="ChevronDown" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none z-0"></lucide-icon>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Ícone da Categoria</label>
+                  <div class="flex flex-wrap gap-2 max-h-[140px] overflow-y-auto custom-scrollbar pr-2 pb-2">
+                    @for (iconName of availableIcons; track iconName) {
+                      <button (click)="groupInfo.update(g => g ? {...g, iconName: iconName} : null)" 
+                              class="h-10 w-10 flex items-center justify-center rounded-lg border transition-colors shrink-0" 
+                              [title]="iconName"
+                              [ngClass]="groupInfo()?.iconName === iconName ? 'border-gray-500 bg-gray-800 text-white shadow-lg' : 'border-gray-800 bg-[#130d24] text-gray-500 hover:text-gray-300 hover:border-gray-700'">
+                        <lucide-icon [img]="getIcon(iconName)" class="h-4 w-4"></lucide-icon>
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Destaque</label>
+                  <div class="flex items-center gap-2 pt-1.5 overflow-x-auto custom-scrollbar pb-2 w-full">
+                    <button (click)="groupInfo.update(g => g ? {...g, themeColor: '#9333ea'} : null)" class="h-7 w-7 shrink-0 rounded-full border-2 transition-transform shadow-md" [ngClass]="groupInfo()?.themeColor === '#9333ea' ? 'border-white scale-110' : 'border-transparent hover:scale-110'" style="background-color: #9333ea"></button>
+                    <button (click)="groupInfo.update(g => g ? {...g, themeColor: '#3b82f6'} : null)" class="h-7 w-7 shrink-0 rounded-full border-2 transition-transform shadow-md" [ngClass]="groupInfo()?.themeColor === '#3b82f6' ? 'border-white scale-110' : 'border-transparent hover:scale-110'" style="background-color: #3b82f6"></button>
+                    <button (click)="groupInfo.update(g => g ? {...g, themeColor: '#06b6d4'} : null)" class="h-7 w-7 shrink-0 rounded-full border-2 transition-transform shadow-md" [ngClass]="groupInfo()?.themeColor === '#06b6d4' ? 'border-white scale-110' : 'border-transparent hover:scale-110'" style="background-color: #06b6d4"></button>
+                    <button (click)="groupInfo.update(g => g ? {...g, themeColor: '#10b981'} : null)" class="h-7 w-7 shrink-0 rounded-full border-2 transition-transform shadow-md" [ngClass]="groupInfo()?.themeColor === '#10b981' ? 'border-white scale-110' : 'border-transparent hover:scale-110'" style="background-color: #10b981"></button>
+                    <button (click)="groupInfo.update(g => g ? {...g, themeColor: '#f97316'} : null)" class="h-7 w-7 shrink-0 rounded-full border-2 transition-transform shadow-md" [ngClass]="groupInfo()?.themeColor === '#f97316' ? 'border-white scale-110' : 'border-transparent hover:scale-110'" style="background-color: #f97316"></button>
+                    <button (click)="groupInfo.update(g => g ? {...g, themeColor: '#ef4444'} : null)" class="h-7 w-7 shrink-0 rounded-full border-2 transition-transform shadow-md" [ngClass]="groupInfo()?.themeColor === '#ef4444' ? 'border-white scale-110' : 'border-transparent hover:scale-110'" style="background-color: #ef4444"></button>
+                    <div class="w-px h-6 bg-gray-800 mx-1 shrink-0"></div>
+                    <label class="relative h-7 w-7 shrink-0 rounded-full overflow-hidden cursor-pointer border border-gray-600 hover:border-gray-400 flex items-center justify-center transition-colors">
+                      <input type="color" [ngModel]="groupInfo()?.themeColor" (ngModelChange)="groupInfo.update(g => g ? {...g, themeColor: $event} : null)" class="absolute inset-[-10px] w-[50px] h-[50px] cursor-pointer">
+                      <lucide-icon [img]="Plus" class="h-3 w-3 text-white mix-blend-difference pointer-events-none drop-shadow-md"></lucide-icon>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Preview -->
+              <div class="w-full flex flex-col items-center justify-start pt-10 border-t border-gray-800/50">
+                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-6 text-center w-full">Preview em Tempo Real</p>
+                
+                <div class="w-full max-w-[380px] h-[160px] bg-[#130d24] border border-gray-800 rounded-2xl flex items-stretch transition-all duration-300 overflow-hidden relative shadow-lg"
+                     [style.boxShadow]="'0 15px 40px ' + (groupInfo()?.themeColor || '#3b82f6') + '30'">
+                  
+                  <div class="relative w-32 shrink-0 bg-[#06040e] flex flex-col items-center justify-center overflow-hidden border-r border-gray-800/50">
+                    <img [src]="groupInfo()?.coverImageUrl" class="absolute inset-0 w-full h-full object-cover opacity-80">
+                    
+                    @if (isBotEnabled() && groupInfo()?.type === 'group') {
+                      <div class="absolute top-2 left-2 flex items-center gap-1.5 bg-black/80 backdrop-blur-md border border-white/10 px-2 py-1 rounded-lg z-10 shadow-lg border-purple-500/40">
+                        <div class="relative flex h-2 w-2 mr-0.5">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-purple-500"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
+                        </div>
+                        <lucide-icon [img]="Bot" class="h-3 w-3 text-purple-400"></lucide-icon>
+                        <span class="text-[9px] font-bold text-gray-200">Ativo</span>
+                      </div>
+                    } @else if (groupInfo()?.type === 'group') {
+                      <div class="absolute top-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm border border-white/5 px-2 py-1 rounded-lg z-10">
+                        <lucide-icon [img]="ShieldAlert" class="h-3 w-3 text-gray-500"></lucide-icon>
+                        <span class="text-[9px] font-medium text-gray-400">Sem Moderação</span>
+                      </div>
+                    }
+                  </div>
+      
+                  <div class="flex flex-col p-4 flex-1 min-w-0">
+                    <div class="flex items-start justify-between gap-3">
+                      <h4 class="text-sm font-extrabold text-white truncate">{{ groupInfo()?.name || 'Nome do Grupo' }}</h4>
+                      @if (groupInfo()?.isVip) {
+                        <span class="text-[8px] font-bold text-yellow-900 bg-yellow-500 px-1.5 py-0.5 rounded shrink-0 shadow-[0_0_10px_rgba(234,179,8,0.3)] mt-0.5">VIP</span>
+                      }
+                    </div>
+                    <p class="text-[10px] text-gray-400 mt-1.5 line-clamp-3 leading-relaxed flex-1">
+                      {{ groupInfo()?.description || 'A descrição do grupo aparecerá aqui.' }}
+                    </p>
+                    <div class="mt-2 mb-2 flex items-center gap-1.5">
+                      <lucide-icon [img]="getIcon(groupInfo()?.iconName)" class="h-3 w-3" [style.color]="groupInfo()?.themeColor || '#3b82f6'"></lucide-icon>
+                      <span class="text-[9px] font-bold uppercase tracking-widest" [style.color]="groupInfo()?.themeColor || '#3b82f6'">
+                        {{ groupInfo()?.mode || 'Geral' }}
+                      </span>
+                    </div>
+                    <div class="flex items-center justify-between text-[9px] font-medium pt-2 border-t border-gray-800/50">
+                      <span class="text-green-500 flex items-center gap-1">
+                        <div class="h-1 w-1 bg-green-500 rounded-full shadow-[0_0_5px_rgba(34,197,94,0.5)]"></div> {{ groupInfo()?.onlineCount || 0 }} online
+                      </span>
+                      <span class="text-gray-500">{{ groupInfo()?.memberCount || 0 }} membros</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ZONA DE PERIGO -->
+              <div class="mt-12 pt-8 border-t border-red-500/20 max-w-5xl">
+                <div class="bg-red-500/5 border border-red-500/20 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div>
+                    <h3 class="text-sm font-bold text-red-500 uppercase tracking-wider flex items-center gap-2"><lucide-icon [img]="AlertTriangle" class="h-4 w-4"></lucide-icon> Zona de Perigo</h3>
+                    <p class="text-[11px] text-gray-500 mt-1 leading-relaxed">A exclusão desativará a comunidade no painel e desconectará integrações. O registro histórico será mantido por segurança.</p>
+                  </div>
+                  <button (click)="confirmDeleteGroup()" class="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 px-6 py-2.5 rounded-xl text-xs font-bold transition-colors flex items-center gap-2 shrink-0">
+                    <lucide-icon [img]="Trash2" class="h-4 w-4"></lucide-icon> Excluir Comunidade
+                  </button>
+                </div>
+              </div>
+
             </div>
           </div>
         }
 
-        <!-- ABA: MENSAGENS -->
+        <!-- ABA 2: TÓPICOS -->
+        @if (activeTab() === 'topicos') {
+          <div class="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            
+            <div class="flex items-center justify-between mb-8">
+              <div>
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                  <lucide-icon [img]="Hash" class="h-4 w-4 text-purple-500"></lucide-icon> Gerenciamento de Tópicos
+                </h3>
+                <p class="text-[11px] text-gray-500 mt-1">Habilite o formato fórum para organizar o grupo em salas temáticas e rotear os alertas automáticos.</p>
+              </div>
+              <button (click)="saveAllSettings()" [disabled]="isSaving()" class="bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-lg text-xs font-semibold transition-colors shadow-lg shadow-purple-600/20 flex items-center gap-2">
+                @if (isSaving()) {
+                  <div class="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Salvando...
+                } @else {
+                  <lucide-icon [img]="CheckCircle" class="h-4 w-4"></lucide-icon> Salvar Configurações
+                }
+              </button>
+            </div>
+
+            @if (!isBotEnabled()) {
+              <div class="bg-red-500/5 border border-red-500/10 rounded-2xl p-10 flex flex-col items-center justify-center text-center my-8">
+                <lucide-icon [img]="ShieldAlert" class="h-16 w-16 text-red-400 mb-4"></lucide-icon>
+                <h3 class="text-lg font-bold text-red-400 mb-2">Moderação Desativada</h3>
+                <p class="text-sm text-red-400/70 max-w-md">Ative o monitoramento do bot na barra lateral para habilitar o gerenciamento de tópicos e o roteamento de mensagens.</p>
+              </div>
+            } @else {
+              <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-6">
+                
+                <div class="flex items-center justify-end mb-6">
+                  <div class="flex items-center gap-3 bg-[#130d24] border border-gray-800 px-4 py-2 rounded-xl transition-colors" 
+                       [ngClass]="isLinkedChannel() ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-gray-700'"
+                       (click)="toggleForumMode()">
+                    <span class="text-xs font-semibold" [ngClass]="isForumMode() ? 'text-purple-400' : 'text-gray-400'">Modo Fórum</span>
+                    <div class="w-8 h-4 rounded-full relative transition-colors" [ngClass]="isForumMode() ? 'bg-purple-600' : 'bg-gray-700'">
+                      <div class="absolute top-0.5 h-3 w-3 bg-white rounded-full transition-all" [ngClass]="isForumMode() ? 'right-1' : 'left-1'"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                @if (isLinkedChannel()) {
+                  <p class="text-[10px] text-yellow-500 font-semibold mb-6 flex items-center gap-1.5 bg-yellow-500/10 border border-yellow-500/20 p-3 rounded-lg">
+                    <lucide-icon [img]="AlertTriangle" class="h-3 w-3"></lucide-icon> 
+                    A API do Telegram não permite Modo Fórum em grupos vinculados a canais. O vínculo ativo bloqueia esta função.
+                  </p>
+                }
+                
+                @if (isForumMode()) {
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @for (topic of getTopicList(); track topic.key) {
+                      <div class="bg-[#130d24] border border-gray-800 rounded-xl p-4 flex items-center justify-between group hover:border-gray-700 transition-colors">
+                        <div class="flex items-center gap-3">
+                          <div class="h-8 w-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                            <lucide-icon [img]="MessageSquare" class="h-4 w-4 text-blue-400"></lucide-icon>
+                          </div>
+                          <div>
+                            <p class="text-xs font-bold text-gray-200">{{ topic.name }}</p>
+                            <p class="text-[9px] text-gray-500 mt-0.5">ID: {{ topic.id }}</p>
+                          </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                          <button (click)="toggleTopicStatus(topic.key, topic.status)" class="transition-transform hover:scale-105" title="Mudar Status">
+                            @if (topic.status === 'open') {
+                              <span class="text-[10px] font-bold text-green-400 bg-green-400/10 px-2 py-1 rounded">Aberto</span>
+                            } @else {
+                              <span class="text-[10px] font-bold text-red-400 bg-red-400/10 px-2 py-1 rounded">Fechado</span>
+                            }
+                          </button>
+                          <button (click)="editTopic(topic)" class="text-gray-500 hover:text-white transition-colors" title="Editar Tópico">
+                            <lucide-icon [img]="Edit2" class="h-4 w-4"></lucide-icon>
+                          </button>
+                          <button (click)="deleteTopic(topic.key, topic.name)" class="text-gray-500 hover:text-red-400 transition-colors" title="Excluir Tópico">
+                            <lucide-icon [img]="Trash2" class="h-4 w-4"></lucide-icon>
+                          </button>
+                        </div>
+                      </div>
+                    }
+                    @if (getTopicList().length === 0) {
+                      <div class="col-span-full text-center py-6 text-gray-500 text-xs">
+                        <p>Nenhum tópico gerenciado pelo bot. Adicione o primeiro abaixo.</p>
+                      </div>
+                    }
+                  </div>
+                  
+                  <button (click)="createNewTopic()" class="mt-6 w-full py-3 border border-gray-800 border-dashed rounded-xl text-xs font-semibold text-gray-400 hover:text-white hover:border-gray-600 hover:bg-gray-800/30 transition-all flex items-center justify-center gap-2">
+                    <lucide-icon [img]="Plus" class="h-4 w-4"></lucide-icon> Adicionar Novo Tópico
+                  </button>
+                } @else if (!isLinkedChannel()) {
+                  <div class="flex flex-col items-center justify-center py-8 text-center bg-[#130d24] border border-gray-800 rounded-xl">
+                    <lucide-icon [img]="MessageSquare" class="h-10 w-10 text-gray-700 mb-3"></lucide-icon>
+                    <p class="text-sm font-semibold text-gray-400">O grupo opera como um chat unificado.</p>
+                    <p class="text-[10px] text-gray-600 max-w-sm mt-1">Ative o Modo Fórum acima para que o bot passe a rotear mensagens de boas-vindas e punições para tópicos específicos.</p>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+
+        <!-- ABA 3: PERMISSÕES DO CHAT -->
+        @if (activeTab() === 'permissoes') {
+          <div class="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            
+            <div class="flex items-center justify-between mb-8">
+              <div>
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-1">PERMISSÕES DO CHAT (TELEGRAM)</h3>
+                <p class="text-[10px] text-gray-500">Privilégios exatos da API baseados nos diferentes estados e restrições do usuário no grupo.</p>
+              </div>
+              <button (click)="saveAllSettings()" [disabled]="isSaving()" class="bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-lg text-xs font-semibold transition-colors shadow-lg shadow-purple-600/20 flex items-center gap-2">
+                @if (isSaving()) {
+                  <div class="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Salvando...
+                } @else {
+                  <lucide-icon [img]="CheckCircle" class="h-4 w-4"></lucide-icon> Salvar Configurações
+                }
+              </button>
+            </div>
+
+            @if (!isBotEnabled()) {
+              <div class="bg-red-500/5 border border-red-500/10 rounded-2xl p-10 flex flex-col items-center justify-center text-center my-8">
+                <lucide-icon [img]="ShieldAlert" class="h-16 w-16 text-red-400 mb-4"></lucide-icon>
+                <h3 class="text-lg font-bold text-red-400 mb-2">Moderação Desativada</h3>
+                <p class="text-sm text-red-400/70 max-w-md">O bot não tem permissão para gerenciar os direitos dos usuários enquanto estiver desativado.</p>
+              </div>
+            } @else {
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl">
+                
+                <div class="bg-white/[0.02] border border-gray-800/40 rounded-xl p-6 space-y-4 relative overflow-hidden">
+                  <div class="absolute top-0 left-0 w-full h-1 bg-purple-500/50"></div>
+                  <div>
+                    <h4 class="text-xs font-bold text-gray-200 flex items-center gap-2"><lucide-icon [img]="Users" class="h-4 w-4 text-purple-400"></lucide-icon> GERAL (MEMBROS PADRÃO)</h4>
+                    <p class="text-[10px] text-gray-500 mt-1 leading-relaxed">Permissões base que se aplicam a todos os membros normais do grupo.</p>
+                  </div>
+                  <div class="pt-2 space-y-3">
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('general', 'sendMessages')">
+                      @if (botConfig()?.permissions?.general?.sendMessages) { <div class="h-4 w-4 bg-purple-600 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.general?.sendMessages ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar mensagens de texto</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('general', 'sendMedia')">
+                      @if (botConfig()?.permissions?.general?.sendMedia) { <div class="h-4 w-4 bg-purple-600 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.general?.sendMedia ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar mídias (Fotos/Vídeos/Arquivos)</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('general', 'sendStickers')">
+                      @if (botConfig()?.permissions?.general?.sendStickers) { <div class="h-4 w-4 bg-purple-600 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.general?.sendStickers ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar adesivos e GIFs</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('general', 'sendPolls')">
+                      @if (botConfig()?.permissions?.general?.sendPolls) { <div class="h-4 w-4 bg-purple-600 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.general?.sendPolls ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar enquetes</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('general', 'embedLinks')">
+                      @if (botConfig()?.permissions?.general?.embedLinks) { <div class="h-4 w-4 bg-purple-600 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.general?.embedLinks ? 'text-gray-300' : 'text-gray-500 line-through'">Incorporar prévias de links</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('general', 'addUsers')">
+                      @if (botConfig()?.permissions?.general?.addUsers) { <div class="h-4 w-4 bg-purple-600 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.general?.addUsers ? 'text-gray-300' : 'text-gray-500 line-through'">Adicionar usuários</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('general', 'pinMessages')">
+                      @if (botConfig()?.permissions?.general?.pinMessages) { <div class="h-4 w-4 bg-purple-600 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.general?.pinMessages ? 'text-gray-300' : 'text-gray-500 line-through'">Fixar mensagens</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('general', 'changeInfo')">
+                      @if (botConfig()?.permissions?.general?.changeInfo) { <div class="h-4 w-4 bg-purple-600 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.general?.changeInfo ? 'text-gray-300' : 'text-gray-500 line-through'">Alterar info do chat</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-white/[0.02] border border-gray-800/40 rounded-xl p-6 space-y-4 relative overflow-hidden">
+                  <div class="absolute top-0 left-0 w-full h-1 bg-blue-500/50"></div>
+                  <div>
+                    <h4 class="text-xs font-bold text-gray-200 flex items-center gap-2"><lucide-icon [img]="UserPlus" class="h-4 w-4 text-blue-400"></lucide-icon> NOVOS MEMBROS</h4>
+                    <p class="text-[10px] text-gray-500 mt-1 leading-relaxed">Permissões limitadas para recém-chegados (ex: para conter ataques de spam inicial).</p>
+                  </div>
+                  <div class="pt-2 space-y-3">
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('newMembers', 'sendMessages')">
+                      @if (botConfig()?.permissions?.newMembers?.sendMessages) { <div class="h-4 w-4 bg-blue-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.newMembers?.sendMessages ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar mensagens de texto</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('newMembers', 'sendMedia')">
+                      @if (botConfig()?.permissions?.newMembers?.sendMedia) { <div class="h-4 w-4 bg-blue-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.newMembers?.sendMedia ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar mídias (Fotos/Vídeos/Arquivos)</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('newMembers', 'sendStickers')">
+                      @if (botConfig()?.permissions?.newMembers?.sendStickers) { <div class="h-4 w-4 bg-blue-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.newMembers?.sendStickers ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar adesivos e GIFs</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('newMembers', 'sendPolls')">
+                      @if (botConfig()?.permissions?.newMembers?.sendPolls) { <div class="h-4 w-4 bg-blue-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.newMembers?.sendPolls ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar enquetes</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('newMembers', 'embedLinks')">
+                      @if (botConfig()?.permissions?.newMembers?.embedLinks) { <div class="h-4 w-4 bg-blue-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.newMembers?.embedLinks ? 'text-gray-300' : 'text-gray-500 line-through'">Incorporar prévias de links</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('newMembers', 'addUsers')">
+                      @if (botConfig()?.permissions?.newMembers?.addUsers) { <div class="h-4 w-4 bg-blue-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.newMembers?.addUsers ? 'text-gray-300' : 'text-gray-500 line-through'">Adicionar usuários</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('newMembers', 'pinMessages')">
+                      @if (botConfig()?.permissions?.newMembers?.pinMessages) { <div class="h-4 w-4 bg-blue-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.newMembers?.pinMessages ? 'text-gray-300' : 'text-gray-500 line-through'">Fixar mensagens</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('newMembers', 'changeInfo')">
+                      @if (botConfig()?.permissions?.newMembers?.changeInfo) { <div class="h-4 w-4 bg-blue-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.newMembers?.changeInfo ? 'text-gray-300' : 'text-gray-500 line-through'">Alterar info do chat</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-white/[0.02] border border-gray-800/40 rounded-xl p-6 space-y-4 relative overflow-hidden">
+                  <div class="absolute top-0 left-0 w-full h-1 bg-gray-500/50"></div>
+                  <div>
+                    <h4 class="text-xs font-bold text-gray-200 flex items-center gap-2"><lucide-icon [img]="Moon" class="h-4 w-4 text-gray-400"></lucide-icon> MODO NOTURNO</h4>
+                    <p class="text-[10px] text-gray-500 mt-1 leading-relaxed">Permissões de chat alteradas automaticamente durante a madrugada/horário de silêncio.</p>
+                  </div>
+                  <div class="pt-2 space-y-3">
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('nightMode', 'sendMessages')">
+                      @if (botConfig()?.permissions?.nightMode?.sendMessages) { <div class="h-4 w-4 bg-gray-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.nightMode?.sendMessages ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar mensagens de texto</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('nightMode', 'sendMedia')">
+                      @if (botConfig()?.permissions?.nightMode?.sendMedia) { <div class="h-4 w-4 bg-gray-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.nightMode?.sendMedia ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar mídias (Fotos/Vídeos/Arquivos)</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('nightMode', 'sendStickers')">
+                      @if (botConfig()?.permissions?.nightMode?.sendStickers) { <div class="h-4 w-4 bg-gray-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.nightMode?.sendStickers ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar adesivos e GIFs</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('nightMode', 'sendPolls')">
+                      @if (botConfig()?.permissions?.nightMode?.sendPolls) { <div class="h-4 w-4 bg-gray-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.nightMode?.sendPolls ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar enquetes</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('nightMode', 'embedLinks')">
+                      @if (botConfig()?.permissions?.nightMode?.embedLinks) { <div class="h-4 w-4 bg-gray-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.nightMode?.embedLinks ? 'text-gray-300' : 'text-gray-500 line-through'">Incorporar prévias de links</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('nightMode', 'addUsers')">
+                      @if (botConfig()?.permissions?.nightMode?.addUsers) { <div class="h-4 w-4 bg-gray-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.nightMode?.addUsers ? 'text-gray-300' : 'text-gray-500 line-through'">Adicionar usuários</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('nightMode', 'pinMessages')">
+                      @if (botConfig()?.permissions?.nightMode?.pinMessages) { <div class="h-4 w-4 bg-gray-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.nightMode?.pinMessages ? 'text-gray-300' : 'text-gray-500 line-through'">Fixar mensagens</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('nightMode', 'changeInfo')">
+                      @if (botConfig()?.permissions?.nightMode?.changeInfo) { <div class="h-4 w-4 bg-gray-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.nightMode?.changeInfo ? 'text-gray-300' : 'text-gray-500 line-through'">Alterar info do chat</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="bg-white/[0.02] border border-gray-800/40 rounded-xl p-6 space-y-4 relative overflow-hidden">
+                  <div class="absolute top-0 left-0 w-full h-1 bg-red-500/50"></div>
+                  <div>
+                    <h4 class="text-xs font-bold text-gray-200 flex items-center gap-2"><lucide-icon [img]="AlertTriangle" class="h-4 w-4 text-red-400"></lucide-icon> RESTRITOS E PUNIDOS</h4>
+                    <p class="text-[10px] text-gray-500 mt-1 leading-relaxed">Permissões severamente reduzidas para usuários mutados ou com warns ativos.</p>
+                  </div>
+                  <div class="pt-2 space-y-3">
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('restricted', 'sendMessages')">
+                      @if (botConfig()?.permissions?.restricted?.sendMessages) { <div class="h-4 w-4 bg-red-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.restricted?.sendMessages ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar mensagens de texto</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('restricted', 'sendMedia')">
+                      @if (botConfig()?.permissions?.restricted?.sendMedia) { <div class="h-4 w-4 bg-red-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.restricted?.sendMedia ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar mídias (Fotos/Vídeos/Arquivos)</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('restricted', 'sendStickers')">
+                      @if (botConfig()?.permissions?.restricted?.sendStickers) { <div class="h-4 w-4 bg-red-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.restricted?.sendStickers ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar adesivos e GIFs</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('restricted', 'sendPolls')">
+                      @if (botConfig()?.permissions?.restricted?.sendPolls) { <div class="h-4 w-4 bg-red-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.restricted?.sendPolls ? 'text-gray-300' : 'text-gray-500 line-through'">Enviar enquetes</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('restricted', 'embedLinks')">
+                      @if (botConfig()?.permissions?.restricted?.embedLinks) { <div class="h-4 w-4 bg-red-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.restricted?.embedLinks ? 'text-gray-300' : 'text-gray-500 line-through'">Incorporar prévias de links</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('restricted', 'addUsers')">
+                      @if (botConfig()?.permissions?.restricted?.addUsers) { <div class="h-4 w-4 bg-red-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.restricted?.addUsers ? 'text-gray-300' : 'text-gray-500 line-through'">Adicionar usuários</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('restricted', 'pinMessages')">
+                      @if (botConfig()?.permissions?.restricted?.pinMessages) { <div class="h-4 w-4 bg-red-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.restricted?.pinMessages ? 'text-gray-300' : 'text-gray-500 line-through'">Fixar mensagens</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer" (click)="togglePermission('restricted', 'changeInfo')">
+                      @if (botConfig()?.permissions?.restricted?.changeInfo) { <div class="h-4 w-4 bg-red-500 rounded flex items-center justify-center"><lucide-icon [img]="Check" class="h-3 w-3 text-white"></lucide-icon></div> } @else { <div class="h-4 w-4 border border-gray-600 rounded bg-[#06040e]"></div> }
+                      <span class="text-sm" [ngClass]="botConfig()?.permissions?.restricted?.changeInfo ? 'text-gray-300' : 'text-gray-500 line-through'">Alterar info do chat</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            }
+          </div>
+        }
+
+        <!-- ABA 4: WARNS E PUNIÇÕES -->
+        @if (activeTab() === 'warns') {
+          <div class="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            
+            <div class="flex items-center justify-between mb-8">
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider">CONFIGURAÇÃO DETALHADA DE PUNIÇÕES</h3>
+              <button (click)="saveAllSettings()" [disabled]="isSaving()" class="bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-lg text-xs font-semibold transition-colors shadow-lg shadow-purple-600/20 flex items-center gap-2">
+                @if (isSaving()) {
+                  <div class="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Salvando...
+                } @else {
+                  <lucide-icon [img]="CheckCircle" class="h-4 w-4"></lucide-icon> Salvar Configurações
+                }
+              </button>
+            </div>
+
+            @if (!isBotEnabled()) {
+              <div class="bg-red-500/5 border border-red-500/10 rounded-2xl p-10 flex flex-col items-center justify-center text-center my-8">
+                <lucide-icon [img]="ShieldAlert" class="h-16 w-16 text-red-400 mb-4"></lucide-icon>
+                <h3 class="text-lg font-bold text-red-400 mb-2">Moderação Desativada</h3>
+                <p class="text-sm text-red-400/70 max-w-md">As políticas de punição e warns estão inativas. Ative o bot para configurar.</p>
+              </div>
+            } @else {
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
+                <div>
+                  <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+                      <div><p class="text-sm font-semibold text-gray-200">Warns antes do Ban</p><p class="text-[10px] text-gray-500">Defina um número inteiro.</p></div>
+                      <div class="flex items-center gap-3 bg-[#06040e] border border-gray-800 rounded-lg px-2 py-1">
+                        <button (click)="updatePunishment('warnLimit', (botConfig()?.punishments?.warnLimit || 0) - 1)" class="text-gray-500 hover:text-white"><lucide-icon [img]="Minus" class="h-3 w-3"></lucide-icon></button>
+                        <span class="text-sm font-mono text-white w-4 text-center">{{ botConfig()?.punishments?.warnLimit || 0 }}</span>
+                        <button (click)="updatePunishment('warnLimit', (botConfig()?.punishments?.warnLimit || 0) + 1)" class="text-gray-500 hover:text-white"><lucide-icon [img]="Plus" class="h-3 w-3"></lucide-icon></button>
+                      </div>
+                    </div>
+                    <div class="p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+                      <div class="flex items-center justify-between mb-3">
+                        <div><p class="text-sm font-semibold text-gray-200">Tipo de Banimento</p><p class="text-[10px] text-gray-500">Ao atingir o limite acima.</p></div>
+                        <div class="relative bg-[#06040e] border border-gray-800 rounded-lg focus-within:border-purple-500 transition-colors">
+                          <select [ngModel]="botConfig()?.punishments?.banType" (ngModelChange)="updatePunishment('banType', $event)" class="w-full bg-transparent pl-3 pr-8 py-1.5 text-sm text-gray-300 focus:outline-none appearance-none cursor-pointer relative z-10">
+                            <option value="temporario" class="bg-[#130d24] text-white">Temporário</option>
+                            <option value="permanente" class="bg-[#130d24] text-white">Permanente</option>
+                          </select>
+                          <lucide-icon [img]="ChevronDown" class="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-500 pointer-events-none z-0"></lucide-icon>
+                        </div>
+                      </div>
+                      <div class="flex items-center justify-end gap-2"><span class="text-[10px] text-gray-500">Tempo:</span><input type="number" [ngModel]="botConfig()?.punishments?.banTimeHours" (ngModelChange)="updatePunishment('banTimeHours', $event)" class="w-16 bg-[#06040e] border border-gray-800 rounded px-2 py-0.5 text-center text-sm text-gray-300 focus:outline-none"><span class="text-[10px] text-gray-500">horas</span></div>
+                    </div>
+                    <div class="p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+                      <div class="flex items-center justify-between mb-3">
+                        <div><p class="text-sm font-semibold text-gray-200">Ação antes do limite</p><p class="text-[10px] text-gray-500">O que fazer ao receber 1 warn solto.</p></div>
+                        <div class="relative bg-[#06040e] border border-gray-800 rounded-lg focus-within:border-purple-500 transition-colors">
+                          <select [ngModel]="botConfig()?.punishments?.preWarnAction" (ngModelChange)="updatePunishment('preWarnAction', $event)" class="w-full bg-transparent pl-3 pr-8 py-1.5 text-sm text-gray-300 focus:outline-none appearance-none cursor-pointer relative z-10">
+                            <option value="nada" class="bg-[#130d24] text-white">Apenas Avisar</option>
+                            <option value="silenciar_temp" class="bg-[#130d24] text-white">Silenciar (Temporário)</option>
+                            <option value="kick" class="bg-[#130d24] text-white">Expulsar do Chat</option>
+                          </select>
+                          <lucide-icon [img]="ChevronDown" class="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-500 pointer-events-none z-0"></lucide-icon>
+                        </div>
+                      </div>
+                      <div class="flex items-center justify-end gap-2"><span class="text-[10px] text-gray-500">Tempo:</span><input type="number" [ngModel]="botConfig()?.punishments?.preWarnTimeHours" (ngModelChange)="updatePunishment('preWarnTimeHours', $event)" class="w-16 bg-[#06040e] border border-gray-800 rounded px-2 py-0.5 text-center text-sm text-gray-300 focus:outline-none"><span class="text-[10px] text-gray-500">horas</span></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div class="p-5 bg-[#06040e] border border-gray-800 rounded-xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-orange-500"></div>
+                    <h4 class="text-xs font-bold text-yellow-500 flex items-center gap-2 mb-6"><lucide-icon [img]="ShieldAlert" class="h-4 w-4"></lucide-icon> RANKING DE ADMINS (WARNS APLICADOS)</h4>
+                    <div class="space-y-4">
+                      <div class="flex flex-col items-center justify-center py-6 text-gray-500 text-xs">
+                        <lucide-icon [img]="Activity" class="h-8 w-8 mb-2 opacity-50"></lucide-icon>
+                        <p>O ranking será alimentado pelos logs do bot em produção.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- ABA 5: MENSAGENS -->
         @if (activeTab() === 'mensagens') {
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- Boas-vindas -->
-            <div class="p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-              <div class="flex items-center justify-between mb-4">
-                <p class="text-sm font-semibold text-gray-200">Mensagem de boas-vindas</p>
-                <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
-              </div>
-              <button class="w-full flex items-center justify-center gap-2 bg-[#06040e] border border-gray-700 hover:bg-white/5 py-2 rounded-lg text-xs font-semibold text-gray-300 transition-colors">
-                <lucide-icon [img]="Edit2" class="h-3.5 w-3.5"></lucide-icon> Editar mensagem
+          <div class="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            
+            <div class="flex items-center justify-between mb-8">
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider">Templates de Mensagens</h3>
+              <button (click)="saveAllSettings()" [disabled]="isSaving()" class="bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-lg text-xs font-semibold transition-colors shadow-lg shadow-purple-600/20 flex items-center gap-2">
+                @if (isSaving()) {
+                  <div class="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Salvando...
+                } @else {
+                  <lucide-icon [img]="CheckCircle" class="h-4 w-4"></lucide-icon> Salvar Configurações
+                }
               </button>
             </div>
-            <!-- Saída -->
-            <div class="p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-              <div class="flex items-center justify-between mb-4">
-                <p class="text-sm font-semibold text-gray-200">Mensagem de saída</p>
-                <div class="w-10 h-5 bg-gray-700 rounded-full relative cursor-pointer"><div class="absolute left-1 top-0.5 h-4 w-4 bg-gray-400 rounded-full"></div></div>
+
+            @if (!isBotEnabled()) {
+              <div class="bg-red-500/5 border border-red-500/10 rounded-2xl p-10 flex flex-col items-center justify-center text-center my-8">
+                <lucide-icon [img]="ShieldAlert" class="h-16 w-16 text-red-400 mb-4"></lucide-icon>
+                <h3 class="text-lg font-bold text-red-400 mb-2">Moderação Desativada</h3>
+                <p class="text-sm text-red-400/70 max-w-md">Mensagens automáticas não serão enviadas. Ative o bot para configurar templates de boas-vindas e punições.</p>
               </div>
-              <button class="w-full flex items-center justify-center gap-2 bg-[#06040e] border border-gray-700 hover:bg-white/5 py-2 rounded-lg text-xs font-semibold text-gray-300 transition-colors opacity-50 cursor-not-allowed">
-                <lucide-icon [img]="Edit2" class="h-3.5 w-3.5"></lucide-icon> Editar mensagem
-              </button>
-            </div>
-            <!-- Advertência -->
-            <div class="p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-              <div class="flex items-center justify-between mb-4">
-                <p class="text-sm font-semibold text-gray-200">Mensagem de advertência (warn)</p>
-                <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
+            } @else {
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl">
+                <div class="bg-white/[0.02] border border-gray-800/40 rounded-xl p-5 flex flex-col justify-between min-h-[120px]" [ngClass]="botConfig()?.messages?.welcome ? 'border-purple-500/30 bg-purple-500/5' : ''">
+                  <div class="flex items-center gap-2 text-purple-400 mb-4">
+                    <lucide-icon [img]="User" class="h-4 w-4"></lucide-icon> 
+                    <span class="text-sm font-semibold text-gray-200">Boas-vindas (Padrão)</span>
+                  </div>
+                  <button (click)="openEditor('welcome', 'Boas-vindas (Padrão)')" class="w-full py-2 bg-[#06040e] border border-gray-800 hover:border-gray-600 rounded-lg text-xs text-gray-300 flex items-center justify-center gap-2 transition-colors">
+                    <lucide-icon [img]="Edit2" class="h-3 w-3"></lucide-icon> {{ botConfig()?.messages?.welcome ? 'Editar Template' : 'Criar Template' }}
+                  </button>
+                </div>
+                <div class="bg-white/[0.02] border border-gray-800/40 rounded-xl p-5 flex flex-col justify-between min-h-[120px]" [ngClass]="botConfig()?.messages?.welcomeNight ? 'border-blue-500/30 bg-blue-500/5' : ''">
+                  <div class="flex items-center gap-2 text-blue-400 mb-4">
+                    <lucide-icon [img]="Moon" class="h-4 w-4"></lucide-icon> 
+                    <span class="text-sm font-semibold text-gray-200">Boas-vindas (Noturna)</span>
+                  </div>
+                  <button (click)="openEditor('welcomeNight', 'Boas-vindas (Noturna)')" class="w-full py-2 bg-[#06040e] border border-gray-800 hover:border-gray-600 rounded-lg text-xs text-gray-300 flex items-center justify-center gap-2 transition-colors">
+                    <lucide-icon [img]="Edit2" class="h-3 w-3"></lucide-icon> {{ botConfig()?.messages?.welcomeNight ? 'Editar Template' : 'Criar Template' }}
+                  </button>
+                </div>
+                <div class="bg-white/[0.02] border border-gray-800/40 rounded-xl p-5 flex flex-col justify-between min-h-[120px]" [ngClass]="botConfig()?.messages?.leave ? 'border-gray-500/30 bg-gray-500/5' : ''">
+                  <div class="flex items-center gap-2 text-gray-400 mb-4">
+                    <lucide-icon [img]="LogOut" class="h-4 w-4"></lucide-icon> 
+                    <span class="text-sm font-semibold text-gray-200">Saída de Membro</span>
+                  </div>
+                  <button (click)="openEditor('leave', 'Saída de Membro')" class="w-full py-2 bg-[#06040e] border border-gray-800 hover:border-gray-600 rounded-lg text-xs text-gray-300 flex items-center justify-center gap-2 transition-colors">
+                    <lucide-icon [img]="Edit2" class="h-3 w-3"></lucide-icon> {{ botConfig()?.messages?.leave ? 'Editar Template' : 'Criar Template' }}
+                  </button>
+                </div>
+                <div class="bg-white/[0.02] border border-gray-800/40 rounded-xl p-5 flex flex-col justify-between min-h-[120px]" [ngClass]="botConfig()?.messages?.warn ? 'border-yellow-500/30 bg-yellow-500/5' : ''">
+                  <div class="flex items-center gap-2 text-yellow-500 mb-4">
+                    <lucide-icon [img]="AlertTriangle" class="h-4 w-4"></lucide-icon> 
+                    <span class="text-sm font-semibold text-gray-200">Advertência (Warn)</span>
+                  </div>
+                  <button (click)="openEditor('warn', 'Advertência (Warn)')" class="w-full py-2 bg-[#06040e] border border-gray-800 hover:border-gray-600 rounded-lg text-xs text-gray-300 flex items-center justify-center gap-2 transition-colors">
+                    <lucide-icon [img]="Edit2" class="h-3 w-3"></lucide-icon> {{ botConfig()?.messages?.warn ? 'Editar Template' : 'Criar Template' }}
+                  </button>
+                </div>
+                <div class="bg-white/[0.02] border border-gray-800/40 rounded-xl p-5 flex flex-col justify-between min-h-[120px]" [ngClass]="botConfig()?.messages?.ban ? 'border-red-500/30 bg-red-500/5' : ''">
+                  <div class="flex items-center gap-2 text-red-500 mb-4">
+                    <lucide-icon [img]="ShieldAlert" class="h-4 w-4"></lucide-icon> 
+                    <span class="text-sm font-semibold text-gray-200">Banimento</span>
+                  </div>
+                  <button (click)="openEditor('ban', 'Banimento')" class="w-full py-2 bg-[#06040e] border border-gray-800 hover:border-gray-600 rounded-lg text-xs text-gray-300 flex items-center justify-center gap-2 transition-colors">
+                    <lucide-icon [img]="Edit2" class="h-3 w-3"></lucide-icon> {{ botConfig()?.messages?.ban ? 'Editar Template' : 'Criar Template' }}
+                  </button>
+                </div>
               </div>
-              <button class="w-full flex items-center justify-center gap-2 bg-[#06040e] border border-gray-700 hover:bg-white/5 py-2 rounded-lg text-xs font-semibold text-gray-300 transition-colors">
-                <lucide-icon [img]="Edit2" class="h-3.5 w-3.5"></lucide-icon> Editar mensagem
-              </button>
-            </div>
-            <!-- Banimento -->
-            <div class="p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-              <div class="flex items-center justify-between mb-4">
-                <p class="text-sm font-semibold text-gray-200">Mensagem de banimento</p>
-                <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
-              </div>
-              <button class="w-full flex items-center justify-center gap-2 bg-[#06040e] border border-gray-700 hover:bg-white/5 py-2 rounded-lg text-xs font-semibold text-gray-300 transition-colors">
-                <lucide-icon [img]="Edit2" class="h-3.5 w-3.5"></lucide-icon> Editar mensagem
-              </button>
-            </div>
+            }
           </div>
         }
 
-        <!-- ABA: MODERAÇÃO -->
-        @if (activeTab() === 'moderacao') {
-          <div class="space-y-4 max-w-2xl">
-            <!-- Regra -->
-            <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-              <div class="flex items-center gap-3">
-                <div class="h-8 w-8 bg-blue-500/20 text-blue-400 rounded flex items-center justify-center"><lucide-icon [img]="MessageSquare" class="h-4 w-4"></lucide-icon></div>
-                <div>
-                  <p class="text-sm font-bold text-gray-200">Anti Spam</p>
-                  <p class="text-[10px] text-gray-500">Bloqueia mensagens repetitivas.</p>
-                </div>
-              </div>
-              <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
+        <!-- ABA 6: DETECÇÃO AUTOMÁTICA -->
+        @if (activeTab() === 'deteccao') {
+          <div class="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            
+            <div class="flex items-center justify-between mb-8">
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider">Filtros de Detecção</h3>
+              <button (click)="saveAllSettings()" [disabled]="isSaving()" class="bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2.5 rounded-lg text-xs font-semibold transition-colors shadow-lg shadow-purple-600/20 flex items-center gap-2">
+                @if (isSaving()) {
+                  <div class="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Salvando...
+                } @else {
+                  <lucide-icon [img]="CheckCircle" class="h-4 w-4"></lucide-icon> Salvar Configurações
+                }
+              </button>
             </div>
-            <!-- Regra -->
-            <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-              <div class="flex items-center gap-3">
-                <div class="h-8 w-8 bg-cyan-500/20 text-cyan-400 rounded flex items-center justify-center"><lucide-icon [img]="Link" class="h-4 w-4"></lucide-icon></div>
+
+            @if (!isBotEnabled()) {
+              <div class="bg-red-500/5 border border-red-500/10 rounded-2xl p-10 flex flex-col items-center justify-center text-center my-8">
+                <lucide-icon [img]="ShieldAlert" class="h-16 w-16 text-red-400 mb-4"></lucide-icon>
+                <h3 class="text-lg font-bold text-red-400 mb-2">Moderação Desativada</h3>
+                <p class="text-sm text-red-400/70 max-w-md">O bot não analisará nomes, links ou palavras. Ative-o para configurar filtros automáticos e a blacklist.</p>
+              </div>
+            } @else {
+              <div class="max-w-4xl space-y-8">
                 <div>
-                  <p class="text-sm font-bold text-gray-200">Anti Links</p>
-                  <p class="text-[10px] text-gray-500">Bloqueia links não permitidos.</p>
+                  <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-1">FILTRO DE NOME/SOBRENOME</h3>
+                  <p class="text-[10px] text-gray-500 mb-4">Detecta caracteres estrangeiros suspeitos nos nomes dos usuários ao entrarem.</p>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+                      <span class="text-sm font-semibold text-gray-200">Russos (Cirílico)</span>
+                      <div (click)="toggleDetectionFilter('russian')" class="w-10 h-5 rounded-full relative cursor-pointer transition-colors" [ngClass]="botConfig()?.autoDetection?.russian?.status ? 'bg-purple-600' : 'bg-gray-700'">
+                        <div class="absolute top-0.5 h-4 w-4 bg-white rounded-full transition-all" [ngClass]="botConfig()?.autoDetection?.russian?.status ? 'right-1' : 'left-1'"></div>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+                      <span class="text-sm font-semibold text-gray-200">Árabes</span>
+                      <div (click)="toggleDetectionFilter('arabic')" class="w-10 h-5 rounded-full relative cursor-pointer transition-colors" [ngClass]="botConfig()?.autoDetection?.arabic?.status ? 'bg-purple-600' : 'bg-gray-700'">
+                        <div class="absolute top-0.5 h-4 w-4 bg-white rounded-full transition-all" [ngClass]="botConfig()?.autoDetection?.arabic?.status ? 'right-1' : 'left-1'"></div>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
+                      <span class="text-sm font-semibold text-gray-200">Orientais</span>
+                      <div (click)="toggleDetectionFilter('oriental')" class="w-10 h-5 rounded-full relative cursor-pointer transition-colors" [ngClass]="botConfig()?.autoDetection?.oriental?.status ? 'bg-purple-600' : 'bg-gray-700'">
+                        <div class="absolute top-0.5 h-4 w-4 bg-white rounded-full transition-all" [ngClass]="botConfig()?.autoDetection?.oriental?.status ? 'right-1' : 'left-1'"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex items-center gap-4 bg-white/[0.02] border border-gray-800/40 p-4 rounded-xl w-max">
+                    <span class="text-sm font-semibold text-gray-300">Ação ao Detectar:</span>
+                    <div class="relative bg-[#06040e] border border-gray-800 rounded-lg focus-within:border-purple-500 transition-colors">
+                      <select [ngModel]="botConfig()?.autoDetection?.globalAction" (ngModelChange)="updateBotConfigField('autoDetection', 'globalAction', $event)" class="w-full bg-transparent pl-3 pr-8 py-1.5 text-sm text-gray-300 focus:outline-none appearance-none cursor-pointer relative z-10">
+                        <option value="ban" class="bg-[#130d24] text-white">Banir Automaticamente</option>
+                        <option value="kick" class="bg-[#130d24] text-white">Expulsar (Pode voltar)</option>
+                      </select>
+                      <lucide-icon [img]="ChevronDown" class="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-500 pointer-events-none z-0"></lucide-icon>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-1">BLACKLIST MANUAL</h3>
+                  <p class="text-[10px] text-gray-500 mb-4">Bloqueie domínios, palavras agressivas ou IDs de usuários específicos.</p>
+                  <div class="flex gap-2 mb-6">
+                    <div class="relative bg-[#06040e] border border-gray-800 rounded-lg w-48 focus-within:border-purple-500 transition-colors">
+                      <select class="w-full bg-transparent pl-4 pr-8 py-2.5 text-sm text-gray-300 focus:outline-none appearance-none cursor-pointer relative z-10">
+                        <option value="url" class="bg-[#130d24] text-white">URL (Domínio)</option>
+                        <option value="palavra" class="bg-[#130d24] text-white">Palavra/Frase</option>
+                        <option value="id" class="bg-[#130d24] text-white">ID Usuário</option>
+                      </select>
+                      <lucide-icon [img]="ChevronDown" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none z-0"></lucide-icon>
+                    </div>
+                    <input type="text" class="flex-1 bg-[#06040e] border border-gray-800 rounded-lg px-4 py-2.5 text-sm text-gray-300 focus:outline-none focus:border-purple-500 placeholder-gray-600" placeholder="Digite o termo para adicionar à blacklist...">
+                    <button class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2.5 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2"><lucide-icon [img]="Plus" class="h-4 w-4"></lucide-icon> Adicionar</button>
+                  </div>
+                  <div class="flex flex-wrap gap-4">
+                    <div class="flex items-center justify-between gap-4 p-3 pr-4 bg-white/[0.02] border border-gray-800 rounded-lg min-w-[200px]">
+                      <div><p class="text-[9px] text-gray-500 uppercase tracking-widest mb-0.5">URL</p><p class="text-sm text-gray-200">discord.gg/</p></div>
+                      <button class="text-gray-500 hover:text-red-400"><lucide-icon [img]="X" class="h-4 w-4"></lucide-icon></button>
+                    </div>
+                    <div class="flex items-center justify-between gap-4 p-3 pr-4 bg-white/[0.02] border border-gray-800 rounded-lg min-w-[200px]">
+                      <div><p class="text-[9px] text-gray-500 uppercase tracking-widest mb-0.5">URL</p><p class="text-sm text-gray-200">t.me/</p></div>
+                      <button class="text-gray-500 hover:text-red-400"><lucide-icon [img]="X" class="h-4 w-4"></lucide-icon></button>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
+            }
+          </div>
+        }
+
+        <!-- ABA 7: LOGS DE AÇÕES -->
+        @if (activeTab() === 'logs') {
+          <div class="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            @if (!isBotEnabled()) {
+              <div class="bg-red-500/5 border border-red-500/10 rounded-2xl p-10 flex flex-col items-center justify-center text-center my-8">
+                <lucide-icon [img]="ShieldAlert" class="h-16 w-16 text-red-400 mb-4"></lucide-icon>
+                <h3 class="text-lg font-bold text-red-400 mb-2">Moderação Desativada</h3>
+                <p class="text-sm text-red-400/70 max-w-md">O log de atividades parou de ser gravado porque o bot não está monitorando as ações do grupo no momento.</p>
+              </div>
+            } @else {
+              <div class="max-w-5xl">
+                <h3 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2"><lucide-icon [img]="Activity" class="h-4 w-4 text-purple-400"></lucide-icon> LOG DE AÇÕES ADMINISTRATIVAS</h3>
+                <div class="flex flex-col items-center justify-center py-10 text-gray-500">
+                  <lucide-icon [img]="Activity" class="h-10 w-10 mb-3 opacity-30"></lucide-icon>
+                  <p class="text-sm font-semibold">Nenhum log recente encontrado.</p>
+                  <p class="text-[10px] max-w-xs text-center mt-1">Os registros do bot começarão a aparecer aqui assim que membros forem punidos ou silenciados no Telegram.</p>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+      </div>
+    </div>
+
+    <!-- SIDEBAR DIREITA (Oculto para Canais) -->
+    @if (groupInfo()?.type === 'group') {
+      <div class="xl:col-span-1 space-y-6 animate-in fade-in duration-300">
+
+        <!-- MODERAÇÃO POR BOT -->
+        <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5 transition-all duration-300" 
+             [ngClass]="isBotEnabled() ? 'border-purple-500/30 shadow-[0_0_20px_rgba(147,51,234,0.1)]' : ''">
+          
+          <div class="flex items-center gap-2 mb-4">
+            <lucide-icon [img]="Bot" class="h-4 w-4" [ngClass]="isBotEnabled() ? 'text-purple-400' : 'text-gray-500'"></lucide-icon>
+            <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase">MODERAÇÃO POR BOT</h3>
+          </div>
+
+          <div class="mb-5">
+            <label class="text-[10px] text-gray-500 font-semibold mb-1.5 block">Selecione o Bot</label>
+            <div class="relative bg-[#130d24] border border-gray-800 rounded-lg focus-within:border-purple-500 transition-colors">
+              <select 
+                [ngModel]="selectedBotId()" 
+                (ngModelChange)="selectBot($event)"
+                class="w-full bg-transparent pl-3 pr-8 py-2.5 text-sm text-white focus:outline-none appearance-none transition-colors cursor-pointer relative z-10"
+                [disabled]="moderationBots().length === 0">
+                
+                @for (bot of moderationBots(); track bot.id) {
+                  <option [value]="bot.id" class="bg-[#130d24] text-white">{{ bot.name }}</option>
+                }
+                
+                @if (moderationBots().length === 0) {
+                  <option value="" disabled class="bg-[#130d24] text-gray-500">Nenhum bot disponível</option>
+                }
+              </select>
+              <lucide-icon [img]="ChevronDown" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none z-0"></lucide-icon>
             </div>
-            <!-- Regra -->
-            <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-              <div class="flex items-center gap-3">
-                <div class="h-8 w-8 bg-blue-600/20 text-blue-500 rounded flex items-center justify-center"><lucide-icon [img]="Activity" class="h-4 w-4"></lucide-icon></div>
-                <div>
-                  <p class="text-sm font-bold text-gray-200">Anti Flood</p>
-                  <p class="text-[10px] text-gray-500">Limita o envio excessivo de mensagens.</p>
-                </div>
-              </div>
-              <div class="w-10 h-5 bg-purple-600 rounded-full relative cursor-pointer"><div class="absolute right-1 top-0.5 h-4 w-4 bg-white rounded-full"></div></div>
-            </div>
-            <!-- Regra -->
-            <div class="flex items-center justify-between p-4 bg-white/[0.02] border border-gray-800/40 rounded-xl">
-              <div class="flex items-center gap-3">
-                <div class="h-8 w-8 bg-purple-500/20 text-purple-400 rounded flex items-center justify-center"><span class="font-bold text-sm">AA</span></div>
-                <div>
-                  <p class="text-sm font-bold text-gray-200">Anti Caps Lock</p>
-                  <p class="text-[10px] text-gray-500">Bloqueia mensagens em CAIXA ALTA.</p>
-                </div>
-              </div>
-              <div class="w-10 h-5 bg-gray-700 rounded-full relative cursor-pointer"><div class="absolute left-1 top-0.5 h-4 w-4 bg-gray-400 rounded-full"></div></div>
+          </div>
+
+          <div class="flex items-center justify-between bg-[#130d24] border border-gray-800 px-4 py-3.5 rounded-xl cursor-pointer hover:border-gray-700 transition-colors"
+               (click)="toggleMasterBotStatus()"
+               [ngClass]="isBotEnabled() ? 'border-purple-500/50 bg-purple-900/10' : ''">
+            <div class="pr-2">
+              <p class="text-sm font-semibold transition-colors" [ngClass]="isBotEnabled() ? 'text-purple-400' : 'text-gray-300'">Monitoramento</p>
+              <p class="text-[10px] mt-0.5 leading-tight transition-colors" [ngClass]="isBotEnabled() ? 'text-purple-400/70' : 'text-gray-500'">{{ isBotEnabled() ? 'Bot gerenciando ações' : 'Bot ignorando o grupo' }}</p>
             </div>
             
-            <button class="w-full bg-white/[0.05] hover:bg-white/[0.08] text-gray-300 py-3 rounded-xl text-sm font-semibold mt-4 transition-colors">
-              Verificar Lista de Palavras
-            </button>
+            @if (isLoadingBot()) {
+              <div class="h-5 w-5 border-2 border-purple-500 border-t-transparent rounded-full animate-spin shrink-0"></div>
+            } @else {
+              <div class="w-10 h-5 rounded-full relative transition-colors shrink-0" [ngClass]="isBotEnabled() ? 'bg-purple-600' : 'bg-gray-700'">
+                <div class="absolute top-0.5 h-4 w-4 bg-white rounded-full transition-all" [ngClass]="isBotEnabled() ? 'right-1' : 'left-1'"></div>
+              </div>
+            }
           </div>
-        }
-
-      </div>
-    </div>
-
-    <!-- SIDEBAR DIREITA -->
-    <div class="xl:col-span-1 flex flex-col gap-6">
-      
-      <!-- Resumo do Grupo -->
-      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5">
-        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-4">RESUMO DO GRUPO</h3>
-        <ul class="space-y-4">
-          <li class="flex items-center gap-3">
-            <div class="h-8 w-8 bg-purple-600/20 rounded-lg flex items-center justify-center"><lucide-icon [img]="Users" class="h-4 w-4 text-purple-400"></lucide-icon></div>
-            <div><p class="text-xs font-bold text-gray-200">Tipo do Grupo</p><p class="text-[10px] text-gray-500">Grupo da Comunidade</p></div>
-          </li>
-          <li class="flex items-center gap-3">
-            <div class="h-8 w-8 bg-blue-500/20 rounded-lg flex items-center justify-center"><lucide-icon [img]="Users" class="h-4 w-4 text-blue-400"></lucide-icon></div>
-            <div><p class="text-xs font-bold text-gray-200">Total de Membros</p><p class="text-[10px] text-gray-500">328 membros</p></div>
-          </li>
-          <li class="flex items-center gap-3">
-            <div class="h-8 w-8 bg-green-500/20 rounded-lg flex items-center justify-center"><lucide-icon [img]="CheckCircle" class="h-4 w-4 text-green-400"></lucide-icon></div>
-            <div><p class="text-xs font-bold text-gray-200">Membros Online</p><p class="text-[10px] text-gray-500">41 online agora</p></div>
-          </li>
-          <li class="flex items-center gap-3 justify-between">
-            <div class="flex items-center gap-3">
-              <div class="h-8 w-8 bg-emerald-500/20 rounded-lg flex items-center justify-center"><lucide-icon [img]="Hash" class="h-4 w-4 text-emerald-400"></lucide-icon></div>
-              <div><p class="text-xs font-bold text-gray-200">Tópicos</p></div>
-            </div>
-            <span class="text-[10px] font-bold text-green-500">Ativados</span>
-          </li>
-          <li class="flex items-center gap-3">
-            <div class="h-8 w-8 bg-yellow-500/20 rounded-lg flex items-center justify-center"><lucide-icon [img]="User" class="h-4 w-4 text-yellow-400"></lucide-icon></div>
-            <div><p class="text-xs font-bold text-gray-200">Bot Adicionado por</p><p class="text-[10px] text-gray-500">@CebolaFn</p></div>
-          </li>
-          <li class="flex items-center gap-3">
-            <div class="h-8 w-8 bg-blue-600/20 rounded-lg flex items-center justify-center"><lucide-icon [img]="Shield" class="h-4 w-4 text-blue-500"></lucide-icon></div>
-            <div><p class="text-xs font-bold text-gray-200">Permissões do Bot</p><p class="text-[10px] text-gray-500">Administrador</p></div>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Ações Rápidas -->
-      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5">
-        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-4">AÇÕES RÁPIDAS</h3>
-        <div class="flex gap-3">
-          <button class="flex-1 flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white py-2.5 rounded-lg text-xs font-semibold transition-colors">
-            <lucide-icon [img]="Send" class="h-3.5 w-3.5"></lucide-icon> Enviar Aviso
-          </button>
-          <button class="flex-1 flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 py-2.5 rounded-lg text-xs font-semibold transition-colors">
-            <lucide-icon [img]="Minus" class="h-3.5 w-3.5"></lucide-icon> Remover Bot
-          </button>
         </div>
-      </div>
 
-      <!-- Estatísticas (7 dias) -->
-      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5">
-        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-4">ESTATÍSTICAS (7 DIAS)</h3>
-        <div class="grid grid-cols-2 gap-y-4 gap-x-2 text-xs">
-          <div class="flex items-center gap-2"><lucide-icon [img]="Trash2" class="h-3.5 w-3.5 text-gray-500"></lucide-icon> <span class="text-gray-300">Mensagens deletadas</span></div>
-          <div class="flex items-center justify-end gap-2"><lucide-icon [img]="AlertTriangle" class="h-3.5 w-3.5 text-yellow-500"></lucide-icon> <span class="text-gray-300">Usuários banidos</span> <span class="font-mono text-gray-500">180</span></div>
-          <div class="flex items-center gap-2"><lucide-icon [img]="MessageSquare" class="h-3.5 w-3.5 text-red-500"></lucide-icon> <span class="text-gray-300">Warns aplicados</span></div>
-          <div class="flex items-center justify-end gap-2"><lucide-icon [img]="Link" class="h-3.5 w-3.5 text-cyan-500"></lucide-icon> <span class="text-gray-300">Links removidos</span> <span class="font-mono text-gray-500">56</span></div>
-          <div class="flex items-center gap-2"><lucide-icon [img]="Lock" class="h-3.5 w-3.5 text-purple-500"></lucide-icon> <span class="text-gray-300">Usuários banidos</span></div>
-          <div class="flex items-center justify-end gap-2"><lucide-icon [img]="Activity" class="h-3.5 w-3.5 text-green-500"></lucide-icon> <span class="text-gray-300">Spam bloqueado</span> <span class="font-mono text-gray-500">132</span></div>
-        </div>
-        <button class="w-full mt-4 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-gray-300 py-2 rounded-lg text-xs font-semibold transition-colors">
-          <lucide-icon [img]="FileText" class="h-3.5 w-3.5"></lucide-icon> Ver relatório completo
-        </button>
       </div>
-
-      <!-- Logs de Ações Mini -->
-      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5">
-        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-4 flex items-center gap-2">
-          <lucide-icon [img]="Activity" class="h-4 w-4 text-purple-400"></lucide-icon> LOGS DE AÇÕES
-        </h3>
-        <ul class="space-y-4">
-          <li class="flex items-start gap-3">
-            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-yellow-500/20 text-yellow-500">WARN</span>
-            <div class="flex-1 flex justify-between"><p class="text-[11px] text-gray-300">Usuário <span class="text-blue-400">@PlayerBR</span> recebeu um warn</p><span class="text-[9px] text-gray-500">Hoje 14:32</span></div>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-orange-500/20 text-orange-400">MUTE</span>
-            <div class="flex-1 flex justify-between"><p class="text-[11px] text-gray-300">Usuário <span class="text-blue-400">@PlayerBR</span> foi silenciado por 1h</p><span class="text-[9px] text-gray-500">Hoje 14:32</span></div>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-red-500/20 text-red-500">DELETE</span>
-            <div class="flex-1 flex justify-between"><p class="text-[11px] text-gray-300">Mensagem apagada de <span class="text-blue-400">@PlayerBR</span></p><span class="text-[9px] text-gray-500">Hoje 14:31</span></div>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-cyan-500/20 text-cyan-400">LINK</span>
-            <div class="flex-1 flex justify-between"><p class="text-[11px] text-gray-300">Link removido de <span class="text-blue-400">@PlayerBR</span></p><span class="text-[9px] text-gray-500">Hoje 14:30</span></div>
-          </li>
-          <li class="flex items-start gap-3">
-            <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-green-500/20 text-green-500">JOIN</span>
-            <div class="flex-1 flex justify-between"><p class="text-[11px] text-gray-300"><span class="text-blue-400">@NovoPlayer</span> entrou no grupo</p><span class="text-[9px] text-gray-500">Hoje 14:29</span></div>
-          </li>
-        </ul>
-        <button class="w-full mt-4 flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-gray-300 py-2 rounded-lg text-xs font-semibold transition-colors">
-          <lucide-icon [img]="FileText" class="h-3.5 w-3.5"></lucide-icon> Ver todos os logs
-        </button>
-      </div>
-
-    </div>
+    }
   </div>
 </div>
+
+<!-- Modal do Editor de Texto -->
+@if (editor.isOpen()) {
+  <app-text-editor
+    [isOpen]="true"
+    [title]="editor.title()"
+    [content]="editor.content()"
+    (save)="saveEditor($event)"
+    (close)="editor.isOpen.set(false)">
+  </app-text-editor>
+}

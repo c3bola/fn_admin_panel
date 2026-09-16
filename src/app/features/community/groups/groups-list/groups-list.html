@@ -9,145 +9,234 @@
 
   <!-- HERO BANNER -->
   <div class="relative w-full h-[220px] rounded-2xl overflow-hidden mb-6 border border-gray-800/50 bg-[#0c0817]">
-    <!-- Imagem de Fundo Estelar -->
     <img src="assets/image/header/group_header.png" class="absolute inset-0 w-full h-full object-cover object-center">
     <div class="absolute inset-0 bg-gradient-to-r from-[#06040e]/90 via-[#06040e]/70 to-[#06040e]/90"></div>
-    
-   
-
-    
   </div>
 
-  <!-- BARRA DE FILTROS -->
+  <!-- BARRA DE FILTROS REATIVA -->
   <div class="bg-[#0c0817] border border-gray-800/50 rounded-xl p-3 flex flex-wrap lg:flex-nowrap items-center gap-4">
+    
     <!-- Busca -->
     <div class="flex-1 min-w-[250px] relative">
       <lucide-icon [img]="Search" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500"></lucide-icon>
-      <input type="text" placeholder="Buscar grupos..." class="w-full bg-[#06040e] border border-gray-800 rounded-lg pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors">
+      <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" placeholder="Buscar grupos ou canais..."
+        class="w-full bg-[#06040e] border border-gray-800 rounded-lg pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors">
     </div>
-    
-    <!-- Categoria -->
+
+    <!-- Categoria (Dinâmico do Banco) -->
     <div class="w-full sm:w-auto">
       <p class="text-[10px] text-gray-500 font-semibold mb-0.5 px-1">Categoria</p>
-      <button class="w-full sm:w-40 flex items-center justify-between bg-[#06040e] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-300">
-        Todas <lucide-icon [img]="ChevronDown" class="h-4 w-4 text-gray-500"></lucide-icon>
-      </button>
+      <div class="relative bg-[#06040e] border border-gray-800 rounded-lg focus-within:border-purple-500 transition-colors w-full sm:w-40">
+        <select [ngModel]="selectedCategory()" (ngModelChange)="selectedCategory.set($event)" class="w-full bg-transparent pl-3 pr-8 py-2 text-sm text-gray-300 focus:outline-none appearance-none cursor-pointer relative z-10">
+          <option value="Todas" class="bg-[#130d24] text-white">Todas</option>
+          @for (mode of availableModes(); track mode.id) {
+            <option [value]="mode.name" class="bg-[#130d24] text-white">{{ mode.name }}</option>
+          }
+        </select>
+        <lucide-icon [img]="ChevronDown" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none z-0"></lucide-icon>
+      </div>
     </div>
 
     <!-- Idioma -->
     <div class="w-full sm:w-auto">
       <p class="text-[10px] text-gray-500 font-semibold mb-0.5 px-1">Idioma</p>
-      <button class="w-full sm:w-40 flex items-center justify-between bg-[#06040e] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-300">
-        Todos <lucide-icon [img]="ChevronDown" class="h-4 w-4 text-gray-500"></lucide-icon>
-      </button>
+      <div class="relative bg-[#06040e] border border-gray-800 rounded-lg focus-within:border-purple-500 transition-colors w-full sm:w-40">
+        <select [ngModel]="selectedLanguage()" (ngModelChange)="selectedLanguage.set($event)" class="w-full bg-transparent pl-3 pr-8 py-2 text-sm text-gray-300 focus:outline-none appearance-none cursor-pointer relative z-10">
+          <option value="Todos" class="bg-[#130d24] text-white">Todos</option>
+          <option value="pt-BR" class="bg-[#130d24] text-white">Português (BR)</option>
+          <option value="en-US" class="bg-[#130d24] text-white">Inglês (EUA)</option>
+          <option value="es-ES" class="bg-[#130d24] text-white">Espanhol</option>
+        </select>
+        <lucide-icon [img]="ChevronDown" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none z-0"></lucide-icon>
+      </div>
     </div>
 
     <div class="w-px h-10 bg-gray-800 hidden lg:block mx-2"></div>
 
-    <!-- Ordenação e Visualização -->
+    <!-- Ordenação e View Mode -->
     <div class="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-end mt-2 lg:mt-0">
       <div class="flex items-center gap-2">
         <span class="text-xs text-gray-500 font-semibold">Ordenar por:</span>
-        <button class="flex items-center gap-2 bg-[#06040e] border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-300">
-          Mais ativos <lucide-icon [img]="ChevronDown" class="h-4 w-4 text-gray-500"></lucide-icon>
-        </button>
+        <div class="relative bg-[#06040e] border border-gray-800 rounded-lg focus-within:border-purple-500 transition-colors w-32">
+          <select [ngModel]="sortRule()" (ngModelChange)="sortRule.set($event)" class="w-full bg-transparent pl-3 pr-8 py-2 text-sm text-gray-300 focus:outline-none appearance-none cursor-pointer relative z-10">
+            <option value="Mais ativos" class="bg-[#130d24] text-white">Mais ativos</option>
+            <option value="Menos ativos" class="bg-[#130d24] text-white">Menos ativos</option>
+            <option value="A-Z" class="bg-[#130d24] text-white">Ordem (A-Z)</option>
+          </select>
+          <lucide-icon [img]="ChevronDown" class="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none z-0"></lucide-icon>
+        </div>
       </div>
+      
+      <!-- Alternador de Grid e List -->
       <div class="flex items-center gap-1 bg-[#06040e] border border-gray-800 rounded-lg p-1">
-        <button class="p-1.5 bg-gray-800 rounded text-white"><lucide-icon [img]="LayoutGrid" class="h-4 w-4"></lucide-icon></button>
-        <button class="p-1.5 text-gray-500 hover:text-white transition-colors"><lucide-icon [img]="ListIcon" class="h-4 w-4"></lucide-icon></button>
+        <button (click)="viewMode.set('grid')" [ngClass]="viewMode() === 'grid' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-white'" class="p-1.5 rounded transition-colors">
+          <lucide-icon [img]="LayoutGrid" class="h-4 w-4"></lucide-icon>
+        </button>
+        <button (click)="viewMode.set('list')" [ngClass]="viewMode() === 'list' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-white'" class="p-1.5 rounded transition-colors">
+          <lucide-icon [img]="ListIcon" class="h-4 w-4"></lucide-icon>
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- LAYOUT PRINCIPAL: LISTA DE GRUPOS + SIDEBAR -->
+  <!-- LAYOUT PRINCIPAL -->
   <div class="grid grid-cols-1 xl:grid-cols-4 gap-6">
-    
+
     <!-- ÁREA DE GRUPOS (Esquerda) -->
     <div class="xl:col-span-3 space-y-8">
-      
-      <!-- SEÇÃO 1: GRUPOS DA COMUNIDADE -->
+
+      <!-- SEÇÃO 1: OFICIAIS -->
       <section>
         <div class="flex items-center justify-between mb-4">
           <div class="flex items-center gap-2">
             <lucide-icon [img]="Users" class="h-5 w-5 text-purple-500"></lucide-icon>
             <div>
-              <h3 class="text-sm font-bold text-white uppercase tracking-widest">GRUPOS DA COMUNIDADE</h3>
-              <p class="text-[11px] text-gray-500">Grupos oficiais criados e gerenciados pela equipe da Fortnite Brasil.</p>
+              <h3 class="text-sm font-bold text-white uppercase tracking-widest">GRUPOS E CANAIS OFICIAIS</h3>
+              <p class="text-[11px] text-gray-500">Comunidades gerenciadas ativamente pela equipe da Fortnite Brasil.</p>
             </div>
           </div>
-          <a href="#" class="text-xs font-semibold text-purple-400 hover:text-purple-300 flex items-center gap-1">Ver todos <lucide-icon [img]="ArrowRight" class="h-3 w-3"></lucide-icon></a>
+          
+          <!-- Ver Todos e Mostrar Menos Inteligente -->
+          @if (filteredCommunityGroups().length > officialLimit()) {
+            <button (click)="officialLimit.set(999)" class="text-xs font-semibold text-purple-400 hover:text-purple-300 flex items-center gap-1">Ver todos ({{ filteredCommunityGroups().length }}) <lucide-icon [img]="ArrowRight" class="h-3 w-3"></lucide-icon></button>
+          } @else if (officialLimit() > 6 && filteredCommunityGroups().length > 6) {
+            <button (click)="officialLimit.set(6)" class="text-xs font-semibold text-gray-500 hover:text-white flex items-center gap-1">Mostrar menos</button>
+          }
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          @for (group of communityGroups; track group.name) {
-            <a [routerLink]="group.link" class="bg-[#0c0817] border border-gray-800/50 rounded-xl overflow-hidden hover:border-gray-700 transition-colors group relative flex flex-col h-full cursor-pointer">
-              <!-- Banner do Card -->
-              <div class="h-24 w-full relative bg-gray-800 overflow-hidden">
-                <img src="assets/image/header/main_header.png" class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity">
-                @if (group.badge) {
-                  <span class="absolute top-2 left-2 text-[8px] font-bold text-white px-2 py-0.5 rounded uppercase tracking-wider {{ group.badgeColor }}">{{ group.badge }}</span>
+        <!-- O layout Grid/List obedece ao Signal viewMode() -->
+        <div [ngClass]="viewMode() === 'grid' ? 'grid grid-cols-1 xl:grid-cols-2 gap-6' : 'grid grid-cols-1 gap-4'">
+          @for (group of filteredCommunityGroups() | slice:0:officialLimit(); track group.id) {
+          <a [routerLink]="group.link"
+             class="w-full bg-[#130d24] border border-gray-800 rounded-2xl flex items-stretch transition-all duration-300 overflow-hidden relative cursor-pointer hover:-translate-y-2 hover:scale-[1.02] hover:border-gray-700 shadow-lg"
+             [ngClass]="viewMode() === 'grid' ? 'h-[160px]' : 'h-[160px] md:h-[130px]'"
+             [style.boxShadow]="'0 15px 40px ' + group.themeColor + '30'">
+            
+            <div class="relative bg-[#06040e] flex flex-col items-center justify-center overflow-hidden border-r border-gray-800/50 group-hover:brightness-110 transition-all"
+                 [ngClass]="viewMode() === 'grid' ? 'w-40 shrink-0' : 'w-40 md:w-48 shrink-0'">
+              <img [src]="group.cover" class="absolute inset-0 w-full h-full object-cover opacity-80">
+              
+              @if (group.hasBot) {
+                <div class="absolute top-2 left-2 flex items-center gap-1.5 bg-black/80 backdrop-blur-md border border-white/10 px-2 py-1 rounded-lg z-10 shadow-lg"
+                     [style.borderColor]="group.botTheme + '40'">
+                  <div class="relative flex h-2 w-2 mr-0.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" [style.backgroundColor]="group.botTheme"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2" [style.backgroundColor]="group.botTheme"></span>
+                  </div>
+                  <lucide-icon [img]="group.botIcon" class="h-3 w-3" [style.color]="group.botTheme"></lucide-icon>
+                  <span class="text-[9px] font-bold text-gray-200">{{ group.botName }}</span>
+                </div>
+              } @else {
+                <div class="absolute top-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm border border-white/5 px-2 py-1 rounded-lg z-10">
+                  <lucide-icon [img]="ShieldAlert" class="h-3 w-3 text-gray-500"></lucide-icon>
+                  <span class="text-[9px] font-medium text-gray-400">Sem Moderação</span>
+                </div>
+              }
+            </div>
+
+            <div class="flex flex-col p-5 flex-1 min-w-0">
+              <div class="flex items-start justify-between gap-3">
+                <h4 class="text-base font-extrabold text-white truncate">
+                  {{ group.name }}
+                </h4>
+                @if (group.isVip) {
+                  <span class="text-[9px] font-bold text-yellow-900 bg-yellow-500 px-1.5 py-0.5 rounded shrink-0 shadow-[0_0_10px_rgba(234,179,8,0.3)] mt-1">VIP</span>
                 }
               </div>
               
-              <!-- Ícone Flutuante -->
-              <div class="absolute top-16 left-4 h-12 w-12 bg-purple-600 rounded-xl border-4 border-[#0c0817] flex items-center justify-center z-10">
-                <lucide-icon [img]="group.icon" class="h-5 w-5 text-white"></lucide-icon>
+              <p class="text-[11px] text-gray-400 mt-2 line-clamp-3 md:line-clamp-2 leading-relaxed flex-1" [title]="group.desc">
+                {{ group.desc || 'Nenhuma descrição informada.' }}
+              </p>
+
+              <div class="mt-3 mb-3 flex items-center gap-1.5">
+                <lucide-icon [img]="group.icon" class="h-3.5 w-3.5" [style.color]="group.themeColor"></lucide-icon>
+                <span class="text-[10px] font-bold uppercase tracking-widest" [style.color]="group.themeColor">
+                  {{ group.mode }}
+                </span>
               </div>
 
-              <!-- Corpo do Card -->
-              <div class="p-4 pt-6 flex flex-col flex-1">
-                <h4 class="text-sm font-bold text-white flex items-center gap-1.5">{{ group.name }} <div class="h-1.5 w-1.5 bg-green-500 rounded-full"></div></h4>
-                <p class="text-[11px] text-gray-400 mt-1 mb-4 leading-relaxed flex-1">{{ group.desc }}</p>
-                
-                <div class="flex items-center justify-between text-[11px] font-medium pt-3 border-t border-gray-800/50">
-                  <span class="text-green-500 flex items-center gap-1"><div class="h-1.5 w-1.5 bg-green-500 rounded-full"></div> {{ group.online }} online</span>
-                  <span class="text-gray-500">{{ group.members }} membros</span>
+              <div class="flex items-center justify-between text-[10px] font-medium pt-3 border-t border-gray-800/50">
+                <div class="flex items-center gap-3">
+                  <span class="text-green-500 flex items-center gap-1.5">
+                    <div class="h-1.5 w-1.5 bg-green-500 rounded-full shadow-[0_0_5px_rgba(34,197,94,0.5)]"></div> {{ group.online }} online
+                  </span>
                 </div>
+                <span class="text-gray-500">{{ group.members }} membros</span>
               </div>
-              @if (group.isVip) {
-                <span class="absolute bottom-11 right-4 text-[9px] font-bold text-yellow-900 bg-yellow-500 px-1.5 py-0.5 rounded">VIP</span>
-              }
-            </a>
+            </div>
+          </a>
+          }
+          
+          @if (filteredCommunityGroups().length === 0 && !isLoading()) {
+             <div class="col-span-full text-center py-10 bg-[#130d24] border border-gray-800 rounded-2xl">
+               <p class="text-gray-500 text-sm">Nenhum grupo oficial encontrado para esse filtro.</p>
+             </div>
           }
         </div>
       </section>
 
-      <!-- SEÇÃO 2: GRUPOS DE TERCEIROS -->
+      <!-- SEÇÃO 2: TERCEIROS -->
       <section>
         <div class="flex items-center justify-between mb-4">
           <div class="flex items-center gap-2">
             <lucide-icon [img]="Users" class="h-5 w-5 text-purple-500"></lucide-icon>
             <div>
               <h3 class="text-sm font-bold text-white uppercase tracking-widest">GRUPOS DE TERCEIROS</h3>
-              <p class="text-[11px] text-gray-500">Grupos em que os bots foram adicionados por terceiros. Não gerenciados pela Fortnite Brasil.</p>
+              <p class="text-[11px] text-gray-500">Grupos em que os bots foram adicionados por terceiros.</p>
             </div>
           </div>
-          <a href="#" class="text-xs font-semibold text-purple-400 hover:text-purple-300 flex items-center gap-1">Ver todos <lucide-icon [img]="ArrowRight" class="h-3 w-3"></lucide-icon></a>
+          @if (filteredThirdPartyGroups().length > thirdPartyLimit()) {
+            <button (click)="thirdPartyLimit.set(999)" class="text-xs font-semibold text-purple-400 hover:text-purple-300 flex items-center gap-1">Ver todos ({{ filteredThirdPartyGroups().length }}) <lucide-icon [img]="ArrowRight" class="h-3 w-3"></lucide-icon></button>
+          } @else if (thirdPartyLimit() > 6 && filteredThirdPartyGroups().length > 6) {
+            <button (click)="thirdPartyLimit.set(6)" class="text-xs font-semibold text-gray-500 hover:text-white flex items-center gap-1">Mostrar menos</button>
+          }
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          @for (group of thirdPartyGroups; track group.name) {
-            <div class="bg-[#0c0817] border border-gray-800/50 rounded-xl overflow-hidden hover:border-gray-700 transition-colors group flex flex-col h-full cursor-pointer">
-              <!-- Banner do Card com indicação de Bot -->
-              <div class="h-24 w-full relative bg-gray-800 overflow-hidden">
-                <img src="assets/image/header/main_header.png" class="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity">
-                <div class="absolute top-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm border border-white/10 px-2 py-1 rounded-lg">
-                  <lucide-icon [img]="group.botIcon" class="h-3.5 w-3.5 text-blue-400"></lucide-icon>
-                  <span class="text-[10px] font-bold text-gray-200">Bot: {{ group.bot }} <span class="text-green-500 inline-block h-1 w-1 rounded-full mb-0.5"></span></span>
-                </div>
-              </div>
-
-              <!-- Corpo do Card -->
-              <div class="p-4 flex flex-col flex-1">
-                <h4 class="text-sm font-bold text-white">{{ group.name }}</h4>
-                <p class="text-[11px] text-gray-400 mt-1 mb-4 leading-relaxed flex-1">{{ group.desc }}</p>
-                
-                <div class="flex items-center justify-between text-[11px] font-medium pt-3 border-t border-gray-800/50">
-                  <span class="text-green-500 flex items-center gap-1"><div class="h-1.5 w-1.5 bg-green-500 rounded-full"></div> {{ group.online }} online</span>
-                  <span class="text-gray-500">{{ group.members }} membros</span>
-                </div>
+        <div [ngClass]="viewMode() === 'grid' ? 'grid grid-cols-1 xl:grid-cols-2 gap-6' : 'grid grid-cols-1 gap-4'">
+          @for (group of filteredThirdPartyGroups() | slice:0:thirdPartyLimit(); track group.id) {
+          <div
+             class="w-full bg-[#130d24] border border-gray-800/60 rounded-2xl flex items-stretch transition-all duration-300 overflow-hidden relative cursor-pointer hover:-translate-y-2 hover:scale-[1.02] hover:border-gray-700 shadow-lg"
+             [ngClass]="viewMode() === 'grid' ? 'h-[180px]' : 'h-[160px] md:h-[130px]'"
+             [style.boxShadow]="'0 15px 40px ' + group.themeColor + '15'">
+            
+            <div class="relative bg-[#06040e] flex flex-col items-center justify-center overflow-hidden border-r border-gray-800/50"
+                 [ngClass]="viewMode() === 'grid' ? 'w-40 shrink-0' : 'w-40 md:w-48 shrink-0'">
+              <img [src]="group.cover" class="absolute inset-0 w-full h-full object-cover opacity-80">
+              <div class="absolute top-2 left-2 flex items-center gap-1.5 bg-black/80 backdrop-blur-md border border-white/10 px-2 py-1 rounded-lg">
+                <lucide-icon [img]="group.botIcon" class="h-3 w-3 text-blue-400"></lucide-icon>
+                <span class="text-[9px] font-bold text-gray-200">Bot: {{ group.botName }}</span>
               </div>
             </div>
+
+            <div class="flex flex-col p-5 flex-1 min-w-0">
+              <h4 class="text-base font-extrabold text-white truncate">{{ group.name }}</h4>
+              
+              <p class="text-[11px] text-gray-400 mt-2 line-clamp-3 md:line-clamp-2 leading-relaxed flex-1" [title]="group.desc">
+                {{ group.desc || 'Nenhuma descrição informada.' }}
+              </p>
+
+              <div class="mt-3 mb-3 flex items-center gap-1.5 opacity-60">
+                <lucide-icon [img]="group.icon" class="h-3.5 w-3.5" [style.color]="group.themeColor"></lucide-icon>
+                <span class="text-[10px] font-bold uppercase tracking-widest" [style.color]="group.themeColor">
+                  {{ group.mode }}
+                </span>
+              </div>
+
+              <div class="flex items-center justify-between text-[10px] font-medium pt-3 border-t border-gray-800/50">
+                <div class="flex items-center gap-3">
+                  <span class="text-green-500 flex items-center gap-1.5">
+                    <div class="h-1.5 w-1.5 bg-green-500 rounded-full shadow-[0_0_5px_rgba(34,197,94,0.5)]"></div> {{ group.online }} online
+                  </span>
+                </div>
+                <span class="text-gray-500">{{ group.members }} membros</span>
+              </div>
+            </div>
+          </div>
+          }
+          @if (filteredThirdPartyGroups().length === 0 && !isLoading()) {
+             <div class="col-span-full text-center py-10 bg-[#130d24] border border-gray-800 rounded-2xl">
+               <p class="text-gray-500 text-sm">Nenhum grupo de terceiros encontrado.</p>
+             </div>
           }
         </div>
       </section>
@@ -156,102 +245,201 @@
 
     <!-- SIDEBAR DIREITA -->
     <div class="xl:col-span-1 space-y-6">
-      
-      <!-- Sobre Grupos -->
+
+      <!-- Sobre -->
       <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5">
-        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-4">SOBRE GRUPOS</h3>
-        <p class="text-[11px] text-gray-400 mb-4">Existem dois tipos de grupos na comunidade:</p>
-        
+        <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase mb-4">SOBRE GRUPOS E CANAIS</h3>
+        <p class="text-[11px] text-gray-400 mb-4">Existem dois tipos principais operando na rede:</p>
+
         <div class="space-y-4">
           <div class="flex items-start gap-3">
-            <div class="h-8 w-8 bg-purple-600/20 text-purple-400 rounded flex items-center justify-center shrink-0 mt-0.5"><lucide-icon [img]="Users" class="h-4 w-4"></lucide-icon></div>
+            <div class="h-8 w-8 bg-purple-600/20 text-purple-400 rounded flex items-center justify-center shrink-0 mt-0.5">
+              <lucide-icon [img]="Users" class="h-4 w-4"></lucide-icon></div>
             <div>
-              <p class="text-xs font-bold text-gray-200">Grupos da Comunidade</p>
-              <p class="text-[10px] text-gray-500 mt-0.5 leading-relaxed">Criados e gerenciados pelos administradores da Fortnite Brasil.</p>
+              <p class="text-xs font-bold text-gray-200">Oficiais da Comunidade</p>
+              <p class="text-[10px] text-gray-500 mt-0.5 leading-relaxed">Criados e gerenciados integralmente pela equipe administrativa.</p>
             </div>
           </div>
           <div class="flex items-start gap-3">
-            <div class="h-8 w-8 bg-blue-500/20 text-blue-400 rounded flex items-center justify-center shrink-0 mt-0.5"><lucide-icon [img]="Users" class="h-4 w-4"></lucide-icon></div>
+            <div class="h-8 w-8 bg-blue-500/20 text-blue-400 rounded flex items-center justify-center shrink-0 mt-0.5">
+              <lucide-icon [img]="Bot" class="h-4 w-4"></lucide-icon></div>
             <div>
               <p class="text-xs font-bold text-gray-200">Grupos de Terceiros</p>
-              <p class="text-[10px] text-gray-500 mt-0.5 leading-relaxed">Grupos em que bots foram adicionados por terceiros e não são gerenciados pela comunidade.</p>
+              <p class="text-[10px] text-gray-500 mt-0.5 leading-relaxed">Chats isolados que adicionaram nossos bots para moderação de rotina.</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Dicas -->
-      <div class="bg-purple-600/5 border border-purple-600/20 rounded-2xl p-5">
-        <div class="flex items-center gap-2 mb-3">
-          <lucide-icon [img]="Shield" class="h-4 w-4 text-purple-400"></lucide-icon>
-          <h3 class="text-[10px] font-bold text-purple-400 tracking-widest uppercase">DICAS DA COMUNIDADE</h3>
-        </div>
-        <ul class="text-[11px] text-gray-400 space-y-2 pl-4 list-disc marker:text-purple-500">
-          <li>Respeite todos os membros.</li>
-          <li>Evite spam e mensagens ofensivas.</li>
-          <li>Use os grupos para fazer amigos e aproveitar ao máximo!</li>
-        </ul>
-      </div>
-
-      <!-- Atividade Recente -->
-      <div class="bg-[#0c0817] border border-gray-800/50 rounded-2xl p-5">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-[10px] font-bold text-gray-500 tracking-widest uppercase">ATIVIDADE RECENTE</h3>
-          <a href="#" class="text-[10px] font-semibold text-purple-400 hover:text-purple-300 flex items-center gap-1">Ver todas <lucide-icon [img]="ArrowRight" class="h-3 w-3"></lucide-icon></a>
-        </div>
-        
-        <div class="space-y-4">
-          <div class="flex items-start gap-3">
-            <div class="h-7 w-7 bg-purple-600/20 text-purple-400 rounded-lg flex items-center justify-center shrink-0"><lucide-icon [img]="Users" class="h-3.5 w-3.5"></lucide-icon></div>
-            <div class="flex-1 min-w-0">
-              <div class="flex justify-between items-start">
-                <p class="text-[11px] font-bold text-gray-200">Novo grupo criado</p>
-                <span class="text-[9px] text-gray-500">2m atrás</span>
-              </div>
-              <p class="text-[10px] text-gray-400 mt-0.5">Clã dos Campeões</p>
-            </div>
-          </div>
-          
-          <div class="flex items-start gap-3">
-            <div class="h-7 w-7 bg-blue-500/20 text-blue-400 rounded-lg flex items-center justify-center shrink-0"><lucide-icon [img]="UserPlus" class="h-3.5 w-3.5"></lucide-icon></div>
-            <div class="flex-1 min-w-0">
-              <div class="flex justify-between items-start">
-                <p class="text-[11px] font-bold text-gray-200">Membro entrou no grupo</p>
-                <span class="text-[9px] text-gray-500">5m atrás</span>
-              </div>
-              <p class="text-[10px] text-gray-400 mt-0.5"><span class="text-blue-400">Jogador_Pro_BR</span> entrou em <span class="text-blue-400">Battle Royale BR</span></p>
-            </div>
-          </div>
-          
-          <div class="flex items-start gap-3">
-            <div class="h-7 w-7 bg-purple-600/20 text-purple-400 rounded-lg flex items-center justify-center shrink-0"><lucide-icon [img]="UserPlus" class="h-3.5 w-3.5"></lucide-icon></div>
-            <div class="flex-1 min-w-0">
-              <div class="flex justify-between items-start">
-                <p class="text-[11px] font-bold text-gray-200">Novo membro</p>
-                <span class="text-[9px] text-gray-500">8m atrás</span>
-              </div>
-              <p class="text-[10px] text-gray-400 mt-0.5"><span class="text-blue-400">NinjaBR</span> entrou em <span class="text-purple-400">Clubinho Fortnite</span></p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3">
-            <div class="h-7 w-7 bg-cyan-500/20 text-cyan-400 rounded-lg flex items-center justify-center shrink-0"><lucide-icon [img]="ShieldAlert" class="h-3.5 w-3.5"></lucide-icon></div>
-            <div class="flex-1 min-w-0">
-              <div class="flex justify-between items-start">
-                <p class="text-[11px] font-bold text-gray-200">Bot adicionado em um grupo</p>
-                <span class="text-[9px] text-gray-500">12m atrás</span>
-              </div>
-              <p class="text-[10px] text-gray-400 mt-0.5"><span class="text-blue-400">GuardaOiBot</span> foi adicionado em <span class="text-cyan-400">Zona de Competições</span></p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Botão Criar Novo -->
-      <button class="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white py-3.5 rounded-xl text-sm font-semibold transition-colors shadow-lg shadow-purple-600/20">
-        <lucide-icon [img]="Plus" class="h-4 w-4"></lucide-icon> Criar novo grupo da comunidade
+      <!-- Botão Criar -->
+      <button type="button" (click)="openCreateModal()"
+        class="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white py-3.5 rounded-xl text-sm font-semibold transition-colors shadow-lg shadow-purple-600/20 cursor-pointer">
+        <lucide-icon [img]="Plus" class="h-4 w-4"></lucide-icon> Adicionar à Comunidade
       </button>
 
     </div>
   </div>
 </div>
+
+<!-- Modal Criar -->
+@if (isCreateModalOpen()) {
+  <div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    <div class="bg-[#0c0817] border border-gray-800/80 rounded-2xl w-[95vw] max-w-[1200px] max-h-[90vh] shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-800/60 bg-[#06040e] shrink-0">
+        <div>
+          <h3 class="text-base font-bold text-white">Criar Nov{{ groupType() === 'channel' ? 'o Canal' : 'o Grupo' }}</h3>
+          <p class="text-xs text-gray-500">Defina a identidade visual e o propósito na comunidade.</p>
+        </div>
+        <button (click)="closeCreateModal()" class="p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
+          <lucide-icon [img]="X" class="h-5 w-5"></lucide-icon>
+        </button>
+      </div>
+
+      <div class="flex flex-col md:flex-row flex-1 overflow-hidden">
+        
+        <div class="flex-1 p-8 space-y-6 overflow-y-auto custom-scrollbar border-b md:border-b-0 md:border-r border-gray-800/60">
+          
+          <div>
+            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">ID do Telegram *</label>
+            <input type="text" [ngModel]="platformId()" (ngModelChange)="platformId.set($event)" placeholder="Ex: -1001183030542" 
+              class="w-full bg-[#130d24] border border-gray-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors">
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Nome {{ groupType() === 'channel' ? 'do Canal' : 'do Grupo' }} *</label>
+            <input type="text" [(ngModel)]="groupName" placeholder="Ex: Fortnite Brasil Oficial" 
+              class="w-full bg-[#130d24] border border-gray-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors">
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Estrutura *</label>
+            <div class="grid grid-cols-2 gap-4">
+              <button type="button" (click)="setGroupType('group')" [ngClass]="groupType() === 'group' ? 'border-purple-500 bg-purple-600/20 text-purple-400' : 'border-gray-800 bg-[#130d24] text-gray-400 hover:border-gray-600'" class="border rounded-lg px-4 py-3 text-sm font-semibold transition-all flex items-center justify-center gap-2"><lucide-icon [img]="Users" class="h-4 w-4"></lucide-icon> Chat de Grupo</button>
+              <button type="button" (click)="setGroupType('channel')" [ngClass]="groupType() === 'channel' ? 'border-purple-500 bg-purple-600/20 text-purple-400' : 'border-gray-800 bg-[#130d24] text-gray-400 hover:border-gray-600'" class="border rounded-lg px-4 py-3 text-sm font-semibold transition-all flex items-center justify-center gap-2"><lucide-icon [img]="Megaphone" class="h-4 w-4"></lucide-icon> Canal de Avisos</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Descrição</label>
+              <span class="text-[10px] text-gray-500" [ngClass]="groupDescription.length >= 500 ? 'text-red-400' : ''">{{ groupDescription.length }}/500</span>
+            </div>
+            <textarea [(ngModel)]="groupDescription" rows="4" maxlength="500" placeholder="Qual a finalidade deste ambiente?" class="w-full bg-[#130d24] border border-gray-800 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors placeholder-gray-700 resize-none"></textarea>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Modo de Indexação</label>
+              <div class="relative bg-[#130d24] border border-gray-800 rounded-lg focus-within:border-purple-500 transition-colors">
+                <select [(ngModel)]="groupMode" class="w-full bg-transparent pl-4 pr-8 py-3 text-sm text-white focus:outline-none appearance-none cursor-pointer relative z-10">
+                  @for (mode of availableModes(); track mode.id) {
+                    <option [value]="mode.name" class="bg-[#06040e]">{{ mode.name }}</option>
+                  }
+                </select>
+                <lucide-icon [img]="ChevronDown" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none z-0"></lucide-icon>
+              </div>
+            </div>
+            <!-- NOVO: Idioma na Criação -->
+            <div>
+              <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Idioma</label>
+              <div class="relative bg-[#130d24] border border-gray-800 rounded-lg focus-within:border-purple-500 transition-colors">
+                <select [(ngModel)]="groupLanguage" class="w-full bg-transparent pl-4 pr-8 py-3 text-sm text-white focus:outline-none appearance-none cursor-pointer relative z-10">
+                  <option value="pt-BR" class="bg-[#06040e]">Português (BR)</option>
+                  <option value="en-US" class="bg-[#06040e]">Inglês (EUA)</option>
+                  <option value="es-ES" class="bg-[#06040e]">Espanhol</option>
+                </select>
+                <lucide-icon [img]="ChevronDown" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none z-0"></lucide-icon>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Ícone Representativo</label>
+            <div class="flex flex-wrap gap-2 max-h-[140px] overflow-y-auto custom-scrollbar pr-2 pb-2">
+              @for (iconName of availableIcons; track iconName) {
+                <button (click)="groupIcon = iconName" class="h-10 w-10 flex items-center justify-center rounded-lg border transition-colors shrink-0" [title]="iconName" [ngClass]="groupIcon === iconName ? 'bg-gray-800 border-gray-500 text-white shadow-lg' : 'bg-[#130d24] border-gray-800 text-gray-500 hover:text-gray-300 hover:border-gray-700'"><lucide-icon [img]="getIcon(iconName)" class="h-4 w-4"></lucide-icon></button>
+              }
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Destaque de Cor</label>
+            <div class="flex items-center gap-2 pt-1.5 overflow-x-auto custom-scrollbar pb-2 w-full">
+              @for (color of presetColors; track color) {
+                <button (click)="themeColor = color" class="h-7 w-7 shrink-0 rounded-full border-2 transition-transform shadow-md" [style.backgroundColor]="color" [style.borderColor]="themeColor === color ? '#ffffff' : 'transparent'" [ngClass]="themeColor === color ? 'scale-110 shadow-lg' : 'hover:scale-110'"></button>
+              }
+              <div class="w-px h-6 bg-gray-800 mx-1 shrink-0"></div>
+              <label class="relative h-7 w-7 shrink-0 rounded-full overflow-hidden cursor-pointer border border-gray-600 hover:border-gray-400 flex items-center justify-center transition-colors">
+                <input type="color" [(ngModel)]="themeColor" class="absolute inset-[-10px] w-[50px] h-[50px] cursor-pointer">
+                <lucide-icon [img]="Plus" class="h-3 w-3 text-white mix-blend-difference pointer-events-none drop-shadow-md"></lucide-icon>
+              </label>
+            </div>
+          </div>
+          
+          <div class="pt-4 border-t border-gray-800/50 space-y-4">
+            <div class="flex items-center justify-between bg-[#130d24] border border-gray-800 px-5 py-4 rounded-xl cursor-pointer hover:border-gray-700 transition-colors" (click)="isVip = !isVip">
+              <div><p class="text-sm font-semibold text-gray-200">Selo VIP</p><p class="text-[10px] text-gray-500 mt-0.5">Destaca no painel como conteúdo de assinantes.</p></div>
+              <div class="w-10 h-5 rounded-full relative transition-colors shrink-0" [ngClass]="isVip ? 'bg-yellow-600' : 'bg-gray-700'"><div class="absolute top-0.5 h-4 w-4 bg-white rounded-full transition-all" [ngClass]="isVip ? 'right-1' : 'left-1'"></div></div>
+            </div>
+
+            @if (groupType() === 'group') {
+              <div class="animate-in fade-in slide-in-from-top-2 duration-300">
+                <div class="flex items-center justify-between bg-[#130d24] border border-gray-800 px-5 py-4 rounded-xl cursor-pointer hover:border-gray-700 transition-colors" (click)="enableBot.set(!enableBot())">
+                  <div class="flex items-center gap-3"><div class="h-8 w-8 bg-purple-500/20 text-purple-400 rounded-lg flex items-center justify-center"><lucide-icon [img]="Bot" class="h-4 w-4"></lucide-icon></div><div><p class="text-sm font-semibold text-gray-200">Vincular Bot de Moderação</p><p class="text-[10px] text-gray-500 mt-0.5">O chat já nascerá protegido pelas regras padrão.</p></div></div>
+                  <div class="w-10 h-5 rounded-full relative transition-colors shrink-0" [ngClass]="enableBot() ? 'bg-purple-600' : 'bg-gray-700'"><div class="absolute top-0.5 h-4 w-4 bg-white rounded-full transition-all" [ngClass]="enableBot() ? 'right-1' : 'left-1'"></div></div>
+                </div>
+
+                @if (enableBot()) {
+                  <div class="pl-2 pt-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Selecione o Bot Disponível</label>
+                    <div class="relative bg-[#06040e] border border-gray-800 rounded-lg focus-within:border-purple-500 transition-colors">
+                      <select [ngModel]="selectedBotId()" (ngModelChange)="selectedBotId.set($event)" class="w-full bg-transparent pl-3 pr-8 py-3 text-sm text-white focus:outline-none appearance-none cursor-pointer relative z-10">
+                        @for (bot of moderationBots(); track bot.id) { <option [value]="bot.id" class="bg-[#130d24] text-white">{{ bot.name }}</option> }
+                      </select>
+                      <lucide-icon [img]="ChevronDown" class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none z-0"></lucide-icon>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Preview (Direita) -->
+        <div class="w-full lg:w-1/2 xl:w-[55%] bg-[#06040e] p-8 md:p-12 flex flex-col justify-center items-center relative overflow-y-auto custom-scrollbar">
+          <div class="w-full max-w-[650px] bg-[#130d24] border border-gray-800 rounded-2xl flex flex-col sm:flex-row items-stretch transition-all duration-300 overflow-hidden relative cursor-pointer hover:-translate-y-2 hover:scale-[1.02] hover:border-gray-700 sm:h-[180px]" [style.boxShadow]="'0 15px 40px ' + themeColor + '40'"> 
+            
+            <div class="relative h-40 sm:h-full sm:w-48 shrink-0 bg-[#06040e] flex flex-col items-center justify-center cursor-pointer group/upload overflow-hidden transition-colors" [ngClass]="isDragging ? 'bg-gray-800/80 border-2 border-purple-500 border-dashed' : ''" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+              <input type="file" (change)="onFileSelected($event)" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+              @if (coverImagePreview) {
+                <img [src]="coverImagePreview" class="absolute inset-0 w-full h-full object-cover group-hover/upload:scale-105 transition-transform duration-500">
+                <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover/upload:opacity-100 transition-opacity"><lucide-icon [img]="Plus" class="h-6 w-6 text-white"></lucide-icon></div>
+              } @else {
+                <div class="h-12 w-12 rounded-xl bg-gray-800/50 flex items-center justify-center mb-2 group-hover/upload:bg-gray-800 transition-colors border border-gray-700 border-dashed"><lucide-icon [img]="Plus" class="h-5 w-5 text-gray-500 group-hover/upload:text-white transition-colors" [ngClass]="isDragging ? 'text-purple-400 scale-125' : ''"></lucide-icon></div>
+                <span class="text-[9px] text-gray-500 font-semibold uppercase tracking-wider text-center px-4" [ngClass]="isDragging ? 'text-purple-400' : ''">{{ isDragging ? 'Solte aqui' : 'Capa' }}</span>
+              }
+            </div>
+
+            <div class="flex flex-col p-6 flex-1 min-w-0">
+              <div class="flex items-start justify-between gap-3">
+                <h4 class="text-lg font-extrabold text-white truncate">{{ groupName || (groupType() === 'channel' ? 'Nome do Canal' : 'Nome do Grupo') }}</h4>
+                @if (isVip) { <span class="text-[9px] font-bold text-yellow-900 bg-yellow-500 px-1.5 py-0.5 rounded shrink-0 shadow-[0_0_10px_rgba(234,179,8,0.3)] mt-1">VIP</span> }
+              </div>
+              <p class="text-[12px] text-gray-400 mt-3 line-clamp-2 leading-relaxed flex-1" [title]="groupDescription">{{ groupDescription || 'O propósito do chat aparecerá aqui de forma limpa, com excelente legibilidade para os usuários.' }}</p>
+              <div class="mt-4 mb-3 flex items-center gap-1.5"><lucide-icon [img]="getIcon(groupIcon)" class="h-4 w-4" [style.color]="themeColor"></lucide-icon><span class="text-[11px] font-bold uppercase tracking-widest" [style.color]="themeColor">{{ groupMode || 'Geral' }}</span></div>
+              <div class="flex items-center justify-between text-[11px] font-medium pt-4 border-t border-gray-800/50"><div class="flex items-center gap-3"><span class="text-green-500 flex items-center gap-1.5"><div class="h-1.5 w-1.5 bg-green-500 rounded-full shadow-[0_0_5px_rgba(34,197,94,0.5)]"></div> 0 online</span></div><span class="text-gray-500">0 membros</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-8 py-5 border-t border-gray-800/60 flex justify-end gap-3 bg-[#06040e] shrink-0">
+        <button (click)="closeCreateModal()" class="px-6 py-2.5 text-xs font-semibold text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors">Cancelar</button>
+        <button (click)="saveNewGroup()" [disabled]="!groupName || isCreating()" class="flex items-center justify-center gap-2 px-8 py-2.5 disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed text-white rounded-lg text-xs font-semibold transition-all" [style.backgroundColor]="groupName && !isCreating() ? themeColor : ''" [style.boxShadow]="groupName && !isCreating() ? '0 4px 15px ' + themeColor + '40' : ''">
+          @if (isCreating()) { <div class="h-4 w-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div> Publicando... } @else { <lucide-icon [img]="Plus" class="h-4 w-4"></lucide-icon> Publicar {{ groupType() === 'channel' ? 'Canal' : 'Grupo' }} }
+        </button>
+      </div>
+    </div>
+  </div>
+}
