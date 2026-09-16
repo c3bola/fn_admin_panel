@@ -9,5 +9,5 @@ import { RouterOutlet } from '@angular/router';
   styleUrls: ['./app.scss']
 })
 export class AppComponent {
-  title = 'fn_admin_panel';
+  title = 'Fortnite Brasil';
 }
